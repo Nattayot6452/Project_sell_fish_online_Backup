@@ -1,0 +1,127 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>หน้าแรก</title>
+   <style>
+    :root {
+        --mj-green: #00571d;
+        --mj-yellow: #f9e547;
+        --mj-white: #fffef9;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Sarabun", sans-serif;
+        background-color: var(--mj-white);
+    }
+
+    /* Header */
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--mj-yellow);
+    }
+
+    .logo {
+        width: 60px;
+        height: 60px;
+        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
+    	transform-origin: center; /* ขยายจากตรงกลาง */
+    }
+
+    .search-box {
+        margin-left: 20px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .search-box button {
+        padding: 10px;
+        background-color: var(--mj-green);
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+    /* Menu */
+    .nav {
+        display: flex;
+        justify-content: center;
+        background-color: var(--mj-green);
+    }
+
+    .nav a {
+        padding: 14px 20px;
+        text-decoration: none;
+        color: white;
+        border-right: 1px solid #ccc;
+    }
+
+    .nav a:hover {
+        background-color: #004414;
+    }
+
+    /* Main Content */
+    .main-content {
+        text-align: center;
+        padding: 40px 0;
+        background-color: var(--mj-white);
+    }
+
+    .main-content img {
+        width: 200px;
+    }
+
+    .main-content h1 {
+        font-size: 36px;
+        margin-top: 20px;
+        color: var(--mj-green);
+    }
+</style>
+
+</head>
+<body>
+
+   <div class="header">
+    <a href="gHome">
+        <img src="assets/images/icon/fishTesting.png" alt="โลโก้ปลา" class="logo">
+    </a>      
+    <form action="gSearchProducts" method="POST" class="search-box">
+        <input type="text" name="searchtext" placeholder="ปลาหางนกยูง">
+        <button type="submit">🔍</button>
+    </form>
+</div>
+
+
+    <!-- Menu -->
+    <div class="nav">
+        <a href="gHome">หน้าแรก</a>
+        <a href="gAllProduct">สินค้าทั้งหมด</a>
+        <a href="#">รายการโปรด</a>
+        <a href="#">คำสั่งซื้อ</a>
+        <a href="#">ประวัติ</a>
+        <a href="#">ตะกร้าสินค้า</a>
+        <a href="gLogin">เข้าสู่ระบบ</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <img src="assets/images/icon/fishTesting.png" alt="ปลาสวยงาม">
+        <h1>ปลาสวยงามแม่โจ้</h1>
+    </div>
+
+</body>
+</html>
