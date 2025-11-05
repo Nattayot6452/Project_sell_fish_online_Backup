@@ -55,7 +55,6 @@ public class Member {
 	    this.password = password;
 	    this.phone = phone;
 	    this.memberImg = memberImg;
-	    // orders, favorites, reviews จะถูกสร้างเป็น empty list ตาม field definition
 	}
 
 	public String getMemberId() {

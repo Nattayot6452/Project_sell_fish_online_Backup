@@ -15,8 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class ProductController {
 	
-	//แสดงสินค้าทั้งหมด
-	 @RequestMapping(value="/gAllProduct", method=RequestMethod.GET)
+	 @RequestMapping(value="/AllProduct", method=RequestMethod.GET)
 	    public ModelAndView productPage(HttpServletRequest request) {
 
 	        ProductManager pm = new ProductManager();
@@ -27,16 +26,27 @@ public class ProductController {
 	        return mav;
 	    }
 	 
-	 //ค้นหาสินค้า
-	 @RequestMapping(value="/gSearchProducts", method=RequestMethod.POST) 
+	 @RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
 		public ModelAndView searchProducts(HttpServletRequest request) {
 			String searchtext = request.getParameter("searchtext");
 			
 			ModelAndView mav = new ModelAndView("products");
 			ProductManager pm = new ProductManager();
-			List<Product> products = pm.getSearchProducts(searchtext);
+			List<Product> products = pm.getSearchProductsBySpecies(searchtext);
 			mav.addObject("Product", products);
 			return mav;
 		}
 	 
+	 @RequestMapping(value="/ProductDetail", method=RequestMethod.GET)
+	 public ModelAndView openProductDetail(HttpServletRequest request) {
+	     String pid = request.getParameter("pid");
+	     
+	     ProductManager pm = new ProductManager();
+	     Product p = pm.getProduct(pid);
+	     
+	     ModelAndView mav = new ModelAndView("productDetail");
+	     mav.addObject("product", p);
+	     return mav;
+	 }
+
 }

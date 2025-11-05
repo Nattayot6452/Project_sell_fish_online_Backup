@@ -13,7 +13,6 @@ public class Admin extends Staff {
         super(email, password);
     }
 
-    // เมธอดเฉพาะของ Admin
     public void manageUsers() {
         System.out.println("Admin " + getEmail() + " is managing users.");
     }

@@ -13,7 +13,6 @@ public class Seller extends Staff {
         super(email, password);
     }
 
-    // เมธอดเฉพาะของ Seller
     public void sellProduct() {
         System.out.println("Seller " + getEmail() + " is selling products.");
     }

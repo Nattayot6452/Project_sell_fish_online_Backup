@@ -1,0 +1,170 @@
+/* style.css */
+
+  	:root {
+        --mj-green: #00571d;
+        --mj-yellow: #f9e547;
+        --mj-white: #fffef9;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Sarabun", sans-serif;
+        background-color: var(--mj-white);
+    }
+
+    /* Header */
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--mj-yellow);
+    }
+
+    .logo {
+        width: 60px;
+        height: 60px;
+        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
+    	transform-origin: center; /* ขยายจากตรงกลาง */
+    }
+
+    .search-box {
+        margin-left: 20px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .search-box button {
+        padding: 10px;
+        background-color: var(--mj-green);
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+    /* Menu */
+    .nav {
+        display: flex;
+        justify-content: center;
+        background-color: var(--mj-green);
+    }
+
+    .nav a {
+        padding: 14px 20px;
+        text-decoration: none;
+        color: white;
+        border-right: 1px solid #ccc;
+    }
+
+    .nav a:hover {
+        background-color: #004414;
+    }
+    
+	   .product-container {
+	  display: flex;
+	  align-items: flex-start;
+	  justify-content: center;
+	  gap: 40px;
+	  padding: 30px;
+	}
+
+	.product-image {
+	    flex: 1;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    height: 400px; /* เพิ่มความสูงเพื่อจัดให้อยู่ตรงกลาง */
+	    margin-top: -40px; /* ดันขึ้นเล็กน้อยให้อยู่ตรงเส้นเหลือง */
+	}
+	
+	.product-image .main-img {
+    width: 450px; /* ขยายให้เท่ากับกรอบเหลืองในภาพ */
+    height: 340px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+	
+	.img-label {
+	    font-size: 14px;
+	    color: #555;
+	}
+	
+	.product-info {
+	    flex: 2;
+	    font-family: sans-serif;
+	}
+	
+	.product-name {
+	    font-size: 24px;
+	    margin-bottom: 5px;
+	}
+	
+	.product-id {
+	    color: gray;
+	    font-size: 14px;
+	}
+	
+	.product-price {
+	    font-size: 22px;
+	    font-weight: bold;
+	    color: #333;
+	    margin: 10px 0 20px;
+	}
+	
+	.product-details p {
+	    margin: 3px 0;
+	    color: #555;
+	}
+	
+	.quantity-box {
+	    margin: 15px 0;
+	}
+	
+	.quantity-control {
+	    display: inline-flex;
+	    align-items: center;
+	    margin-left: 10px;
+	}
+	
+	.btn-qty {
+	    width: 30px;
+	    height: 30px;
+	    border: 1px solid #aaa;
+	    background: #f9f9f9;
+	    cursor: pointer;
+	    font-size: 18px;
+	}
+	
+	.qty-input {
+	    width: 40px;
+	    text-align: center;
+	    border: 1px solid #aaa;
+	    margin: 0 5px;
+	}
+	
+	.add-to-cart-btn {
+	    display: block;
+	    width: 100%;
+	    background-color: #4cd137;
+	    color: white;
+	    font-size: 16px;
+	    padding: 10px;
+	    border: none;
+	    border-radius: 4px;
+	    cursor: pointer;
+	}
+	
+	.add-to-cart-btn:hover {
+	    background-color: #44bd32;
+	}
+    

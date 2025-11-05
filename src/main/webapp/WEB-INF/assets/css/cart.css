@@ -1,0 +1,173 @@
+	/* style.css */
+	
+	:root {
+	    --mj-green: #00571d;
+	    --mj-yellow: #f9e547;
+	    --mj-white: #fffef9;
+	}
+	
+	body {
+	    margin: 0;
+	    font-family: "Sarabun", sans-serif;
+	    background-color: var(--mj-white);
+	}
+	
+	/* Header */
+	.header {
+	    display: flex;
+	    align-items: center;
+	    padding: 10px 20px;
+	    background-color: var(--mj-yellow);
+	}
+	
+	.logo {
+	    width: 60px;
+	    height: 60px;
+	    transform: scale(1.5);
+	    transform-origin: center;
+	}
+	
+	.search-box {
+	    margin-left: 20px;
+	    flex: 1;
+	    display: flex;
+	    align-items: center;
+	}
+	
+	.search-box input[type="text"] {
+	    width: 100%;
+	    padding: 10px;
+	    font-size: 16px;
+	    border: none;
+	    border-radius: 5px 0 0 5px;
+	}
+	
+	.search-box button {
+	    padding: 10px;
+	    background-color: var(--mj-green);
+	    color: white;
+	    border: none;
+	    border-radius: 0 5px 5px 0;
+	    cursor: pointer;
+	}
+	
+	/* Menu */
+	.nav {
+	    display: flex;
+	    justify-content: center;
+	    background-color: var(--mj-green);
+	}
+	
+	.nav a {
+	    padding: 14px 20px;
+	    text-decoration: none;
+	    color: white;
+	    border-right: 1px solid #ccc;
+	}
+	
+	.nav a:hover {
+	    background-color: #004414;
+	}
+	
+	.cart-table {
+		width: 90%;
+		margin: 30px auto;
+		border-collapse: collapse;
+		background-color: #fff;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+	.cart-table th, .cart-table td {
+		border: 1px solid #ddd;
+		padding: 12px 15px;
+		text-align: left;
+    }
+        
+	.cart-table th {
+		background-color: var(--mj-green); /* ใช้สีเขียวจาก CSS เดิม */
+		color: white;
+		font-weight: bold;
+    }
+    
+	.cart-table td img {
+        max-width: 60px;
+        height: auto;
+       	vertical-align: middle;
+        margin-right: 10px;
+    }
+    
+	.quantity-input {
+		width: 50px;
+		padding: 5px;
+		text-align: center;
+    }
+    
+	.remove-btn {
+		color: #dc3545; /* สีแดง */
+		text-decoration: none;
+		font-weight: bold;
+	}
+	
+	.remove-btn:hover {
+		text-decoration: underline;
+	}
+	
+	.cart-summary {
+		width: 90%;
+		margin: 20px auto;
+		text-align: right;
+        padding-top: 20px;
+		border-top: 2px solid var(--mj-green);
+   	}
+   	
+	.cart-summary h3 {
+		margin-bottom: 15px;
+	}
+	
+	.checkout-btn {
+		display: inline-block;
+		padding: 12px 25px;
+		background-color: var(--mj-yellow); /* สีเหลือง */
+		color: var(--mj-green); /* สีเขียว */
+		text-decoration: none;
+		font-weight: bold;
+		border-radius: 5px;
+		border: 1px solid var(--mj-green);
+	}
+        
+	.checkout-btn:hover {
+		opacity: 0.9;
+	}
+	
+	.empty-cart {
+		text-align: center;
+		margin-top: 50px;
+		color: #777;
+   	}
+    
+    .cart-table td img { /* เพิ่มสไตล์รูปภาพ */
+            max-width: 80px; /* ปรับขนาดตามต้องการ */
+            height: auto;
+            vertical-align: middle; /* จัดให้อยู่กลางแนวตั้ง */
+	}
+        
+    .item-name { /* เพิ่ม class นี้ */
+             display: block; /* ให้ชื่อขึ้นบรรทัดใหม่ */
+             margin-top: 5px;
+	}
+        
+	.text-right { /* Helper class สำหรับจัดชิดขวา */
+            text-align: right;
+    }
+    
+    .update-cart-btn { /* สไตล์สำหรับปุ่มอัปเดต */
+            padding: 8px 15px;
+            background-color: #ffc107; /* สีเหลือง */
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px; /* เว้นระยะห่างจากปุ่ม checkout */
+   	}
+   	

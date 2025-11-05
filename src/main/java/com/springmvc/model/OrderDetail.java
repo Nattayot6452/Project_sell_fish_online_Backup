@@ -15,8 +15,8 @@ public class OrderDetail {
     @Column(name = "orderdetail_id")
     private String orderDetailId;
 
-    @Column(name = "quantity", length = 5, nullable = false)
-    private String quantity;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private Double price;
@@ -27,22 +27,22 @@ public class OrderDetail {
     
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product products;
+    private Product product;
 
 	public OrderDetail() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrderDetail(String orderDetailId, String quantity, Double price, Orders orders, Product products) {
+	public OrderDetail(String orderDetailId, Integer quantity, Double price, Orders orders, Product product) {
 		super();
 		this.orderDetailId = orderDetailId;
 		this.quantity = quantity;
 		this.price = price;
 		this.orders = orders;
-		this.products = products;
+		this.product = product;
 	}
-
+    
 	public String getOrderDetailId() {
 		return orderDetailId;
 	}
@@ -51,11 +51,11 @@ public class OrderDetail {
 		this.orderDetailId = orderDetailId;
 	}
 
-	public String getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -75,12 +75,11 @@ public class OrderDetail {
 		this.orders = orders;
 	}
 
-	public Product getProducts() {
-		return products;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProducts(Product products) {
-		this.products = products;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
-
 }

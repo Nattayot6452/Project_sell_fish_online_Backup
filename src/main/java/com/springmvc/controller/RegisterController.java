@@ -16,43 +16,10 @@ import java.util.UUID;
 @Controller
 public class RegisterController {
 
-    @RequestMapping(value = "/gRegister", method = RequestMethod.GET)
+    @RequestMapping(value = "/Register", method = RequestMethod.GET)
     public ModelAndView openRegisterPage() {
         return new ModelAndView("register");
     }
-
-//    @RequestMapping(value = "/saveRegister", method = RequestMethod.POST)
-//    public ModelAndView saveRegister(
-//            @RequestParam("email") String email,
-//            @RequestParam("name") String name,
-//            @RequestParam("password") String password,
-//            @RequestParam("tel") String phone,
-//            @RequestParam("profileImg") MultipartFile profileImg
-//    ) {
-//        ModelAndView mv = new ModelAndView("register");
-//        RegisterManager rm = new RegisterManager();
-//
-//        try {
-//            String memberId = UUID.randomUUID().toString();
-//            String memberImg = profileImg.getOriginalFilename(); // หรือ save ลง server
-//            Member newMember = new Member(memberId, email, name, password, phone, memberImg);
-//
-//            boolean result = rm.insertRegister(newMember);
-//
-//            if(result) {
-//                mv.setViewName("login");
-//                mv.addObject("message", "✅ สมัครสมาชิกสำเร็จแล้ว!");
-//            } else {
-//                mv.addObject("add_result", "❌ ไม่สามารถบันทึกข้อมูลได้");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            mv.addObject("add_result", "เกิดข้อผิดพลาด: " + e.getMessage());
-//        }
-//
-//        return mv;
-//    }
 
     @RequestMapping(value = "/saveRegister", method = RequestMethod.POST)
     public ModelAndView saveRegister(
@@ -67,16 +34,9 @@ public class RegisterController {
         RegisterManager rm = new RegisterManager();
 
         try {
-            // 🔹 Log ตรวจสอบ
-            System.out.println("Email: " + email);
-            System.out.println("Name: " + name);
-            System.out.println("Tel: " + phone);
-            System.out.println("ProfileImg: " + profileImg.getOriginalFilename());
-
             String memberId = UUID.randomUUID().toString();
             String fileName = profileImg.getOriginalFilename();
-
-            // 🔹 บันทึกไฟล์ไปที่ folder ใน server (เช่น C:/tmp/uploads/)
+            
             if (!profileImg.isEmpty()) {
                 String uploadDir = "C:/tmp/uploads/";
                 File dir = new File(uploadDir);
@@ -86,8 +46,10 @@ public class RegisterController {
                 profileImg.transferTo(serverFile);
             }
 
-            // 🔹 สร้าง Member object
-            Member newMember = new Member(memberId, email, name, password, phone, fileName);
+            String hashedPassword = PasswordUtil.getInstance().createPassword(password, "itmjusci");
+
+            // 🟢 ใช้ hashedPassword
+            Member newMember = new Member(memberId, email, name, hashedPassword, phone, fileName);
 
             boolean result = rm.insertRegister(newMember);
 
@@ -105,5 +67,4 @@ public class RegisterController {
 
         return mv;
     }
-
 }

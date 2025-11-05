@@ -6,7 +6,6 @@ import org.hibernate.Transaction;
 
 public class RegisterManager {
 
-	 // Method to get a Member by email and password
     public Member getRegisterByEmailAndPassword(String email, String password) {
     	Member user = null;
         try {
@@ -26,7 +25,6 @@ public class RegisterManager {
         return user;
     }
     
- // 🔹 ใช้สำหรับบันทึกข้อมูลสมาชิกใหม่
     public boolean insertRegister(Member member) {
         boolean success = false;
         Transaction tx = null;
@@ -49,6 +47,28 @@ public class RegisterManager {
         return success;
     }
 
+    public boolean updateRegister(Member member) {
+        boolean success = false;
+        Transaction tx = null;
+
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            Session session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+    
+            session.update(member); 
+
+            tx.commit();
+            session.close();
+            success = true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        }
+
+        return success;
+    }
+    
 }
     
 

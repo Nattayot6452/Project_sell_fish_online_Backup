@@ -1,0 +1,206 @@
+/* style.css */
+
+    :root {
+        --mj-green: #00571d;
+        --mj-yellow: #f9e547;
+        --mj-white: #fffef9;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Sarabun", sans-serif;
+        background-color: var(--mj-white);
+    }
+
+    /* Header */
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--mj-yellow);
+    }
+
+    .logo {
+        width: 60px;
+        height: 60px;
+        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
+    	transform-origin: center; /* ขยายจากตรงกลาง */
+    }
+
+    .search-box {
+        margin-left: 20px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .search-box button {
+        padding: 10px;
+        background-color: var(--mj-green);
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+    /* Menu */
+    .nav {
+        display: flex;
+        justify-content: center;
+        background-color: var(--mj-green);
+    }
+
+    .nav a {
+        padding: 14px 20px;
+        text-decoration: none;
+        color: white;
+        border-right: 1px solid #ccc;
+    }
+
+    .nav a:hover {
+        background-color: #004414;
+    }
+
+   /* Product Section */
+	.product-grid {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	    gap: 20px;
+	    padding: 30px;
+	}
+
+	.product-card {
+	    background-color: #ffffff;
+	    border: 1px solid #ddd;
+	    border-radius: 10px;
+	    padding: 15px;
+	    text-align: center;
+	    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	    transition: transform 0.2s ease-in-out;
+	    position: relative; /* 👈 สำคัญ! ต้องมีอันนี้ */
+	}
+
+	.product-card:hover {
+	    transform: scale(1.03);
+	}
+
+	.product-card img {
+	    width: 100%;
+	    height: 180px;
+	    object-fit: cover;
+	    border-radius: 8px;
+	    margin-bottom: 10px;
+	}
+
+	/* Product Info */
+	.product-info {
+	    margin-top: 10px;
+	}
+
+
+	.product-name {
+	    font-size: 16px;
+	    font-weight: bold;
+	    color: #333;
+	    margin-bottom: 5px;
+	}
+
+	.product-price {
+	    font-size: 14px;
+	    color: #555;
+	    margin-bottom: 10px;
+	}
+
+	.btn {
+	    display: inline-block;
+	    padding: 8px 15px;
+	    background-color: var(--mj-green);
+	    color: white;
+	    text-decoration: none;
+	    border-radius: 5px;
+	    font-size: 14px;
+	}
+	.btn:hover {
+	     background-color: #004414;
+	}
+
+
+	/* vvvvv ❌ ลบ CSS ชุดนี้ทิ้งไปเลย ❌ vvvvv */
+	/*
+	.add-to-cart-btn {
+	    display: inline-block;
+	    position: absolute;
+	    top: 10px;
+	    right: 10px;
+	    background-color: #28a745;
+	    color: white;
+	    width: 35px;
+	    height: 35px;
+	    border-radius: 50%;
+	    text-align: center;
+	    line-height: 35px;
+	    font-size: 18px;
+	    text-decoration: none;
+	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+	    transition: background-color 0.2s;
+	    z-index: 10;
+	}
+
+	.add-to-cart-btn:hover {
+	    background-color: #218838;
+	}
+	*/
+	/* ^^^^^ ❌ สิ้นสุด CSS ที่ลบ ❌ ^^^^^ */
+
+
+	/* vvvvv ✅ ใช้ CSS ชุดนี้แทน ✅ vvvvv */
+
+	/* Container สำหรับปุ่มมุมขวาบน */
+	.card-buttons {
+	    position: absolute; /* ใช้ absolute */
+	    top: 10px;          /* ระยะห่างจากขอบบน */
+	    right: 10px;         /* ระยะห่างจากขอบขวา */
+	    display: flex;       /* เรียงปุ่มแนวนอน */
+	    gap: 8px;            /* ระยะห่างระหว่างปุ่ม */
+	    z-index: 10;         /* ให้อยู่เหนือรูป */
+	}
+
+	/* สไตล์ร่วมสำหรับปุ่มวงกลม */
+	.card-icon-btn {
+	    display: inline-block;
+	    color: white;
+	    width: 35px;
+	    height: 35px;
+	    border-radius: 50%;
+	    text-align: center;
+	    line-height: 35px; /* อาจจะต้องปรับถ้าไอคอนไม่กลาง */
+	    font-size: 18px;   /* อาจจะต้องปรับถ้าไอคอนใหญ่ไป */
+	    text-decoration: none;
+	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+	    transition: background-color 0.2s;
+	    cursor: pointer; /* เพิ่ม cursor pointer */
+	}
+
+	/* ปุ่มตะกร้า (เขียว) */
+	.add-to-cart-btn.card-icon-btn {
+	    background-color: #28a745;
+	}
+	.add-to-cart-btn.card-icon-btn:hover {
+	    background-color: #218838;
+	}
+
+	/* ปุ่ม Favorite (แดง) */
+	.add-to-favorite-btn.card-icon-btn {
+	    background-color: #dc3545;
+	}
+	.add-to-favorite-btn.card-icon-btn:hover {
+	    background-color: #c82333;
+	}

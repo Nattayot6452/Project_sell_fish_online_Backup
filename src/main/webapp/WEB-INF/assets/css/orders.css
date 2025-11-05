@@ -1,0 +1,193 @@
+	/* style.css (orders.css) */
+	
+	:root {
+	    --mj-green: #00571d;
+	    --mj-yellow: #f9e547;
+	    --mj-white: #fffef9;
+	}
+	
+	body {
+	    margin: 0;
+	    font-family: "Sarabun", sans-serif;
+	    background-color: var(--mj-white);
+	}
+	
+	/* Header (เหมือนเดิม) */
+	.header {
+	    display: flex;
+	    align-items: center;
+	    padding: 10px 20px;
+	    background-color: var(--mj-yellow);
+	}
+	
+	.logo {
+	    width: 60px;
+	    height: 60px;
+	    transform: scale(1.5);
+	    transform-origin: center;
+	}
+	
+	.search-box {
+	    margin-left: 20px;
+	    flex: 1;
+	    display: flex;
+	    align-items: center;
+	}
+	
+	.search-box input[type="text"] {
+	    width: 100%;
+	    padding: 10px;
+	    font-size: 16px;
+	    border: none;
+	    border-radius: 5px 0 0 5px;
+	}
+	
+	.search-box button {
+	    padding: 10px;
+	    background-color: var(--mj-green);
+	    color: white;
+	    border: none;
+	    border-radius: 0 5px 5px 0;
+	    cursor: pointer;
+	}
+	
+	/* Menu (เหมือนเดิม) */
+	.nav {
+	    display: flex;
+	    justify-content: center;
+	    background-color: var(--mj-green);
+	}
+	
+	.nav a {
+	    padding: 14px 20px;
+	    text-decoration: none;
+	    color: white;
+	    border-right: 1px solid #ccc;
+	}
+	
+	.nav a:hover {
+	    background-color: #004414;
+	}
+	
+	/* Alert Messages (เหมือนเดิม) */
+	 .alert-container {
+	    width: 88%;
+	    margin: 20px auto 0 auto;
+	}
+	.alert-success {
+	    padding: 15px;
+	    background-color: #d4edda; /* เขียวอ่อน */
+	    color: #155724; /* เขียวเข้ม */
+	    border: 1px solid #c3e6cb;
+	    border-radius: 5px;
+	}
+	.alert-error {
+	    padding: 15px;
+	    background-color: #f8d7da; /* แดงอ่อน */
+	    color: #721c24; /* แดงเข้ม */
+	    border: 1px solid #f5c6cb;
+	    border-radius: 5px;
+	}
+	
+	/* * vvvvv 🟢 (แก้ไข) สไตล์ตาราง 🟢 vvvvv
+	*/
+	.cart-table {
+	    width: 90%;
+	    margin: 30px auto;
+	    border-collapse: collapse;
+	    font-size: 1em;
+	    background-color: var(--mj-white);
+	}
+	.cart-table thead th {
+	    text-align: left;
+	    padding: 15px 10px;
+	    color: #333;
+	    border-bottom: 2px solid #333;
+	    background-color: transparent;
+	}
+	.cart-table tbody td {
+	    text-align: left;
+	    padding: 15px 10px;
+	    vertical-align: top;
+	    border-bottom: 1px solid #eee;
+	}
+	.text-right { text-align: right; }
+	.text-center { text-align: center; }
+	
+	
+	/* * vvvvv 🟢 (แก้ไข) สไตล์ป้ายสถานะ 🟢 vvvvv
+	*/
+	.status {
+	    font-weight: bold;
+	    padding: 5px 8px;
+	    border-radius: 4px;
+	    /* (ลบ color: white; ออกจาก base class) */
+	}
+	
+	/* 1. (คงเดิม) Pending Payment (พื้นเหลือง, ตัวดำ) */
+	.status-pending { 
+	    background-color: #ffc107; /* เหลือง */
+	    color: #333; /* สีดำ */
+	}
+	
+	/* 2. (ใหม่!) "กำลังตรวจสอบ" (ไม่มีพื้นหลัง, ตัวดำ) */
+	.status-inspecting {
+	    background-color: transparent; /* 👈 ไม่มีพื้นหลัง */
+	    color: #333; /* 👈 สีดำ */
+	}
+	
+	/* 3. (อื่นๆ) ยังคงมีพื้นหลังและตัวขาว */
+	.status-verifying { 
+	    background-color: #007bff; /* ฟ้า */
+	    color: white; 
+	}
+	.status-shipping { 
+	    background-color: #17a2b8; /* ฟ้าอมเขียว */
+	    color: white;
+	}
+	.status-completed { 
+	    background-color: #28a745; /* เขียว */
+	    color: white;
+	}
+	.status-cancelled { 
+	    background-color: #dc3545; /* แดง */
+	    color: white;
+	}
+	/* ^^^^^ 🟢 (สิ้นสุดการแก้ไขสถานะ) 🟢 ^^^^^ */
+	
+	
+	/* รายการสินค้าในตาราง (เหมือนเดิม) */
+	.order-item-list {
+	     margin: 0; 
+	     padding-left: 18px; 
+	     font-size: 0.9em;
+	     list-style-type: square;
+	}
+	
+	/* * vvvvv 🟢 (คงเดิม) สไตล์ปุ่ม 🟢 vvvvv
+	*/
+	.btn {
+	    display: inline-block;
+	    padding: 5px 10px;
+	    text-decoration: none;
+	    border-radius: 4px;
+	    font-size: 0.9em;
+	    font-weight: bold;
+	    cursor: pointer;
+	    border: none;
+	    color: white; 
+	}
+	.btn-pay {
+	    background-color: #007bff; /* 👈 ปุ่มยังคงมีพื้นหลังสีน้ำเงิน */
+	}
+	.btn-pay:hover {
+	    background-color: #0056b3;
+	}
+	
+	/* (ข้อความตะกร้าว่าง) */
+	.empty-cart {
+	    text-align: center;
+	    margin: 50px auto;
+	    color: #777;
+	    font-size: 1.1em;
+	}

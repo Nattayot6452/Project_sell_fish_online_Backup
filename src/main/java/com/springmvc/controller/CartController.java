@@ -1,0 +1,107 @@
+package com.springmvc.controller;
+
+import jakarta.servlet.http.HttpServletRequest;
+// ----- Imports -----
+import jakarta.servlet.http.HttpSession;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping; // 👈 Import RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod; // 👈 Import RequestMethod
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.springmvc.model.CartItem;
+import com.springmvc.model.Product;
+import com.springmvc.model.ProductManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+@Controller
+public class CartController {
+
+    @RequestMapping(value = "/addToCart", method = RequestMethod.GET)
+    public ModelAndView addToCart(@RequestParam("productId") String productId, HttpSession session) {
+        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        if (cart == null) { cart = new HashMap<>(); }
+        int currentQuantityInCart = cart.getOrDefault(productId, 0);
+        // (เช็ค Stock) ...
+        cart.put(productId, currentQuantityInCart + 1);
+        session.setAttribute("cart", cart);
+        System.out.println("Added to cart: " + cart);
+        return new ModelAndView("redirect:/AllProduct");
+    }
+
+    @RequestMapping(value = "/Cart", method = RequestMethod.GET)
+    public ModelAndView showCart(HttpSession session) {
+        ModelAndView mav = new ModelAndView("cart");
+        Map<String, Integer> cartSessionData = (Map<String, Integer>) session.getAttribute("cart");
+        List<CartItem> cartItems = new ArrayList<>();
+        double totalCartPrice = 0.0;
+        ProductManager pm = new ProductManager();
+        if (cartSessionData != null && !cartSessionData.isEmpty()) {
+            for (Map.Entry<String, Integer> entry : cartSessionData.entrySet()) {
+                Product product = pm.getProduct(entry.getKey());
+                if (product != null) {
+                    CartItem item = new CartItem(product, entry.getValue());
+                    cartItems.add(item);
+                    totalCartPrice += item.getItemTotal();
+                } else { System.err.println(/*...*/);}
+            }
+        }
+        mav.addObject("cartItems", cartItems);
+        mav.addObject("totalCartPrice", totalCartPrice);
+        System.out.println("Showing cart: " + cartItems.size() + " items, Total: " + totalCartPrice);
+        return mav;
+    }
+
+    @RequestMapping(value = "/removeFromCart", method = RequestMethod.GET)
+    public ModelAndView removeFromCart(@RequestParam("productId") String productId, HttpSession session) {
+        // ... (Logic เหมือนเดิม) ...
+        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        if (cart != null && cart.containsKey(productId)) {
+            cart.remove(productId);
+            session.setAttribute("cart", cart);
+            System.out.println("Removed product " + productId + " from cart. New cart: " + cart);
+        } else { System.out.println(/*...*/); }
+        return new ModelAndView("redirect:/Cart");
+    }
+
+    @RequestMapping(value = "/updateFullCart", method = RequestMethod.POST)
+    public ModelAndView updateFullCart(HttpServletRequest request, HttpSession session) {
+
+        Map<String, Integer> updatedCart = new HashMap<>();
+
+        Map<String, String[]> parameterMap = request.getParameterMap();
+
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            String paramName = entry.getKey();
+            String[] paramValues = entry.getValue(); // ค่าที่ส่งมาจะเป็น Array (ปกติมีค่าเดียว)
+
+            if (paramName.startsWith("quantity_") && paramValues != null && paramValues.length > 0) {
+                try {
+                    String productId = paramName.substring("quantity_".length());
+                    int newQuantity = Integer.parseInt(paramValues[0]);
+                    if (newQuantity > 0) {
+                                          updatedCart.put(productId, newQuantity); 
+                    } else {
+                        System.out.println("Quantity for product " + productId + " is <= 0, removing from cart.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid quantity format for parameter: " + paramName);
+                } catch (Exception e) {
+                    System.err.println("Error processing cart update: " + e.getMessage());
+                }
+            }
+        }
+
+        session.setAttribute("cart", updatedCart);
+        System.out.println("Cart updated via form: " + updatedCart);
+
+        return new ModelAndView("redirect:/Cart");
+    }
+    
+}
