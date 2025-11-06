@@ -1,0 +1,77 @@
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: fish-shop-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: fishdatabase
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: 1234
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - fish-shop-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Tomcat Application Server
+  tomcat:
+    image: tomcat:10.1-jdk25
+    container_name: fish-shop-tomcat
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    volumes:
+      - ./target/Fishonline_6452-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/fish-online.war
+    environment:
+      # bind JPDA to all interfaces so host debugger can attach
+      JPDA_ADDRESS: "0.0.0.0:8000"
+      JPDA_TRANSPORT: "dt_socket"
+      # suspend JVM until debugger attaches (useful for diagnosing attach issues)
+      #JPDA_SUSPEND: "y"
+      CATALINA_OPTS: "-Dspring.profiles.active=docker -Xmx512m -Xms256m"
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: project_tutor2
+      DB_USER: root
+      DB_PASSWORD: 1234
+    entrypoint: ["catalina.sh", "jpda", "run"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - fish-shop-network
+
+  # phpMyAdmin for Database Management (Optional)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: fish-shop-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: user1
+      PMA_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "8082:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - fish-shop-network
+
+# Named volumes
+volumes:
+  mysql_data:
+    driver: local
+
+# Networks
+networks:
+  fish-shop-network:
+    driver: bridge
