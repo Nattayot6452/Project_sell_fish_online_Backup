@@ -10,6 +10,14 @@
     <link rel="stylesheet" type="text/css" href="assets/css/allProduct.css">
 </head>
 <body>
+    <div class="header">
+        <a href="Home"><img src="assets/images/icon/fishTesting.png" alt="โลโก้ปลา" class="logo"></a>
+        <form action="SearchProducts" method="POST" class="search-box">
+            <input type="text" name="searchtext" placeholder="ปลาหางนกยูง">
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
     <div class="nav">
         <a href="Home">หน้าแรก</a>
         <a href="AllProduct">สินค้าทั้งหมด</a>
