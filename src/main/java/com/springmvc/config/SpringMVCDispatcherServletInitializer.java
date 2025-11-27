@@ -33,12 +33,16 @@ public class SpringMVCDispatcherServletInitializer extends AbstractAnnotationCon
 
     @Override
     protected void customizeRegistration(Dynamic registration) {
-        String tempDir = "C:/tmp"; // สร้างโฟลเดอร์ C:\tmp ไว้ก่อน
+        // ❌ ของเดิม: String tempDir = "C:/tmp";  <-- Docker ไม่รู้จัก C:
+        
+        // ✅ ของใหม่: ใช้ /tmp (มาตรฐานของ Linux/Docker)
+        String tempDir = "/tmp"; 
+        
         MultipartConfigElement multipartConfig = new MultipartConfigElement(
-                tempDir,               // temporary folder
-                5 * 1024 * 1024,       // max file size (5 MB)
-                5 * 1024 * 1024,       // max request size (5 MB)
-                0                       // file size threshold
+                tempDir,               
+                5 * 1024 * 1024,       
+                5 * 1024 * 1024,       
+                0                       
         );
         registration.setMultipartConfig(multipartConfig);
     }

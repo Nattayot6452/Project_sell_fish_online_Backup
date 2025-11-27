@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
         
         // 2. อันใหม่สำหรับรูปโปรไฟล์ที่อัปโหลด
         registry.addResourceHandler("/profile-uploads/**") 
-                .addResourceLocations("file:///C:/tmp/uploads/"); 
+                .addResourceLocations("file:/app/uploads/"); 
     }
 
     // Multipart Resolver สำหรับ file upload

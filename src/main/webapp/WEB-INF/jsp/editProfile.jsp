@@ -24,8 +24,7 @@
             
             <h1>แก้ไขข้อมูลส่วนตัว</h1>
             
-            <img src="profile-uploads/${sessionScope.user.memberImg}" alt="Profile Image" width="150" class="profile-img-preview">
-            
+            <img src="${pageContext.request.contextPath}/profile-uploads/${sessionScope.user.memberImg}" alt="Profile Image" width="150" class="profile-img-preview">            
             <form action="updateProfile" method="post" enctype="multipart/form-data">
                 
                 <input type="hidden" name="memberId" value="${sessionScope.user.memberId}">

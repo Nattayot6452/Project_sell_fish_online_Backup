@@ -39,8 +39,7 @@
         <p>เบอร์โทร: ${sessionScope.user.phone}</p>
         
         <p>รูปโปรไฟล์:</p>
-        <img src="profile-uploads/${sessionScope.user.memberImg}" alt="Profile Image" width="150"> <br>
-
+        <img src="${pageContext.request.contextPath}/profile-uploads/${sessionScope.user.memberImg}" alt="Profile Image" width="150">
 		<a href="Editprofile" class="btn">แก้ไขข้อมูลส่วนตัว</a>
 		
     </div>

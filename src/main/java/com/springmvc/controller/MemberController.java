@@ -19,18 +19,14 @@ public class MemberController {
 
 	@RequestMapping(value = "/Profile", method = RequestMethod.GET) 
 	public ModelAndView showProfilePage(HttpSession session) {
-	    
 	    Member userInSession = (Member) session.getAttribute("user");
-	    
 	    if (userInSession == null) {
 	        return new ModelAndView("redirect:/Login");
 	    }
-	    
-	    ModelAndView mav = new ModelAndView("profile"); 
-	    return mav;
+	    return new ModelAndView("profile"); 
 	}
-	
-	@RequestMapping(value = "/Editprofile", method = RequestMethod.GET) 
+
+    @RequestMapping(value = "/Editprofile", method = RequestMethod.GET) 
 	public ModelAndView EditprofilePage(HttpSession session) {
 	    
 	    Member userInSession = (Member) session.getAttribute("user");
@@ -45,18 +41,15 @@ public class MemberController {
 	
 	@RequestMapping(value = "/editProfile", method = RequestMethod.GET)
     public ModelAndView showEditProfilePage(HttpSession session) {
-        
         Member user = (Member) session.getAttribute("user");
         if (user == null) {
             return new ModelAndView("redirect:/Login");
         }
-        
         return new ModelAndView("editProfile"); 
     }
 	
 	@RequestMapping(value = "/updateProfile", method = RequestMethod.POST)
     public ModelAndView updateProfile(
-            // รับค่าจากฟอร์ม
             @RequestParam("memberId") String memberId,
             @RequestParam("memberName") String memberName,
             @RequestParam("phone") String phone,
@@ -64,7 +57,6 @@ public class MemberController {
             @RequestParam("profileImg") MultipartFile profileImg,
             HttpSession session
     ) {
-        
         Member currentUser = (Member) session.getAttribute("user");
         if (currentUser == null || !currentUser.getMemberId().equals(memberId)) {
             return new ModelAndView("redirect:/Login"); 
@@ -77,12 +69,17 @@ public class MemberController {
 
             if (profileImg != null && !profileImg.isEmpty()) {
                 fileName = profileImg.getOriginalFilename();
-                String uploadDir = "C:/tmp/uploads/";
+                
+                // vvvvv 🟢 (แก้ไข) เปลี่ยน Path ให้ตรงกับ Docker Volume 🟢 vvvvv
+                String uploadDir = "/app/uploads/"; 
+                // ^^^^^ 🟢 (สิ้นสุดการแก้ไข) 🟢 ^^^^^
+                
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();
                 
                 File serverFile = new File(dir, fileName);
                 profileImg.transferTo(serverFile);
+                System.out.println("Profile image saved to: " + serverFile.getAbsolutePath());
             }
 
             Member updatedMember = new Member(
@@ -97,7 +94,6 @@ public class MemberController {
             boolean result = rm.updateRegister(updatedMember);
             if (result) {
                 session.setAttribute("user", updatedMember); 
-                
                 return new ModelAndView("redirect:/Profile"); 
             } else {
                 ModelAndView mav = new ModelAndView("editProfile");
