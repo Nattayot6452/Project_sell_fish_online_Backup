@@ -86,8 +86,7 @@
                    </a>
                 </div>
 
-               <img src="${products.productImg}" alt="รูปภาพของ ${products.productName}">
-
+                <img src="${pageContext.request.contextPath}/${products.productImg}" alt="รูปภาพของ ${products.productName}">
                <div class="product-info">
                    <div class="product-name">${products.productName}</div>
                    <div class="product-price">ราคา: ${products.price} บาท</div>
