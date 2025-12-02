@@ -38,10 +38,8 @@ public class RegisterController {
             String fileName = profileImg.getOriginalFilename();
             
            if (!profileImg.isEmpty()) {
-                // ❌ ของเดิม: String uploadDir = "C:/tmp/uploads/";
                 
-                // ✅ ของใหม่: กำหนด Path กลางๆ สำหรับ Docker
-                String uploadDir = "/app/uploads/"; 
+                String uploadDir = "/app/uploads/user"; 
                 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();

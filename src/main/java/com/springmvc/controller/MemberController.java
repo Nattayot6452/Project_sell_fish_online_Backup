@@ -71,7 +71,7 @@ public class MemberController {
                 fileName = profileImg.getOriginalFilename();
                 
                 // vvvvv 🟢 (แก้ไข) เปลี่ยน Path ให้ตรงกับ Docker Volume 🟢 vvvvv
-                String uploadDir = "/app/uploads/"; 
+                String uploadDir = "/app/uploads/user"; 
                 // ^^^^^ 🟢 (สิ้นสุดการแก้ไข) 🟢 ^^^^^
                 
                 File dir = new File(uploadDir);

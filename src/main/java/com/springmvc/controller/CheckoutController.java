@@ -189,7 +189,7 @@ public class CheckoutController {
 
         if (slipImage != null && !slipImage.isEmpty()) {
             try {
-                String uploadDir = "C:/tmp/uploads/slips/"; 
+                String uploadDir = "/app/uploads/slips/"; 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs(); 
                 String originalFileName = slipImage.getOriginalFilename();

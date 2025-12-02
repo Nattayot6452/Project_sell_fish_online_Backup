@@ -28,8 +28,8 @@ services:
       - "8000:8000"
     volumes:
       - ./target/Fishonline_6452-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/fish-online.war
-      - C:/Eclipse_Works/Fishonline_6452/src/main/webapp/WEB-INF/assets/images/user:/app/uploads/
-      - C:/my-fish-app-data/uploads:/app/uploads
+      
+      - C:/Eclipse_Works/Fishonline_6452/src/main/webapp/WEB-INF/assets/images:/app/uploads
     environment:
       # bind JPDA to all interfaces so host debugger can attach
       JPDA_ADDRESS: "0.0.0.0:8000"
