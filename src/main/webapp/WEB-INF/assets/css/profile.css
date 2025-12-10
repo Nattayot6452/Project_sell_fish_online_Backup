@@ -1,0 +1,188 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
+
+:root {
+    --mj-green: #00571d;
+    --mj-green-hover: #004414;
+    --mj-yellow: #f9e547;
+    --mj-white: #fffef9;
+    --text-color: #333;
+    --gray-light: #f4f6f8;
+}
+
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--gray-light);
+}
+
+/* --- Header & Nav (Copy สไตล์มาจากไฟล์อื่นเพื่อให้เหมือนกัน) --- */
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--mj-yellow);
+}
+.logo {
+    width: 60px;
+    height: 60px;
+    transform: scale(1.5);
+    transform-origin: center;
+}
+.search-box {
+    margin-left: 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+.search-box input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+}
+.search-box button {
+    padding: 10px;
+    background-color: var(--mj-green);
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.nav {
+    display: flex;
+    justify-content: center;
+    background-color: var(--mj-green);
+}
+.nav a {
+    padding: 14px 20px;
+    text-decoration: none;
+    color: white;
+    border-right: 1px solid #ccc;
+    font-size: 16px;
+}
+.nav a:hover {
+    background-color: var(--mj-green-hover);
+}
+
+/* --- Main Content & Profile Card --- */
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* เริ่มต้นจากด้านบน */
+    min-height: 80vh;
+    padding: 40px 20px;
+}
+
+/* ตัวการ์ดโปรไฟล์ */
+.profile-card {
+    background-color: white;
+    width: 100%;
+    max-width: 450px; /* ความกว้างการ์ด */
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px); /* ลอยขึ้นเล็กน้อยเมื่อเอาเมาส์ชี้ */
+}
+
+/* แถบสีเขียวด้านบน */
+.profile-header-bg {
+    height: 120px;
+    background: linear-gradient(135deg, var(--mj-green), #007a29);
+}
+
+/* รูปโปรไฟล์ */
+.profile-img-container {
+    margin-top: -75px; /* ดึงรูปขึ้นไปทับแถบสี */
+    display: flex;
+    justify-content: center;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white; /* ขอบขาวรอบรูป */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    background-color: white;
+}
+
+/* เนื้อหาในการ์ด */
+.profile-body {
+    padding: 20px 30px 40px;
+}
+
+.username {
+    margin: 10px 0 5px;
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+.role-badge {
+    display: inline-block;
+    background-color: #e8f5e9;
+    color: var(--mj-green);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* รายการข้อมูล (อีเมล, เบอร์โทร) */
+.info-list {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item .label {
+    color: #777;
+    font-weight: 500;
+}
+
+.info-item .value {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* ปุ่มแก้ไข */
+.btn-edit {
+    display: inline-block;
+    background-color: var(--mj-green);
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 87, 29, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: var(--mj-green-hover);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 87, 29, 0.4);
+}

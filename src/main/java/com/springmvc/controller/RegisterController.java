@@ -39,7 +39,7 @@ public class RegisterController {
             
            if (!profileImg.isEmpty()) {
                 
-                String uploadDir = "/app/uploads/user"; 
+                String uploadDir = "/app/uploads/"; 
                 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();
