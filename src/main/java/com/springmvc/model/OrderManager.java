@@ -3,11 +3,30 @@ package com.springmvc.model;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query; // 👈 (Import เพิ่ม)
+import org.hibernate.query.Query;
 import java.util.List;
-import java.util.ArrayList; // 👈 (Import เพิ่ม)
+import java.util.ArrayList;
 
 public class OrderManager {
+
+    public List<Orders> getAllOrders() {
+        List<Orders> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            String hql = "SELECT DISTINCT o FROM Orders o LEFT JOIN FETCH o.member ORDER BY o.orderDate DESC";
+            
+            list = session.createQuery(hql, Orders.class).list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) session.close();
+        }
+        return list;
+    }
 
     public Orders getOrderById(String orderId) {
         Orders order = null; 
@@ -112,4 +131,31 @@ public class OrderManager {
         return success;
     }
     
+     public Orders getOrderWithDetails(String orderId) {
+        Orders order = null;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            String hql = "SELECT DISTINCT o FROM Orders o " +
+                         "LEFT JOIN FETCH o.orderDetails od " +
+                         "LEFT JOIN FETCH od.product " +
+                         "LEFT JOIN FETCH o.member " +
+                         "LEFT JOIN FETCH o.payment " +
+                         "WHERE o.ordersId = :orderId";
+            
+            Query<Orders> query = session.createQuery(hql, Orders.class);
+            query.setParameter("orderId", orderId);
+            order = query.uniqueResult();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return order;
+    }
 }

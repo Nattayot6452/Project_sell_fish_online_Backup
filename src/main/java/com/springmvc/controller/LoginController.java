@@ -2,10 +2,8 @@ package com.springmvc.controller;
 
 import com.springmvc.model.Product;
 import com.springmvc.model.ProductManager; 
-import com.springmvc.model.Staff;         
-import com.springmvc.model.*;  
-import com.springmvc.model.Admin;        
-import com.springmvc.model.Seller;       
+import com.springmvc.model.Staff;
+import com.springmvc.model.StaffManager;
 import com.springmvc.model.Member;
 import com.springmvc.model.RegisterManager;
 
@@ -27,6 +25,26 @@ public class LoginController {
     public ModelAndView openLoginPage() {
         return new ModelAndView("login");
     }
+
+    @RequestMapping(value="/Main", method=RequestMethod.GET)
+    public ModelAndView showMainPage(HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        ModelAndView mav = new ModelAndView("main");
+        
+        List<Product> productList = new ArrayList<>();
+        try {
+            ProductManager pm = new ProductManager();
+            productList = pm.getFeaturedProducts(8);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        mav.addObject("featuredProducts", productList);
+        return mav;
+    }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(HttpServletRequest request, HttpSession session) {
@@ -36,7 +54,6 @@ public class LoginController {
 		
 		System.out.println("Login Attempt: User=" + email + " Role=" + role);
 	    
-        // กรณีที่ 1: Login เป็นสมาชิกทั่วไป (User/Member)
 		if ("user".equals(role)) {
 			String hashedPassword = password;
 		    try {
@@ -44,48 +61,32 @@ public class LoginController {
 		    } catch (Exception e ) {
 		    	e.printStackTrace();
 		    }
-	    
+		    
 			RegisterManager rm = new RegisterManager();
-			Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword);
+			Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword); 
 
-			if (user != null) {
-			    session.setAttribute("user", user);
-			    
-			    // ดึงสินค้าแนะนำไปแสดงที่หน้า Main
-			    ModelAndView mav = new ModelAndView("main");
-	            List<Product> productList = new ArrayList<>();
-	            try {
-	                ProductManager pm = new ProductManager();
-	                productList = pm.getFeaturedProducts(8);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	            mav.addObject("featuredProducts", productList);
-			    return mav; 
-			}
+            if (user != null) {
+                session.setAttribute("user", user);
+                return new ModelAndView("redirect:/Main"); 
+            }
 		}
-        // กรณีที่ 2: Login เป็นเจ้าหน้าที่ (Staff -> Admin / Seller)
+
 		else if ("staff".equals(role)) {
 			StaffManager sm = new StaffManager();
-			// หมายเหตุ: ถ้า Staff ในฐานข้อมูลไม่ได้เข้ารหัสรหัสผ่าน ให้ส่ง password ดิบไปเช็ค
 			Staff staff = sm.getStaffByEmailAndPassword(email, password); 
 
 			if (staff != null) {
-				// ตรวจสอบว่าเป็น Admin หรือ Seller
-				if (staff instanceof Admin) {
-					session.setAttribute("admin", staff); // set session admin
-					System.out.println("Login success: ADMIN");
-					return new ModelAndView("redirect:/AdminDashboard");
-				} 
-				else if (staff instanceof Seller) {
-					session.setAttribute("seller", staff); // set session seller
-					System.out.println("Login success: SELLER");
-					return new ModelAndView("redirect:/ListProducts");
+				if (staff.getId() == 1) { 
+					session.setAttribute("admin", staff);
+					return new ModelAndView("redirect:/AdminCenter");
+				} else {
+					session.setAttribute("seller", staff);
+                    System.out.println("Seller Login Success: " + staff.getEmail());
+					return new ModelAndView("redirect:/SellerCenter");
 				}
 			}
 		}
 
-        // กรณี Login ไม่สำเร็จ (แสดง Error)
 	    ModelAndView mav = new ModelAndView("login");
 	    mav.addObject("error", "อีเมล หรือ รหัสผ่าน ไม่ถูกต้อง");
 	    return mav;
@@ -93,7 +94,7 @@ public class LoginController {
     
     @RequestMapping(value="/Logout", method=RequestMethod.GET)
     public ModelAndView logout(HttpSession session) {
-        session.invalidate();
+        session.invalidate(); 
         return new ModelAndView("redirect:/Home");
     }
 }

@@ -70,9 +70,7 @@ public class MemberController {
             if (profileImg != null && !profileImg.isEmpty()) {
                 fileName = profileImg.getOriginalFilename();
                 
-                // vvvvv 🟢 (แก้ไข) เปลี่ยน Path ให้ตรงกับ Docker Volume 🟢 vvvvv
-                String uploadDir = "/app/uploads/"; 
-                // ^^^^^ 🟢 (สิ้นสุดการแก้ไข) 🟢 ^^^^^
+                String uploadDir = "/app/uploads/user/"; 
                 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();

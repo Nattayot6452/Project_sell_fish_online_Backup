@@ -1,208 +1,159 @@
-	/* style.css */
-	
-	:root {
-	    --mj-green: #00571d;
-	    --mj-yellow: #f9e547;
-	    --mj-white: #fffef9;
-	}
-	
-	body {
-	    margin: 0;
-	    font-family: "Sarabun", sans-serif;
-	    background-color: var(--mj-white);
-	}
-	
-	/* Header */
-	.header {
-	    display: flex;
-	    align-items: center;
-	    padding: 10px 20px;
-	    background-color: var(--mj-yellow);
-	}
-	
-	.logo {
-	    width: 60px;
-	    height: 60px;
-	    transform: scale(1.5);
-	    transform-origin: center;
-	}
-	
-	.search-box {
-	    margin-left: 20px;
-	    flex: 1;
-	    display: flex;
-	    align-items: center;
-	}
-	
-	.search-box input[type="text"] {
-	    width: 100%;
-	    padding: 10px;
-	    font-size: 16px;
-	    border: none;
-	    border-radius: 5px 0 0 5px;
-	}
-	
-	.search-box button {
-	    padding: 10px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    border: none;
-	    border-radius: 0 5px 5px 0;
-	    cursor: pointer;
-	}
-	
-	/* Menu */
-	.nav {
-	    display: flex;
-	    justify-content: center;
-	    background-color: var(--mj-green);
-	}
-	
-	.nav a {
-	    padding: 14px 20px;
-	    text-decoration: none;
-	    color: white;
-	    border-right: 1px solid #ccc;
-	}
-	
-	.nav a:hover {
-	    background-color: #004414;
-	}
-	
-	/* Product Section */
-	.product-grid {
-	    display: grid;
-	    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	    gap: 20px;
-	    padding: 30px;
-	}
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
 
-	.product-card {
-	    background-color: #ffffff;
-	    border: 1px solid #ddd;
-	    border-radius: 10px;
-	    padding: 15px;
-	    text-align: center;
-	    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	    transition: transform 0.2s ease-in-out;
-	    position: relative; /* 👈 สำคัญ! ต้องมีอันนี้ */
-	}
+:root {
+    --primary-color: #00571d;
+    --accent-color: #f9e547;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --danger-color: #e74c3c;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow-hover: 0 15px 35px rgba(0,0,0,0.12);
+    --radius-md: 15px;
+}
 
-	.product-card:hover {
-	    transform: scale(1.03);
-	}
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
 
-	.product-card img {
-	    width: 100%;
-	    height: 180px;
-	    object-fit: cover;
-	    border-radius: 8px;
-	    margin-bottom: 10px;
-	}
+/* --- Navbar (Standard) --- */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky; top: 0; z-index: 1000; padding: 10px 0;
+}
+.nav-container {
+    max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+}
+.brand-logo {
+    display: flex; align-items: center; text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 24px;
+}
+.brand-logo img { height: 50px; margin-right: 10px; }
+.search-wrapper { flex: 1; max-width: 500px; margin: 0 40px; position: relative; display: flex; }
+.search-wrapper input { width: 100%; padding: 12px 20px; border: 2px solid #eee; border-radius: 50px; font-family: inherit; outline: none; transition: all 0.3s; }
+.search-wrapper input:focus { border-color: var(--primary-color); }
+.search-wrapper button { position: absolute; right: 5px; top: 5px; background: var(--primary-color); color: white; border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+.search-wrapper button:hover { transform: scale(1.1); }
+.nav-links { display: flex; align-items: center; gap: 20px; }
+.nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+.btn-login { background: var(--primary-color); color: white !important; padding: 8px 20px; border-radius: 50px; }
+.cart-link { font-size: 20px !important; }
 
-	/* Product Info */
-	.product-info {
-	    margin-top: 10px;
-	}
+/* --- Page Content --- */
+.main-container {
+    max-width: 1200px; margin: 40px auto; padding: 0 20px; min-height: 80vh;
+}
 
+.page-header { text-align: center; margin-bottom: 40px; }
+.page-header h1 { color: var(--primary-color); font-size: 32px; margin: 0 0 10px; }
+.page-header h1 i { color: #e74c3c; animation: heartbeat 1.5s infinite; }
+.page-header p { color: var(--text-light); font-size: 16px; }
 
-	.product-name {
-	    font-size: 16px;
-	    font-weight: bold;
-	    color: #333;
-	    margin-bottom: 5px;
-	}
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
 
-	.product-price {
-	    font-size: 14px;
-	    color: #555;
-	    margin-bottom: 10px;
-	}
+/* --- Product Grid --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
 
-	.btn {
-	    display: inline-block;
-	    padding: 8px 15px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    text-decoration: none;
-	    border-radius: 5px;
-	    font-size: 14px;
-	}
-	.btn:hover {
-	     background-color: #004414;
-	}
+.product-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
 
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
 
-	/* vvvvv ❌ ลบ CSS ชุดนี้ทิ้งไปเลย ❌ vvvvv */
-	/*
-	.add-to-cart-btn {
-	    display: inline-block;
-	    position: absolute;
-	    top: 10px;
-	    right: 10px;
-	    background-color: #28a745;
-	    color: white;
-	    width: 35px;
-	    height: 35px;
-	    border-radius: 50%;
-	    text-align: center;
-	    line-height: 35px;
-	    font-size: 18px;
-	    text-decoration: none;
-	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-	    transition: background-color 0.2s;
-	    z-index: 10;
-	}
+.product-img-box {
+    width: 100%; height: 200px; position: relative; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center;
+}
 
-	.add-to-cart-btn:hover {
-	    background-color: #218838;
-	}
-	*/
-	/* ^^^^^ ❌ สิ้นสุด CSS ที่ลบ ❌ ^^^^^ */
+.product-img-box img {
+    max-width: 90%; max-height: 90%; object-fit: contain; transition: transform 0.5s;
+}
 
+.product-card:hover .product-img-box img { transform: scale(1.05); }
 
-	/* vvvvv ✅ ใช้ CSS ชุดนี้แทน ✅ vvvvv */
+/* Remove Button */
+.btn-remove {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #999;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.btn-remove:hover {
+    background: var(--danger-color);
+    color: white;
+}
 
-	/* Container สำหรับปุ่มมุมขวาบน */
-	.card-buttons {
-	    position: absolute; /* ใช้ absolute */
-	    top: 10px;          /* ระยะห่างจากขอบบน */
-	    right: 10px;         /* ระยะห่างจากขอบขวา */
-	    display: flex;       /* เรียงปุ่มแนวนอน */
-	    gap: 8px;            /* ระยะห่างระหว่างปุ่ม */
-	    z-index: 10;         /* ให้อยู่เหนือรูป */
-	}
+.out-of-stock-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: #e74c3c; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;
+}
 
-	/* สไตล์ร่วมสำหรับปุ่มวงกลม */
-	.card-icon-btn {
-	    display: inline-block;
-	    color: white;
-	    width: 35px;
-	    height: 35px;
-	    border-radius: 50%;
-	    text-align: center;
-	    line-height: 35px; /* อาจจะต้องปรับถ้าไอคอนไม่กลาง */
-	    font-size: 18px;   /* อาจจะต้องปรับถ้าไอคอนใหญ่ไป */
-	    text-decoration: none;
-	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-	    transition: background-color 0.2s;
-	    cursor: pointer; /* เพิ่ม cursor pointer */
-	}
-	
-	.remove-fav-btn {
-            background-color: #ff4d4d;
-            color: white;
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: inline-block;
-    }
-        
-     .empty-favorites {
-            text-align: center;
-            margin-top: 50px;
-            color: #777;
-    }
-    
+/* Info */
+.product-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.product-name { font-size: 18px; font-weight: 600; margin: 0 0 10px; color: var(--text-dark); }
+.price { font-size: 20px; font-weight: 700; color: var(--primary-color); margin-bottom: 15px; display: block; }
+
+/* Buttons */
+.action-buttons {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.btn-detail, .btn-cart {
+    padding: 10px; border-radius: 50px; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s;
+}
+
+.btn-detail {
+    background: #f0f0f0; color: var(--text-dark);
+}
+.btn-detail:hover { background: #e0e0e0; }
+
+.btn-cart {
+    background: var(--primary-color); color: white;
+}
+.btn-cart:hover { background: #004414; }
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+}
+.empty-state i { font-size: 60px; color: #ffadad; margin-bottom: 20px; }
+.empty-state h2 { color: var(--text-dark); margin-bottom: 10px; }
+.empty-state p { color: var(--text-light); margin-bottom: 30px; }
+.btn-back { display: inline-block; padding: 12px 30px; background: var(--primary-color); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; transition: background 0.3s; }
+.btn-back:hover { background: #004414; }
+
+/* Footer */
+.site-footer { text-align: center; padding: 20px; background: var(--primary-color); color: rgba(255,255,255,0.8); margin-top: 40px; }

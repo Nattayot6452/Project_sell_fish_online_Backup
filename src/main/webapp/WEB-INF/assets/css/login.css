@@ -1,226 +1,202 @@
-/* style.css */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
 
-    :root {
-        --mj-green: #00571d;
-        --mj-yellow: #f9e547;
-        --mj-white: #fffef9;
-    }
+:root {
+    --primary-color: #00571d;
+    --primary-hover: #004414;
+    --accent-color: #f9e547;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+}
 
-    body {
-        margin: 0;
-        font-family: "Sarabun", sans-serif;
-        background-color: var(--mj-white);
-    }
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
 
-    /* Header */
-    .header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--mj-yellow);
-    }
+/* --- Navbar (Standard) --- */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky; top: 0; z-index: 1000; padding: 10px 0;
+}
+.nav-container {
+    max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+}
+.brand-logo {
+    display: flex; align-items: center; text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 24px;
+}
+.brand-logo img { height: 50px; margin-right: 10px; }
+.search-wrapper { flex: 1; max-width: 500px; margin: 0 40px; position: relative; display: flex; }
+.search-wrapper input { width: 100%; padding: 12px 20px; border: 2px solid #eee; border-radius: 50px; font-family: inherit; outline: none; transition: all 0.3s; }
+.search-wrapper input:focus { border-color: var(--primary-color); }
+.search-wrapper button { position: absolute; right: 5px; top: 5px; background: var(--primary-color); color: white; border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+.search-wrapper button:hover { transform: scale(1.1); }
+.nav-links { display: flex; align-items: center; gap: 20px; }
+.nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+.btn-login { background: var(--primary-color); color: white !important; padding: 8px 20px; border-radius: 50px; }
 
-    .logo {
-        width: 60px;
-        height: 60px;
-        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
-    	transform-origin: center; /* ขยายจากตรงกลาง */
-    }
+/* --- Login Content --- */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    padding: 20px;
+}
 
-    .search-box {
-        margin-left: 20px;
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
+.login-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+}
 
-    .search-box input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px 0 0 5px;
-    }
+.login-header img {
+    width: 80px;
+    margin-bottom: 15px;
+}
 
-    .search-box button {
-        padding: 10px;
-        background-color: var(--mj-green);
-        color: white;
-        border: none;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-    }
+.login-header h2 {
+    margin: 0 0 10px;
+    color: var(--primary-color);
+    font-size: 26px;
+}
 
-    /* Menu */
-    .nav {
-        display: flex;
-        justify-content: center;
-        background-color: var(--mj-green);
-    }
+.login-header p {
+    margin: 0 0 30px;
+    color: var(--text-light);
+    font-size: 16px;
+}
 
-    .nav a {
-        padding: 14px 20px;
-        text-decoration: none;
-        color: white;
-        border-right: 1px solid #ccc;
-    }
+/* Role Selector (Tabs) */
+.role-selector {
+    display: flex;
+    background: #f0f0f0;
+    padding: 5px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+}
 
-    .nav a:hover {
-        background-color: #004414;
-    }
+.role-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
 
-    /* Product Section */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
-        padding: 30px;
-    }
+.role-btn.active {
+    background: var(--white);
+    color: var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-    .product-card {
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease-in-out;
-    }
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
 
-    .product-card:hover {
-        transform: scale(1.03);
-    }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
 
-    .product-card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
+.form-group label i {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
 
-    .product-name {
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
-    }
-    
-    .login-container {
-    	display: flex;
-    	justify-content: center;
-    	align-items: center;
-    	min-height: 80vh; /* ให้เว้นจาก header ข้างบน */
-    	background-color: #f7f7f7;
-	}
-	
- 	.login-box {
-    	width: 350px;
-    	background: #ffffff;
-    	padding: 30px 25px;
-    	text-align: center;
-    	border-radius: 12px;
-    	box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
-    	border: 1px solid #ddd;
-	}
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
 
-	.login-box img {
-    	width: 80px;
-    	margin-bottom: 20px;
-	}
+.input-wrapper input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: #f9fff9;
+}
 
-	.tab {
-	    display: flex;
-	    margin-bottom: 20px;
-	}
-	
-	.tab button {
-	    flex: 1;
-	    padding: 10px;
-	    border: none;
-	    cursor: pointer;
-	    font-size: 16px;
-	    border-radius: 5px 5px 0 0;
-	}
-	
-	.tab .active {
-	    background: #9b59b6;
-	    color: white;
-	}
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
 
-	.tab .inactive {
-	    background: #eee;
-	    color: #333;
-	}
+.btn-submit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 87, 29, 0.3);
+}
 
-	.form-group {
-	    text-align: left;
-	    margin-bottom: 15px;
-	}
+/* Error Message */
+.error-msg {
+    background-color: #fde8e8;
+    color: #c0392b;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
 
-	.form-group label {
-	    font-weight: bold;
-	}
+/* Footer */
+.login-footer {
+    margin-top: 25px;
+    font-size: 15px;
+    color: var(--text-light);
+}
 
-	.form-group input {
-	    width: 100%;
-	    padding: 10px;
-	    margin-top: 5px;
-	    border: 1px solid #ccc;
-	    background: #fafafa;
-	    border-radius: 6px;
-	}
+.login-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
 
-	.email-box {
-	    display: flex;
-	    align-items: center;
-	}
-
-	.password-box {
-	    display: flex;
-	    align-items: center;
-	}
-	
-	.password-box input {
-	    flex: 1;
-	}
-	
-	.password-box span {
-	    background: #e0e0e0;
-	    padding: 10px;
-	    cursor: pointer;
-	    border-radius: 0 6px 6px 0;
-	}
-
-	/* ลิงก์สมัครสมาชิก */
-	.register-link {
-	    text-align: right;
-	    margin: 10px 0;
-	}
-	
-	.register-link a {
-	    text-decoration: none;
-	    color: #007bff;
-	}
-	
-	.register-link a:hover {
-	    text-decoration: underline;
-	}
-
-	/* ปุ่มเข้าสู่ระบบ */
-	.login-btn {
-	    width: 100%;
-	    padding: 12px;
-	    border: none;
-	    background: #4cd137;
-	    color: white;
-	    font-size: 16px;
-	    border-radius: 8px;
-	    cursor: pointer;
-	    font-weight: bold;
-	}
-	
-	.login-btn:hover {
-	    background: #44bd32;
-	}
-	
+.login-footer a:hover {
+    text-decoration: underline;
+}

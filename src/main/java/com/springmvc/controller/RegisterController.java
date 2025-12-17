@@ -39,7 +39,7 @@ public class RegisterController {
             
            if (!profileImg.isEmpty()) {
                 
-                String uploadDir = "/app/uploads/"; 
+                String uploadDir = "/app/uploads/user/"; 
                 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();
@@ -50,7 +50,6 @@ public class RegisterController {
 
             String hashedPassword = PasswordUtil.getInstance().createPassword(password, "itmjusci");
 
-            // 🟢 ใช้ hashedPassword
             Member newMember = new Member(memberId, email, name, hashedPassword, phone, fileName);
 
             boolean result = rm.insertRegister(newMember);

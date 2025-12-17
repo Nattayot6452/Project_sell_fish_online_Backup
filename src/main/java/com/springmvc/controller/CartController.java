@@ -1,7 +1,6 @@
 package com.springmvc.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-// ----- Imports -----
 import jakarta.servlet.http.HttpSession;
 
 
@@ -28,7 +27,6 @@ public class CartController {
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart == null) { cart = new HashMap<>(); }
         int currentQuantityInCart = cart.getOrDefault(productId, 0);
-        // (เช็ค Stock) ...
         cart.put(productId, currentQuantityInCart + 1);
         session.setAttribute("cart", cart);
         System.out.println("Added to cart: " + cart);
@@ -60,7 +58,6 @@ public class CartController {
 
     @RequestMapping(value = "/removeFromCart", method = RequestMethod.GET)
     public ModelAndView removeFromCart(@RequestParam("productId") String productId, HttpSession session) {
-        // ... (Logic เหมือนเดิม) ...
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart != null && cart.containsKey(productId)) {
             cart.remove(productId);
@@ -79,7 +76,7 @@ public class CartController {
 
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             String paramName = entry.getKey();
-            String[] paramValues = entry.getValue(); // ค่าที่ส่งมาจะเป็น Array (ปกติมีค่าเดียว)
+            String[] paramValues = entry.getValue();
 
             if (paramName.startsWith("quantity_") && paramValues != null && paramValues.length > 0) {
                 try {

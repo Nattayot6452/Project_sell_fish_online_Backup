@@ -16,7 +16,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan(basePackages = "com.springmvc")
 public class WebConfig implements WebMvcConfigurer {
 
-    // View Resolver สำหรับ JSP
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -25,20 +24,16 @@ public class WebConfig implements WebMvcConfigurer {
         return viewResolver;
     }
 
-    // Resource Handler (สำหรับ assets และ profile uploads)
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         
-        // 1. อันเดิมสำหรับ CSS/JS
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("/WEB-INF/assets/");
         
-        // 2. อันใหม่สำหรับรูปโปรไฟล์ที่อัปโหลด
-        registry.addResourceHandler("/profile-uploads/**") 
-                .addResourceLocations("file:/app/uploads/"); 
+        registry.addResourceHandler("/profile-uploads/**")
+        .addResourceLocations("file:/app/uploads/"); 
     }
 
-    // Multipart Resolver สำหรับ file upload
     @Bean
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();

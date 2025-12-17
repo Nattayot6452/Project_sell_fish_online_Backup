@@ -82,7 +82,6 @@ public class CheckoutController {
             Product product = pm.getProduct(entry.getKey());
             if (product != null) {
                 if(product.getStock() < entry.getValue()) {
-                    // (Stock ไม่พอ, ส่ง Error กลับไปหน้า checkout)
                     ModelAndView mavError = new ModelAndView("checkout");
                     List<CartItem> currentCartItems = new ArrayList<>();
                     double currentTotal = 0.0;
@@ -111,7 +110,7 @@ public class CheckoutController {
         newOrder.setOrdersId(newOrderId);
         newOrder.setMember(user);
         newOrder.setOrderDate(new Date(System.currentTimeMillis()));
-        newOrder.setStatus("Pending Payment");
+        newOrder.setStatus("รอดำเนินการชำระเงิน");
         newOrder.setTotalAmount(totalCartPriceForOrder);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -154,7 +153,6 @@ public class CheckoutController {
         OrderManager om = new OrderManager();
         Orders order = om.getOrderById(orderId);
         
-        // (แก้ไข Redirect ปลายทางถ้าหา Order ไม่เจอ)
         if(order == null /* || !order.getMember().getMemberId().equals(user.getMemberId()) */) {
              return new ModelAndView("redirect:/Orders?error=OrderNotFound");
         }
@@ -279,18 +277,22 @@ public class CheckoutController {
         }
         
         OrderManager om = new OrderManager();
-        List<Orders> orderList = om.getOrdersByMemberId(user.getMemberId());
+        List<Orders> allOrders = om.getOrdersByMemberId(user.getMemberId());
+        
+        List<Orders> historyList = new ArrayList<>();
+        
+        if (allOrders != null) {
+            for (Orders order : allOrders) {
+                String status = order.getStatus();
+                if ("Completed".equalsIgnoreCase(status) || "Cancelled".equalsIgnoreCase(status)) {
+                    historyList.add(order);
+                }
+            }
+        }
         
         ModelAndView mav = new ModelAndView("history");
-        mav.addObject("orderList", orderList); 
+        mav.addObject("orderList", historyList); 
         
-        if(request.getParameter("error") != null) {
-             mav.addObject("errorMessage", "เกิดข้อผิดพลาด: ไม่พบคำสั่งซื้อที่ระบุ");
-        }
-        if(request.getParameter("upload") != null && request.getParameter("upload").equals("success")) {
-           
-        }
-
         return mav;
     }
 

@@ -3,7 +3,7 @@ package com.springmvc.model;
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)  // JOINED = มีตาราง Staff, Admin, Seller
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Staff {
 
     @Id
@@ -13,7 +13,6 @@ public class Staff {
     private String email;
     private String password;
 
-    // Default constructor (JPA ต้องใช้)
     public Staff() {}
 
     public Staff(String email, String password) {

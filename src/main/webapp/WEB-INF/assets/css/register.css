@@ -1,210 +1,183 @@
-/* style.css */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
 
-    :root {
-        --mj-green: #00571d;
-        --mj-yellow: #f9e547;
-        --mj-white: #fffef9;
-    }
+:root {
+    --primary-color: #00571d;
+    --primary-hover: #004414;
+    --accent-color: #f9e547;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+}
 
-    body {
-        margin: 0;
-        font-family: "Sarabun", sans-serif;
-        background-color: var(--mj-white);
-    }
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
 
-    /* Header */
-    .header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--mj-yellow);
-    }
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky; top: 0; z-index: 1000; padding: 10px 0;
+}
+.nav-container {
+    max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+}
+.brand-logo {
+    display: flex; align-items: center; text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 24px;
+}
+.brand-logo img { height: 50px; margin-right: 10px; }
+.search-wrapper { flex: 1; max-width: 500px; margin: 0 40px; position: relative; display: flex; }
+.search-wrapper input { width: 100%; padding: 12px 20px; border: 2px solid #eee; border-radius: 50px; font-family: inherit; outline: none; transition: all 0.3s; }
+.search-wrapper input:focus { border-color: var(--primary-color); }
+.search-wrapper button { position: absolute; right: 5px; top: 5px; background: var(--primary-color); color: white; border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+.search-wrapper button:hover { transform: scale(1.1); }
+.nav-links { display: flex; align-items: center; gap: 20px; }
+.nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+.btn-login { background: var(--primary-color); color: white !important; padding: 8px 20px; border-radius: 50px; }
 
-    .logo {
-        width: 60px;
-        height: 60px;
-        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
-    	transform-origin: center; /* ขยายจากตรงกลาง */
-    }
+/* --- Register Content --- */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    padding: 40px 20px;
+}
 
-    .search-box {
-        margin-left: 20px;
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
+.register-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+}
 
-    .search-box input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px 0 0 5px;
-    }
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-    .search-box button {
-        padding: 10px;
-        background-color: var(--mj-green);
-        color: white;
-        border: none;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-    }
+.register-header h2 {
+    color: var(--primary-color);
+    margin: 0 0 10px;
+    font-size: 28px;
+}
 
-    /* Menu */
-    .nav {
-        display: flex;
-        justify-content: center;
-        background-color: var(--mj-green);
-    }
+.register-header p {
+    color: var(--text-light);
+    margin: 0;
+}
 
-    .nav a {
-        padding: 14px 20px;
-        text-decoration: none;
-        color: white;
-        border-right: 1px solid #ccc;
-    }
+/* Form Styles */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+@media (max-width: 500px) {
+    .form-grid { grid-template-columns: 1fr; gap: 0; }
+}
 
-    .nav a:hover {
-        background-color: #004414;
-    }
+.form-group {
+    margin-bottom: 20px;
+}
 
-    /* Product Section */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
-        padding: 30px;
-    }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
 
-    .product-card {
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease-in-out;
-    }
+.form-group label i {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
 
-    .product-card:hover {
-        transform: scale(1.03);
-    }
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
 
-    .product-card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: #f9fff9;
+}
 
-    .product-name {
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
-    }
-    
-    .login-container {
-		display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    width: 100%;
-	    height: 100%;
-	}
-	
- 	.login-box {
-		width: 350px;
-	    max-width: 90%;
-	    max-height: 80%;          /* สูงสุดไม่เกิน 80% ของพื้นที่ container */
-	    padding: 30px 25px;
-	    text-align: center;
-	    border-radius: 12px;
-	    box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
-	    border: 1px solid #ddd;
-	    overflow-y: auto;         /* ถ้าเนื้อหาฟอร์มเยอะ จะมี scroll ภายใน box */
-	    margin: 20px 0;    
-	}
+/* File Input */
+.file-group {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px dashed #ccc;
+}
 
-	.login-box img {
-    	width: 80px;
-    	margin-bottom: 20px;
-	}
+.file-input-wrapper input {
+    width: 100%;
+    font-size: 14px;
+}
 
-	.form-group {
-	    text-align: left;
-	    margin-bottom: 15px;
-	}
+.file-hint {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
 
-	.form-group label {
-	    font-weight: bold;
-	}
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
 
-	.form-group input {
-	    width: 100%;
-	    padding: 10px;
-	    margin-top: 5px;
-	    border: 1px solid #ccc;
-	    background: #fafafa;
-	    border-radius: 6px;
-	}
+.btn-register:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 87, 29, 0.3);
+}
 
-	.fill-box {
-	    display: flex;
-	    align-items: center;
-	}
-	
-	.password-box input {
-	    flex: 1;
-	}
-	
-	.password-box span {
-	    background: #e0e0e0;
-	    padding: 10px;
-	    cursor: pointer;
-	    border-radius: 0 6px 6px 0;
-	}
+.register-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 15px;
+    color: var(--text-light);
+}
 
-	/* ลิงก์สมัครสมาชิก */
-	.register-link {
-	    text-align: right;
-	    margin: 10px 0;
-	}
-	
-	.register-link a {
-	    text-decoration: none;
-	    color: #007bff;
-	}
-	
-	.register-link a:hover {
-	    text-decoration: underline;
-	}
+.register-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
 
-	/* ปุ่มเข้าสู่ระบบ */
-	.register-btn {
-	    width: 100%;
-	    padding: 12px;
-	    border: none;
-	    background: #4cd137;
-	    color: white;
-	    font-size: 16px;
-	    border-radius: 8px;
-	    cursor: pointer;
-	    font-weight: bold;
-	}
-	
-	.register-btn:hover {
-	    background: #44bd32;
-	}
-	
-	.main-content {
-		display: flex;
-	    justify-content: center;  /* กึ่งกลางแนวนอน */
-	    align-items: center;      /* กึ่งกลางแนวตั้ง */
-	    min-height: calc(100vh - 120px); /* ลบความสูง header + menu bar */
-	    background-color: #f7f7f7;
-	    padding: 0 20px;          /* เว้นด้านซ้ายขวา */
-	    box-sizing: border-box;
-	}
-  
+.register-footer a:hover {
+    text-decoration: underline;
+}

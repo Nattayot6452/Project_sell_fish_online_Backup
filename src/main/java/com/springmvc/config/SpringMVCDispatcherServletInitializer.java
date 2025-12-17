@@ -32,10 +32,7 @@ public class SpringMVCDispatcherServletInitializer extends AbstractAnnotationCon
     }
 
     @Override
-    protected void customizeRegistration(Dynamic registration) {
-        // ❌ ของเดิม: String tempDir = "C:/tmp";  <-- Docker ไม่รู้จัก C:
-        
-        // ✅ ของใหม่: ใช้ /tmp (มาตรฐานของ Linux/Docker)
+    protected void customizeRegistration(Dynamic registration) {        
         String tempDir = "/tmp"; 
         
         MultipartConfigElement multipartConfig = new MultipartConfigElement(

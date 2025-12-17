@@ -28,49 +28,33 @@ public class Species {
     @OneToMany(mappedBy = "species", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
-	public Species() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public Species() {
+        super();
+    }
 
-	public Species(String speciesId, String speciesName, String description, List<Product> products) {
-		super();
-		this.speciesId = speciesId;
-		this.speciesName = speciesName;
-		this.description = description;
-		this.products = products;
-	}
+    public Species(String speciesId, String speciesName, String description, List<Product> products) {
+        super();
+        this.speciesId = speciesId;
+        this.speciesName = speciesName;
+        this.description = description;
+        this.products = products;
+    }
 
-	public String getSpeciesId() {
-		return speciesId;
-	}
+    public Species(String speciesId, String speciesName) {
+        this.speciesId = speciesId;
+        this.speciesName = speciesName;
+        this.description = "-";
+    }
 
-	public void setSpeciesId(String speciesId) {
-		this.speciesId = speciesId;
-	}
+    public String getSpeciesId() { return speciesId; }
+    public void setSpeciesId(String speciesId) { this.speciesId = speciesId; }
 
-	public String getSpeciesName() {
-		return speciesName;
-	}
+    public String getSpeciesName() { return speciesName; }
+    public void setSpeciesName(String speciesName) { this.speciesName = speciesName; }
 
-	public void setSpeciesName(String speciesName) {
-		this.speciesName = speciesName;
-	}
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-	
+    public List<Product> getProducts() { return products; }
+    public void setProducts(List<Product> products) { this.products = products; }
 }

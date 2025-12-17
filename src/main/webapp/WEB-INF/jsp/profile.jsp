@@ -6,61 +6,95 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>ข้อมูลส่วนตัว</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/profile.css">
+    <title>ข้อมูลส่วนตัว | Fish Online</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="header">
-        <a href="Home"><img src="assets/images/icon/fishTesting.png" alt="โลโก้ปลา" class="logo"></a>
-        <form action="SearchProducts" method="POST" class="search-box">
-            <input type="text" name="searchtext" placeholder="ปลาหางนกยูง">
-            <button type="submit">🔍</button>
-        </form>
-    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="Home" class="brand-logo">
+                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
+                <span>Fish Online</span>
+            </a>
+            
+            <form action="SearchProducts" method="POST" class="search-wrapper">
+                <input type="text" name="searchtext" placeholder="ค้นหาปลาที่คุณชอบ...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
 
-    <div class="nav">
-        <a href="Home">หน้าแรก</a>
-        <a href="AllProduct">สินค้าทั้งหมด</a>
-        <c:if test="${not empty sessionScope.user}">
-            <a href="Favorites">รายการโปรด</a>
-            <a href="Orders">คำสั่งซื้อ</a>
-            <a href="History">ประวัติ</a>
-            <a href="Cart">ตะกร้าสินค้า</a>
-            <a href="Profile" style="font-weight: bold;">สวัสดี, ${sessionScope.user.memberName}</a> 
-            <a href="Logout">ออกจากระบบ</a>
-        </c:if>
-    </div>
+            <div class="nav-links">
+                <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
+                <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
+                
+                <c:if test="${not empty sessionScope.user}">
+                    <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
 
-    <div class="main-content">
+                    <div class="dropdown">
+                        <a href="Profile" class="dropbtn user-profile">
+                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" class="nav-avatar">
+                            <span>สวัสดี, ${sessionScope.user.memberName}</span>
+                            <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
+
+                            <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a>
+                            <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
+                            <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
+                            <div style="border-top: 1px solid #eee; margin: 5px 0;"></div>
+                            <a href="Logout" class="menu-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
+                        </div>
+                    </div>
+                </c:if>
+                
+                <c:if test="${empty sessionScope.user}">
+                    <a href="Login" class="btn-login"><i class="fas fa-user"></i> เข้าสู่ระบบ</a>
+                </c:if>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
         <div class="profile-card">
-            <div class="profile-header-bg"></div> <div class="profile-img-container">
-                <img src="${pageContext.request.contextPath}/profile-uploads/${sessionScope.user.memberImg}" 
+            
+            <div class="profile-header-bg">
+                <div class="bg-pattern"></div>
+            </div>
+            
+            <div class="profile-img-container">
+                <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" 
                      alt="รูปโปรไฟล์" class="profile-img">
             </div>
 
             <div class="profile-body">
                 <h1 class="username">${sessionScope.user.memberName}</h1>
-                <p class="role-badge">สมาชิกทั่วไป</p> <div class="info-list">
-                    <div class="info-item">
-                        <span class="label"><i class="fas fa-envelope"></i> อีเมล</span>
-                        <span class="value">${sessionScope.user.email}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label"><i class="fas fa-phone"></i> เบอร์โทร</span>
-                        <span class="value">${sessionScope.user.phone}</span>
-                    </div>
-                </div>
+                <span class="role-badge"><i class="fas fa-check-circle"></i> สมาชิกทั่วไป</span>
 
-                <div class="action-buttons">
-                    <%-- แก้ลิงก์ให้ถูกต้อง (ตัว e เล็ก) --%>
-                    <a href="editProfile" class="btn btn-edit">
-                        <i class="fas fa-edit"></i> แก้ไขข้อมูลส่วนตัว
-                    </a>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                        <div class="text-box">
+                            <span class="label">อีเมล</span>
+                            <span class="value">${sessionScope.user.email}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon-box"><i class="fas fa-phone"></i></div>
+                        <div class="text-box">
+                            <span class="label">เบอร์โทรศัพท์</span>
+                            <span class="value">${sessionScope.user.phone}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                
+                </div>
         </div>
     </div>
-    </body>
+
+</body>
 </html>

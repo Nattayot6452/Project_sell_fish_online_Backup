@@ -3,8 +3,8 @@ package com.springmvc.controller;
 import com.springmvc.model.FavoriteManager;
 import com.springmvc.model.FavoriteProduct;
 import com.springmvc.model.Member;
-import com.springmvc.model.Product; // 👈 Import Product
-import com.springmvc.model.ProductManager; // 👈 Import ProductManager
+import com.springmvc.model.Product;
+import com.springmvc.model.ProductManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +59,7 @@ public class FavoritesController {
             FavoriteProduct newFavorite = new FavoriteProduct();
             newFavorite.setFavoriteId(UUID.randomUUID().toString());
             newFavorite.setMember(user);
-            newFavorite.setProduct(product); // 👈 ตั้งค่า Product ที่ดึงมาได้
+            newFavorite.setProduct(product);
 
             FavoriteManager fm = new FavoriteManager();
             boolean success = fm.addFavorite(newFavorite);

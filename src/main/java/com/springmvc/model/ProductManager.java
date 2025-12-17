@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.hibernate.Transaction;
 
 public class ProductManager {
 
@@ -61,15 +62,122 @@ public class ProductManager {
 	}
 
 	public List<Product> getFeaturedProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            Query<Product> query = session.createQuery("FROM Product ORDER BY productId DESC", Product.class);
+            query.setMaxResults(limit);
+            
+            products = query.list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return products;
+    }
+	
+    public boolean insertProduct(Product product, String speciesId) {
+        boolean result = false;
+        Session session = null;
+        Transaction tx = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+
+            Species species = session.get(Species.class, speciesId);
+            if (species != null) {
+                product.setSpecies(species);
+                session.save(product);
+                
+                session.flush();
+                tx.commit();
+                result = true;
+                System.out.println(">>> Product Saved: " + product.getProductName());
+            } else {
+                System.err.println(">>> Error: Species ID " + speciesId + " Not Found!");
+            }
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return result;
+    }
+
+    public boolean deleteProduct(String productId) {
+        boolean result = false;
+        Session session = null;
+        Transaction tx = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+
+            Product product = session.get(Product.class, productId);
+            if (product != null) {
+                session.remove(product);
+                tx.commit();
+                result = true;
+            }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return result;
+    }
+
+    public List<Species> getAllSpecies() {
+        List<Species> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            list = session.createQuery("FROM Species ORDER BY speciesId", Species.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return list;
+    }
+
+    public List<Product> searchProducts(String keyword, String speciesId) {
         List<Product> list = new ArrayList<>();
         Session session = null;
         try {
-            SessionFactory sessionfactory = HibernateConnection.doHibernateConnection();
-            session = sessionfactory.openSession();
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
             
-            Query<Product> query = session.createQuery("FROM Product p ORDER BY p.productId DESC", Product.class);
-            query.setMaxResults(limit); // 👈 จำกัดจำนวน
+            StringBuilder hql = new StringBuilder("FROM Product p WHERE 1=1 ");
             
+            if (keyword != null && !keyword.isEmpty()) {
+                hql.append("AND (p.productName LIKE :keyword OR p.description LIKE :keyword) ");
+            }
+            if (speciesId != null && !speciesId.isEmpty() && !speciesId.equals("all")) {
+                hql.append("AND p.species.speciesId = :speciesId ");
+            }
+            
+            hql.append("ORDER BY p.productId DESC");
+
+            Query<Product> query = session.createQuery(hql.toString(), Product.class);
+            
+            if (keyword != null && !keyword.isEmpty()) {
+                query.setParameter("keyword", "%" + keyword + "%");
+            }
+            if (speciesId != null && !speciesId.isEmpty() && !speciesId.equals("all")) {
+                query.setParameter("speciesId", speciesId);
+            }
+
             list = query.list();
             
         } catch (Exception e) {
@@ -78,6 +186,39 @@ public class ProductManager {
             if (session != null) session.close();
         }
         return list;
+    }
+
+    public boolean updateProduct(Product product, String speciesId) {
+        boolean result = false;
+        Session session = null;
+        Transaction tx = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+
+            Species species = session.get(Species.class, speciesId);
+            
+            if (species != null) {
+                product.setSpecies(species); 
+                
+                session.merge(product);
+                
+                session.flush();
+                tx.commit();
+                result = true;
+                System.out.println(">>> Product Updated: " + product.getProductName());
+            } else {
+                System.err.println(">>> Error: Species ID " + speciesId + " Not Found!");
+            }
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return result;
     }
 
 }

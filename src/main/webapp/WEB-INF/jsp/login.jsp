@@ -1,96 +1,130 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ page import="com.springmvc.model.*" %>
-<%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ล็อคอิน</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/login.css">
-    <script>
-    function setRole(role, btn) {
-
-    	document.getElementById("role").value = role;
-
-        const buttons = btn.parentNode.querySelectorAll("button");
-        buttons.forEach(b => {
-            b.classList.remove("active");
-            b.classList.add("inactive");
-        });
-
-        btn.classList.remove("inactive");
-        btn.classList.add("active");
-    }
-    </script>
+    <meta charset="UTF-8">
+    <title>เข้าสู่ระบบ | Fish Online</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/login.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <script>
+        function setRole(role, btn) {
+            document.getElementById("role").value = role;
+            
+            const buttons = document.querySelectorAll(".role-btn");
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            const welcomeText = document.getElementById("welcome-text");
+            if(role === 'staff') {
+                welcomeText.innerText = "เข้าสู่ระบบสำหรับเจ้าหน้าที่";
+            } else {
+                welcomeText.innerText = "ยินดีต้อนรับสมาชิก";
+            }
+        }
+    </script>
+</head>
 <body>
 
-	<div class="header">
-    <a href="Home">
-        <img src="assets/images/icon/fishTesting.png" alt="โลโก้ปลา" class="logo">
-    </a>      
-    <form action="SearchProducts" method="POST" class="search-box">
-        <input type="text" name="searchtext" placeholder="ปลาหางนกยูง">
-        <button type="submit">🔍</button>
-    </form>
-</div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="Home" class="brand-logo">
+                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
+                <span>Fish Online</span>
+            </a>
+            
+            <form action="SearchProducts" method="POST" class="search-wrapper">
+                <input type="text" name="searchtext" placeholder="ค้นหาปลาที่คุณชอบ...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
 
-    <!-- Menu -->
-    <div class="nav">
-        <a href="Home">หน้าแรก</a>
-        <a href="#">รายการโปรด</a>
-        <a href="#">คำสั่งซื้อ</a>
-        <a href="#">ประวัติ</a>
-        <a href="#">ตะกร้าสินค้า</a>
-        <a href="Login">เข้าสู่ระบบ</a>
-    </div>
-    
-      <!-- Main Content -->
-<div class="login-container">
-    <div class="login-box">
-        <img src="assets/images/icon/fishTesting.png" alt="Fish Logo">
+            <div class="nav-links">
+                <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
+                
+                <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
+                
+                <c:if test="${not empty sessionScope.user}">
+                    <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
 
-        <!-- ปุ่มเลือกประเภทการเข้าสู่ระบบ -->
-<div class="tab">
-    <button type="button" class="active" onclick="setRole('user', this)">ผู้ใช้</button>
-    <button type="button" class="inactive" onclick="setRole('staff', this)">เจ้าหน้าที่</button>
-</div>
+                    <div class="dropdown">
+                        <a href="Profile" class="dropbtn user-profile">
+                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" class="nav-avatar">
+                            สวัสดี, ${sessionScope.user.memberName}
+                            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
+                            
+                            <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a> 
+                            <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
+                            <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
+                            <div style="border-top: 1px solid #eee; margin: 5px 0;"></div>
+                            <a href="Logout" class="menu-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
+                        </div>
+                    </div>
+                </c:if>
+                
+                <c:if test="${empty sessionScope.user}">
+                    <a href="Login" class="btn-login"><i class="fas fa-user"></i> เข้าสู่ระบบ</a>
+                </c:if>
+            </div>
+        </div>
+    </nav>
 
-<!-- ฟอร์ม -->
-<form action="login" method="post">
-    <!-- hidden field เก็บค่า role -->
-    <input type="hidden" id="role" name="role" value="user">
+    <div class="main-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
+                <h2 id="welcome-text">ยินดีต้อนรับสมาชิก</h2>
+                <p>กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
+            </div>
 
-    <div class="form-group">
-        <label for="email">อีเมล</label>
-        <div class="email-box">
-            <input type="text" id="email" name="email" placeholder="กรอกอีเมล" required>
+            <div class="role-selector">
+                <button type="button" class="role-btn active" onclick="setRole('user', this)">
+                    <i class="fas fa-user"></i> สมาชิกทั่วไป
+                </button>
+                <button type="button" class="role-btn" onclick="setRole('staff', this)">
+                    <i class="fas fa-user-shield"></i> เจ้าหน้าที่
+                </button>
+            </div>
+
+            <form action="login" method="post" class="login-form">
+                <input type="hidden" id="role" name="role" value="user">
+
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="email" name="email" placeholder="ตัวอย่าง: user@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> รหัสผ่าน</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่านของคุณ" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">เข้าสู่ระบบ <i class="fas fa-sign-in-alt"></i></button>
+            </form>
+
+            <c:if test="${not empty error}">
+                <div class="error-msg">
+                    <i class="fas fa-exclamation-circle"></i> ${error}
+                </div>
+            </c:if>
+
+            <div class="login-footer">
+                <p>ยังไม่มีบัญชีใช่ไหม? <a href="Register">สมัครสมาชิกที่นี่</a></p>
+            </div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="password">รหัสผ่าน</label>
-        <div class="password-box">
-            <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่าน" required>
-        </div>
-    </div>
-
-    <div class="register-link">
-        <a href="Register">สมัครสมาชิก</a>
-    </div>
-
-    <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
-</form>
-
-<c:if test="${not empty error}">
-    <p style="color:red;">${error}</p>
-</c:if>
-
-</div>
-</div>
-   
- </body>
- </html>
+</body>
+</html>

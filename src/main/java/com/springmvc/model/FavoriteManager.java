@@ -3,8 +3,8 @@ package com.springmvc.model;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query; // Import Query
-import java.util.Collections; // Import Collections
+import org.hibernate.query.Query;
+import java.util.Collections;
 import java.util.List;
 
 public class FavoriteManager {

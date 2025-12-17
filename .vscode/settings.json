@@ -5,5 +5,5 @@
   // evaluate expressions for hover during debugging so runtime values show up
   "debug.evaluateForHovers": true,
   // enable editor hover (for mouse-over value/tooltips)
-  "editor.hover.enabled": true
+  "editor.hover.enabled": "on"
 }

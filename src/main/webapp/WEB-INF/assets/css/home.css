@@ -1,264 +1,464 @@
-	/* style.css (home.css) */
-	
-	:root {
-	    --mj-green: #00571d;
-	    --mj-yellow: #f9e547;
-	    --mj-white: #fffef9;
-	}
-	
-	body {
-	    margin: 0;
-	    font-family: "Sarabun", sans-serif;
-	    background-color: var(--mj-white);
-	}
-	
-	/* Header (เหมือนเดิม) */
-	.header {
-	    display: flex;
-	    align-items: center;
-	    padding: 10px 20px;
-	    background-color: var(--mj-yellow);
-	}
-	.logo {
-	    width: 60px;
-	    height: 60px;
-	    transform: scale(1.5);
-	    transform-origin: center;
-	}
-	.search-box {
-	    margin-left: 20px;
-	    flex: 1;
-	    display: flex;
-	    align-items: center;
-	}
-	.search-box input[type="text"] {
-	    width: 100%;
-	    padding: 10px;
-	    font-size: 16px;
-	    border: none;
-	    border-radius: 5px 0 0 5px;
-	}
-	.search-box button {
-	    padding: 10px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    border: none;
-	    border-radius: 0 5px 5px 0;
-	    cursor: pointer;
-	}
-	
-	/* Menu (เหมือนเดิม) */
-	.nav {
-	    display: flex;
-	    justify-content: center;
-	    background-color: var(--mj-green);
-	}
-	.nav a {
-	    padding: 14px 20px;
-	    text-decoration: none;
-	    color: white;
-	    border-right: 1px solid #ccc;
-	}
-	.nav a:hover {
-	    background-color: #004414;
-	}
-	
-	/* Slider (เหมือนเดิม) */
-	.news-slider {
-	    position: relative;
-	    max-width: 100%;
-	    height: 350px;
-	    overflow: hidden;
-	}
-	.news-slider img {
-	    width: 100%;
-	    height: 350px;
-	    object-fit: cover;
-	    display: block;
-	}
-	.slides { position: relative; }
-	.slide {
-	    display: none;
-	    position: absolute;
-	    width: 100%;
-	    height: 100%;
-	}
-	.slide.active { display: block; }
-	.caption { /* ... */ }
-	.news-slider button { /* ... */ }
-	.news-slider .prev { left: 10px; }
-	.news-slider .next { right: 10px; }
-	
-	
-	/* vvvvv 🟢 (ส่วนที่เพิ่มใหม่ - แต่คุณมีอยู่แล้ว) 🟢 vvvvv */
-	
-	/* ตัวจัด Layout กลาง */
-	.container {
-	    width: 90%;
-	    max-width: 1200px;
-	    margin: 0 auto;
-	    padding: 30px 0;
-	}
-	
-	/* 1. ส่วนหมวดหมู่ (Categories) */
-	.categories-section {
-	    text-align: center;
-	    border-bottom: 1px solid #eee;
-	}
-	.categories-section h2 {
-	    font-size: 2em;
-	    color: var(--mj-green);
-	    margin-bottom: 20px;
-	}
-	.category-grid {
-	    display: flex;
-	    justify-content: center;
-	    gap: 20px;
-	    flex-wrap: wrap;
-	}
-	.category-card {
-	    text-decoration: none;
-	    color: #333;
-	    width: 150px;
-	    transition: transform 0.2s, box-shadow 0.2s;
-	}
-	.category-card img {
-	    width: 100%;
-	    height: 120px;
-	    object-fit: cover;
-	    border-radius: 50%; /* 👈 รูปวงกลม */
-	    border: 4px solid var(--mj-white);
-	    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	}
-	.category-card h3 {
-	    margin-top: 10px;
-	    font-size: 1.1em;
-	}
-	.category-card:hover {
-	    transform: translateY(-5px);
-	    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-	}
-	
-	/* 2. ส่วนสินค้าแนะนำ (Featured Products) */
-	.featured-products {
-	    text-align: center;
-	}
-	.featured-products h2 {
-	    font-size: 2em;
-	    color: var(--mj-green);
-	    margin-bottom: 20px;
-	}
-	
-	/* (สไตล์ Product Card - เหมือน allProduct.css) */
-	.product-grid {
-	    display: grid;
-	    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	    gap: 20px;
-	}
-	.product-card {
-	    background-color: #ffffff;
-	    border: 1px solid #ddd;
-	    border-radius: 10px;
-	    padding: 15px;
-	    text-align: center;
-	    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	    transition: transform 0.2s ease-in-out;
-	    position: relative; 
-	}
-	.product-card:hover {
-	    transform: scale(1.03);
-	}
-	.product-card img {
-	    width: 100%;
-	    height: 180px;
-	    object-fit: cover;
-	    border-radius: 8px;
-	    margin-bottom: 10px;
-	}
-	.product-info { margin-top: 10px; }
-	.product-name {
-	    font-size: 16px;
-	    font-weight: bold;
-	    color: #333;
-	    margin-bottom: 5px;
-	}
-	.product-price {
-	    font-size: 14px;
-	    color: #555;
-	    margin-bottom: 10px;
-	}
-	.btn {
-	    display: inline-block;
-	    padding: 8px 15px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    text-decoration: none;
-	    border-radius: 5px;
-	    font-size: 14px;
-	}
-	.btn:hover {
-	     background-color: #004414;
-	}
-	
-	.card-buttons {
-	    position: absolute;
-	    top: 10px;
-	    right: 10px;
-	    display: flex;
-	    gap: 8px;
-	    z-index: 10;
-	}
-	.card-icon-btn {
-	    display: inline-block;
-	    color: white;
-	    width: 35px;
-	    height: 35px;
-	    border-radius: 50%;
-	    text-align: center;
-	    line-height: 35px;
-	    font-size: 18px;
-	    text-decoration: none;
-	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-	    transition: background-color 0.2s;
-	    cursor: pointer;
-	}
-	.add-to-cart-btn.card-icon-btn { background-color: #28a745; }
-	.add-to-cart-btn.card-icon-btn:hover { background-color: #218838; }
-	.add-to-favorite-btn.card-icon-btn { background-color: #dc3545; }
-	.add-to-favorite-btn.card-icon-btn:hover { background-color: #c82333; }
-	
-	
-	/* 3. ส่วนโปรโมชัน (Promo Banner) */
-	.promo-banner {
-	    text-align: center;
-	    padding: 40px 20px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    margin-top: 30px;
-	}
-	.promo-banner h2 {
-	    font-size: 2.2em;
-	    margin-top: 0;
-	    margin-bottom: 15px;
-	    color: var(--mj-yellow);
-	}
-	.promo-banner p {
-	    font-size: 1.1em;
-	    margin-bottom: 25px;
-	}
-	.promo-banner .btn-promo {
-	    display: inline-block;
-	    padding: 12px 25px;
-	    background-color: var(--mj-yellow);
-	    color: var(--mj-green);
-	    text-decoration: none;
-	    border-radius: 5px;
-	    font-size: 1.1em;
-	    font-weight: bold;
-	    transition: transform 0.2s;
-	}
-	.promo-banner .btn-promo:hover {
-	    transform: scale(1.05);
-	}
-	
-	/* (ลบ } 2 ตัวที่เกินมาท้ายไฟล์) */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-color: #00571d;
+    --accent-color: #f9e547;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-white: #ffffff;
+    --bg-light: #f4f7f6;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow-hover: 0 15px 35px rgba(0,0,0,0.12);
+    --radius-md: 15px;
+    --radius-lg: 25px;
+}
+
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* --- 1. Navbar --- */
+.navbar {
+    background-color: var(--bg-white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.brand-logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+/* Search Box */
+.search-wrapper {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 40px;
+    position: relative;
+    display: flex;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #eee;
+    border-radius: 50px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.search-wrapper input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 87, 29, 0.1);
+}
+
+.search-wrapper button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.search-wrapper button:hover {
+    transform: scale(1.1);
+}
+
+/* Nav Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary-color);
+}
+
+.btn-login {
+    background: var(--primary-color);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 50px;
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: #004414;
+}
+
+.cart-link {
+    position: relative;
+    font-size: 20px !important;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- 2. Hero Slider --- */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.slider-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hero Content Overlay */
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translate(0, -40%); }
+    to { opacity: 1; transform: translate(0, -50%); }
+}
+
+.hero-content h1 {
+    font-size: 36px;
+    margin: 0 0 10px;
+    color: var(--primary-color);
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-bottom: 25px;
+}
+
+.cta-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, var(--primary-color), #007a29);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 87, 29, 0.3);
+    transition: transform 0.3s;
+}
+
+.cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 87, 29, 0.4);
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--primary-color);
+    transition: all 0.3s;
+}
+.prev:hover, .next:hover {
+    background: white;
+    color: var(--primary-color);
+}
+.prev { left: 20px; }
+.next { right: 20px; }
+
+/* --- 3. Section Styling --- */
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.section-container.bg-light {
+    background-color: white;
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+.section-title {
+    font-size: 28px;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i { color: var(--accent-color); text-shadow: 1px 1px 0 #ccc; }
+
+.view-all-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: margin-right 0.3s;
+}
+.view-all-link:hover { margin-right: 5px; }
+
+/* Categories Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    text-align: center;
+}
+
+.category-card {
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: transform 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+}
+
+.cat-img-wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.category-card:hover .cat-img-wrapper {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.cat-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-card span {
+    font-weight: 600;
+    font-size: 18px;
+    display: block;
+}
+
+/* --- 4. Product Cards --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px);
+    border-color: transparent;
+}
+
+.product-img-box {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    background: #f9f9f9;
+}
+
+.product-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.product-card:hover .product-img-box img {
+    transform: scale(1.1);
+}
+
+/* Action Buttons Overlay */
+.card-actions {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.product-card:hover .card-actions {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 16px;
+    margin: 0 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-dark);
+}
+
+.product-desc {
+    font-size: 13px;
+    color: #999;
+    margin: 0 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--primary-color);
+    color: rgba(255,255,255,0.8);
+    margin-top: 40px;
+}

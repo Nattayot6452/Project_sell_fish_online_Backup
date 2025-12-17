@@ -1,206 +1,290 @@
-/* style.css */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
 
-    :root {
-        --mj-green: #00571d;
-        --mj-yellow: #f9e547;
-        --mj-white: #fffef9;
-    }
+:root {
+    --primary-color: #00571d;
+    --accent-color: #f9e547;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow-hover: 0 15px 35px rgba(0,0,0,0.12);
+    --radius-md: 15px;
+}
 
-    body {
-        margin: 0;
-        font-family: "Sarabun", sans-serif;
-        background-color: var(--mj-white);
-    }
+body {
+    margin: 0;
+    font-family: "Sarabun", sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
 
-    /* Header */
-    .header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--mj-yellow);
-    }
+/* --- Navbar --- */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.brand-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 24px;
+}
+.brand-logo img { height: 50px; margin-right: 10px; }
 
-    .logo {
-        width: 60px;
-        height: 60px;
-        transform: scale(1.5); /* ขยายรูป 1.5 เท่า */
-    	transform-origin: center; /* ขยายจากตรงกลาง */
-    }
+/* Search Box */
+.search-wrapper {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 40px;
+    position: relative;
+    display: flex;
+}
+.search-wrapper input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #eee;
+    border-radius: 50px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s;
+}
+.search-wrapper input:focus { border-color: var(--primary-color); }
+.search-wrapper button {
+    position: absolute;
+    right: 5px; top: 5px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.search-wrapper button:hover { transform: scale(1.1); }
 
-    .search-box {
-        margin-left: 20px;
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
+/* Nav Links */
+.nav-links { display: flex; align-items: center; gap: 20px; }
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 16px;
+    display: flex; align-items: center; gap: 5px;
+    transition: color 0.3s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+.btn-login {
+    background: var(--primary-color);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 50px;
+}
+.cart-link { font-size: 20px !important; }
 
-    .search-box input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px 0 0 5px;
-    }
+/* --- Page Content --- */
+.main-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: 60vh;
+}
 
-    .search-box button {
-        padding: 10px;
-        background-color: var(--mj-green);
-        color: white;
-        border: none;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-    }
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
 
-    /* Menu */
-    .nav {
-        display: flex;
-        justify-content: center;
-        background-color: var(--mj-green);
-    }
+.page-header h1 {
+    font-size: 32px;
+    color: var(--primary-color);
+    margin: 0 0 10px;
+}
 
-    .nav a {
-        padding: 14px 20px;
-        text-decoration: none;
-        color: white;
-        border-right: 1px solid #ccc;
-    }
+.page-header h1 span {
+    color: var(--text-dark);
+    font-weight: 400;
+}
 
-    .nav a:hover {
-        background-color: #004414;
-    }
+.page-header p {
+    color: var(--text-light);
+    font-size: 16px;
+}
 
-   /* Product Section */
-	.product-grid {
-	    display: grid;
-	    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	    gap: 20px;
-	    padding: 30px;
-	}
+/* --- Product Grid --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+}
 
-	.product-card {
-	    background-color: #ffffff;
-	    border: 1px solid #ddd;
-	    border-radius: 10px;
-	    padding: 15px;
-	    text-align: center;
-	    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	    transition: transform 0.2s ease-in-out;
-	    position: relative; /* 👈 สำคัญ! ต้องมีอันนี้ */
-	}
+.product-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+}
 
-	.product-card:hover {
-	    transform: scale(1.03);
-	}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
 
-	.product-card img {
-	    width: 100%;
-	    height: 180px;
-	    object-fit: cover;
-	    border-radius: 8px;
-	    margin-bottom: 10px;
-	}
+.product-img-box {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-	/* Product Info */
-	.product-info {
-	    margin-top: 10px;
-	}
+.product-img-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.5s;
+}
 
+.product-card:hover .product-img-box img {
+    transform: scale(1.1);
+}
 
-	.product-name {
-	    font-size: 16px;
-	    font-weight: bold;
-	    color: #333;
-	    margin-bottom: 5px;
-	}
+/* Action Buttons */
+.card-actions {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
 
-	.product-price {
-	    font-size: 14px;
-	    color: #555;
-	    margin-bottom: 10px;
-	}
+.product-card:hover .card-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-	.btn {
-	    display: inline-block;
-	    padding: 8px 15px;
-	    background-color: var(--mj-green);
-	    color: white;
-	    text-decoration: none;
-	    border-radius: 5px;
-	    font-size: 14px;
-	}
-	.btn:hover {
-	     background-color: #004414;
-	}
+.action-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.2s;
+    font-size: 16px;
+}
 
+.action-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
 
-	/* vvvvv ❌ ลบ CSS ชุดนี้ทิ้งไปเลย ❌ vvvvv */
-	/*
-	.add-to-cart-btn {
-	    display: inline-block;
-	    position: absolute;
-	    top: 10px;
-	    right: 10px;
-	    background-color: #28a745;
-	    color: white;
-	    width: 35px;
-	    height: 35px;
-	    border-radius: 50%;
-	    text-align: center;
-	    line-height: 35px;
-	    font-size: 18px;
-	    text-decoration: none;
-	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-	    transition: background-color 0.2s;
-	    z-index: 10;
-	}
+.out-of-stock-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
-	.add-to-cart-btn:hover {
-	    background-color: #218838;
-	}
-	*/
-	/* ^^^^^ ❌ สิ้นสุด CSS ที่ลบ ❌ ^^^^^ */
+/* Product Info */
+.product-info {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
 
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-	/* vvvvv ✅ ใช้ CSS ชุดนี้แทน ✅ vvvvv */
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-	/* Container สำหรับปุ่มมุมขวาบน */
-	.card-buttons {
-	    position: absolute; /* ใช้ absolute */
-	    top: 10px;          /* ระยะห่างจากขอบบน */
-	    right: 10px;         /* ระยะห่างจากขอบขวา */
-	    display: flex;       /* เรียงปุ่มแนวนอน */
-	    gap: 8px;            /* ระยะห่างระหว่างปุ่ม */
-	    z-index: 10;         /* ให้อยู่เหนือรูป */
-	}
+.price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
 
-	/* สไตล์ร่วมสำหรับปุ่มวงกลม */
-	.card-icon-btn {
-	    display: inline-block;
-	    color: white;
-	    width: 35px;
-	    height: 35px;
-	    border-radius: 50%;
-	    text-align: center;
-	    line-height: 35px; /* อาจจะต้องปรับถ้าไอคอนไม่กลาง */
-	    font-size: 18px;   /* อาจจะต้องปรับถ้าไอคอนใหญ่ไป */
-	    text-decoration: none;
-	    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-	    transition: background-color 0.2s;
-	    cursor: pointer; /* เพิ่ม cursor pointer */
-	}
+.stock-status {
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.in-stock { color: #27ae60; background: #e8f8f5; }
+.out-stock { color: #c0392b; background: #fdedec; }
 
-	/* ปุ่มตะกร้า (เขียว) */
-	.add-to-cart-btn.card-icon-btn {
-	    background-color: #28a745;
-	}
-	.add-to-cart-btn.card-icon-btn:hover {
-	    background-color: #218838;
-	}
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px;
+    color: var(--text-light);
+}
+.empty-state i {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: background 0.3s;
+}
+.btn-back:hover { background: #004414; }
 
-	/* ปุ่ม Favorite (แดง) */
-	.add-to-favorite-btn.card-icon-btn {
-	    background-color: #dc3545;
-	}
-	.add-to-favorite-btn.card-icon-btn:hover {
-	    background-color: #c82333;
-	}
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--primary-color);
+    color: rgba(255,255,255,0.8);
+    margin-top: 40px;
+}

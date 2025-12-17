@@ -1,0 +1,65 @@
+package com.springmvc.controller;
+
+import com.springmvc.model.OrderManager;
+import com.springmvc.model.Orders;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class OrderDetailController {
+
+    @RequestMapping(value = "/OrderDetail", method = RequestMethod.GET)
+    public ModelAndView showOrderDetail(@RequestParam("orderId") String orderId, HttpSession session) {
+        boolean isUser = session.getAttribute("user") != null;
+        boolean isSeller = session.getAttribute("seller") != null;
+        boolean isAdmin = session.getAttribute("admin") != null;
+
+        if (!isUser && !isSeller && !isAdmin) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        OrderManager om = new OrderManager();
+        Orders order = om.getOrderWithDetails(orderId);
+
+        if (order == null) {
+            return new ModelAndView("redirect:/SellerCenter?error=OrderNotFound");
+        }
+
+        ModelAndView mav = new ModelAndView("orderDetail");
+        mav.addObject("order", order);
+        return mav;
+    }
+    
+    @RequestMapping(value = "/updateOrderStatus", method = RequestMethod.GET)
+    public ModelAndView updateOrderStatus(
+            @RequestParam("orderId") String orderId,
+            @RequestParam("status") String status,
+            HttpSession session) {
+        
+        if (session.getAttribute("seller") == null && session.getAttribute("admin") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        OrderManager om = new OrderManager();
+        om.updateOrderStatus(orderId, status);
+
+        return new ModelAndView("redirect:/OrderDetail?orderId=" + orderId);
+    }
+    
+    @RequestMapping(value = "/requestCancellation", method = RequestMethod.GET)
+    public ModelAndView requestCancellation(@RequestParam("orderId") String orderId, HttpSession session) {
+        
+        if (session.getAttribute("user") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        OrderManager om = new OrderManager();
+        om.updateOrderStatus(orderId, "รออนุมัติยกเลิก");
+
+        return new ModelAndView("redirect:/OrderDetail?orderId=" + orderId);
+    }
+}
