@@ -1,15 +1,6 @@
 package com.springmvc.controller;
 
-import com.springmvc.model.CartItem;
-import com.springmvc.model.Member;
-import com.springmvc.model.Product;
-import com.springmvc.model.ProductManager;
-import com.springmvc.model.OrderManager;
-import com.springmvc.model.Orders;
-import com.springmvc.model.OrderDetail;
-import com.springmvc.model.Payment;
-import com.springmvc.model.PaymentManager;
-
+import com.springmvc.model.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -29,7 +20,10 @@ import java.util.Map;
 public class CheckoutController { 
 
     @RequestMapping(value = "/checkout", method = RequestMethod.GET)
-    public ModelAndView showCheckoutPage(HttpSession session) {
+    public ModelAndView showCheckoutPage(
+            @RequestParam(value = "coupon", required = false) String couponCode,
+            @RequestParam(value = "discount", defaultValue = "0.0") Double discount,
+            HttpSession session) {
         
         Member user = (Member) session.getAttribute("user");
         if (user == null) {
@@ -53,9 +47,16 @@ public class CheckoutController {
             }
         }
 
+        double finalPrice = totalCartPrice - discount;
+        if (finalPrice < 0) finalPrice = 0;
+
         ModelAndView mav = new ModelAndView("checkout");
         mav.addObject("cartItems", cartItems);
         mav.addObject("totalCartPrice", totalCartPrice);
+        
+        mav.addObject("couponCode", couponCode);
+        mav.addObject("discount", discount);
+        mav.addObject("finalPrice", finalPrice);
         
         return mav;
     }
@@ -63,6 +64,8 @@ public class CheckoutController {
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public ModelAndView createOrder(
             @RequestParam("paymentMethod") String paymentMethod,
+            @RequestParam(value = "couponCode", required = false) String couponCode,  
+            @RequestParam(value = "discountAmount", defaultValue = "0.0") Double discountAmount, 
             HttpSession session) {
         
         Member user = (Member) session.getAttribute("user");
@@ -82,7 +85,9 @@ public class CheckoutController {
             Product product = pm.getProduct(entry.getKey());
             if (product != null) {
                 if(product.getStock() < entry.getValue()) {
+
                     ModelAndView mavError = new ModelAndView("checkout");
+                
                     List<CartItem> currentCartItems = new ArrayList<>();
                     double currentTotal = 0.0;
                     ProductManager pmForError = new ProductManager();
@@ -94,8 +99,12 @@ public class CheckoutController {
                              currentTotal += i.getItemTotal();
                          }
                     }
+
                     mavError.addObject("cartItems", currentCartItems); 
                     mavError.addObject("totalCartPrice", currentTotal);
+                    mavError.addObject("finalPrice", currentTotal - discountAmount);
+                    mavError.addObject("couponCode", couponCode);
+                    mavError.addObject("discount", discountAmount);
                     mavError.addObject("checkoutError", "ขออภัย, สินค้า '" + product.getProductName() + "' มีไม่พอในสต็อก!");
                     return mavError;
                 }
@@ -105,13 +114,19 @@ public class CheckoutController {
             }
         }
         
+        double finalTotal = totalCartPriceForOrder - discountAmount;
+        if (finalTotal < 0) finalTotal = 0;
+
         String newOrderId = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         Orders newOrder = new Orders();
         newOrder.setOrdersId(newOrderId);
         newOrder.setMember(user);
         newOrder.setOrderDate(new Date(System.currentTimeMillis()));
         newOrder.setStatus("รอดำเนินการชำระเงิน");
-        newOrder.setTotalAmount(totalCartPriceForOrder);
+        newOrder.setTotalAmount(finalTotal); 
+        
+        newOrder.setDiscountAmount(discountAmount);
+        newOrder.setCouponCode(couponCode);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartItem item : cartItemsForOrder) {
@@ -135,6 +150,15 @@ public class CheckoutController {
             return mavError;
         }
 
+        if (couponCode != null && !couponCode.isEmpty()) {
+            CouponManager cm = new CouponManager();
+            Coupon c = cm.getCouponByCode(couponCode);
+            if (c != null) {
+                c.setUsageCount(c.getUsageCount() + 1);
+                cm.updateCoupon(c);
+            }
+        }
+
         session.removeAttribute("cart");
         
         return new ModelAndView("redirect:/uploadSlip?orderId=" + newOrderId); 
@@ -153,7 +177,7 @@ public class CheckoutController {
         OrderManager om = new OrderManager();
         Orders order = om.getOrderById(orderId);
         
-        if(order == null /* || !order.getMember().getMemberId().equals(user.getMemberId()) */) {
+        if(order == null) {
              return new ModelAndView("redirect:/Orders?error=OrderNotFound");
         }
         
@@ -181,7 +205,6 @@ public class CheckoutController {
         ModelAndView mavError = null;
 
         if (order == null) {
-            System.err.println("Upload Error: Order not found or user mismatch.");
             return new ModelAndView("redirect:/Orders?error=OrderNotFound"); 
         }
 
@@ -198,7 +221,6 @@ public class CheckoutController {
                 savedFileName = UUID.randomUUID().toString() + fileExtension;
                 File serverFile = new File(dir, savedFileName);
                 slipImage.transferTo(serverFile); 
-                System.out.println("Slip saved to: " + serverFile.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 mavError = new ModelAndView("uploadSlip");
@@ -226,14 +248,7 @@ public class CheckoutController {
         boolean success = pm.savePayment(payment); 
 
         if (success) {
-            System.out.println("Payment saved. Updating Order status for " + orderId);
-            boolean statusUpdated = om.updateOrderStatus(orderId, "กำลังตรวจสอบ");
-            if (!statusUpdated) {
-                 System.err.println("Failed to update order status for Order ID: " + orderId);
-            }
-        }
-
-        if (success) {
+            om.updateOrderStatus(orderId, "กำลังตรวจสอบ");
             return new ModelAndView("redirect:/Orders?upload=success");
         } else {
             mavError = new ModelAndView("uploadSlip");
@@ -278,7 +293,6 @@ public class CheckoutController {
         
         OrderManager om = new OrderManager();
         List<Orders> allOrders = om.getOrdersByMemberId(user.getMemberId());
-        
         List<Orders> historyList = new ArrayList<>();
         
         if (allOrders != null) {
@@ -295,5 +309,4 @@ public class CheckoutController {
         
         return mav;
     }
-
 }

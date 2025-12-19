@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.springmvc.model.*" %>
 <%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -30,7 +29,6 @@
 
             <div class="nav-links">
                 <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
-                
                 <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
                 
                 <c:if test="${not empty sessionScope.user}">
@@ -46,7 +44,6 @@
                         </a>
                         <div class="dropdown-content">
                             <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
-                            
                             <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a> 
                             <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
                             <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
@@ -123,17 +120,42 @@
                     </div>
                     
                     <div class="summary-divider"></div>
+
+                    <div class="summary-item" style="color: #666; margin-top: 10px;">
+                        <span class="item-name">ยอดรวมสินค้า</span>
+                        <span class="item-price"><fmt:formatNumber value="${totalCartPrice}" type="currency" currencySymbol="฿"/></span>
+                    </div>
+
+                    <c:if test="${discount > 0}">
+                        <div class="summary-item" style="color: #28a745; font-weight: bold;">
+                            <span class="item-name"><i class="fas fa-ticket-alt"></i> ส่วนลด (${couponCode})</span>
+                            <span class="item-price">-<fmt:formatNumber value="${discount}" type="currency" currencySymbol="฿"/></span>
+                        </div>
+                    </c:if>
+                    
+                    <div class="summary-divider"></div>
                     
                     <div class="summary-total">
                         <span>ยอดชำระสุทธิ</span>
-                        <span class="final-price"><fmt:formatNumber value="${totalCartPrice}" type="currency" currencySymbol="฿"/></span>
+                        <span class="final-price">
+                            <fmt:formatNumber value="${finalPrice}" type="currency" currencySymbol="฿"/>
+                        </span>
                     </div>
+
+                    <input type="hidden" name="couponCode" value="${couponCode}">
+                    <input type="hidden" name="discountAmount" value="${discount}">
 
                     <button type="submit" class="btn-confirm-order">
                         ยืนยันการแจ้งโอน <i class="fas fa-arrow-right"></i>
                     </button>
                     
                     <a href="Cart" class="btn-back-cart">ย้อนกลับ</a>
+                    
+                    <c:if test="${not empty checkoutError}">
+                        <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 0.9em; text-align: center;">
+                            <i class="fas fa-exclamation-circle"></i> ${checkoutError}
+                        </div>
+                    </c:if>
                 </div>
             </div>
 
@@ -146,7 +168,6 @@
 
     <script>
         function showQr(qrId) {
-
             document.querySelectorAll('.qr-box').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.payment-card').forEach(el => el.classList.remove('selected'));
             

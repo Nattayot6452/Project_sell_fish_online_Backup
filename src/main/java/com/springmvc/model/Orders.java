@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "orders")
 public class Orders {
@@ -32,6 +31,12 @@ public class Orders {
 
     @Column(name = "total_amount", precision = 10, scale = 2, nullable = false)
     private Double totalAmount;
+
+	@Column(name = "discount_amount")
+    private Double discountAmount = 0.0;
+
+    @Column(name = "coupon_code")
+    private String couponCode;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails = new ArrayList<>();
@@ -115,5 +120,21 @@ public class Orders {
 	public void setMember(Member member) {
 		this.member = member;
 	}
+
+	public Double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
 
 }

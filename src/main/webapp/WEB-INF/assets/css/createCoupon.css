@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Sarabun', sans-serif;
+    background-color: #f4f6f9; /* สีพื้นหลังเทาอ่อน สบายตา */
+}
+
+/* กล่องฟอร์มหลัก */
+.form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px; /* มุมมน */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* เงานุ่มๆ */
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* การจัดวางช่องกรอกข้อมูล */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* สไตล์ช่อง Input และ Select */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Sarabun', sans-serif;
+    box-sizing: border-box; /* สำคัญ: ไม่ให้ input ล้นกรอบ */
+    transition: all 0.2s ease-in-out;
+    background-color: #fff;
+}
+
+/* ตอนคลิกที่ช่อง (Focus) */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6f42c1; /* สีม่วงธีมคูปอง */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15); /* เงาสีม่วงจางๆ */
+}
+
+/* คำอธิบายตัวเล็กๆ ใต้ช่อง */
+.form-group small {
+    display: block;
+    margin-top: 6px;
+    color: #888;
+    font-size: 0.85em;
+}
+
+/* ปุ่มยืนยัน (สีเขียว) */
+.btn-submit {
+    background-color: #28a745;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+}
+
+.btn-submit:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* ปุ่มยกเลิก (สีเทา) */
+a[href="ManageCoupons"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6c757d;
+    color: white;
+    padding: 14px;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+a[href="ManageCoupons"]:hover {
+    background-color: #5a6268;
+}
+
+/* จัด layout ให้ปุ่มอยู่คู่กัน */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+}

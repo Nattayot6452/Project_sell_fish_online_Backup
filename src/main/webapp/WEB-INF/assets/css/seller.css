@@ -1,0 +1,73 @@
+/* ตารางรายการคูปอง */
+.seller-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+.seller-table th, .seller-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.seller-table th {
+    background-color: #007bff; /* เปลี่ยนสีหัวตารางให้เป็นธีม Seller (สีน้ำเงิน) */
+    color: white;
+    font-weight: 600;
+}
+
+.seller-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* ป้ายสถานะ */
+.badge-code {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+    border: 1px dashed #ccc;
+    font-size: 1.1em;
+}
+
+.status-active {
+    color: #28a745;
+    font-weight: bold;
+    background: #d4edda;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+
+.status-inactive {
+    color: #dc3545;
+    font-weight: bold;
+    background: #f8d7da;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+
+/* หลอด Progress Bar */
+.progress-bar-bg {
+    width: 100%;
+    background: #e9ecef;
+    border-radius: 4px;
+    height: 8px;
+    margin-bottom: 5px;
+    overflow: hidden; /* สำคัญ */
+}
+
+.progress-bar-fill {
+    background: #17a2b8;
+    height: 100%;
+    border-radius: 4px;
+    /* เราจะไม่ใส่ width ที่นี่ แต่จะไปใส่ใน JSP */
+}

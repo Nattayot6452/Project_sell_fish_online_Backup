@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.springmvc.model.*" %>
 <%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -13,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/cart.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -88,8 +88,6 @@
                                     <tr>
                                         <td class="product-col">
                                             <div class="product-detail-flex">
-                                                
-                                                <%-- ✅ Logic รูปภาพ (Hybrid) ✅ --%>
                                                 <c:choose>
                                                     <c:when test="${item.product.productImg.startsWith('assets')}">
                                                         <img src="${pageContext.request.contextPath}/${item.product.productImg}" 
@@ -100,7 +98,6 @@
                                                              alt="${item.product.productName}">
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <%-- ✅ จบ Logic ✅ --%>
 
                                                 <div class="product-text">
                                                     <a href="ProductDetail?pid=${item.product.productId}" class="product-title">
@@ -145,21 +142,48 @@
                     <div class="cart-summary-section">
                         <div class="summary-card">
                             <h3>สรุปคำสั่งซื้อ</h3>
+                            
                             <div class="summary-row">
                                 <span>ยอดรวมสินค้า</span>
-                                <span><fmt:formatNumber value="${totalCartPrice}" type="currency" currencySymbol="฿"/></span>
+                                <span id="subtotal-display"><fmt:formatNumber value="${totalCartPrice}" type="currency" currencySymbol="฿"/></span>
                             </div>
-                            <div class="summary-divider"></div>
-                            <div class="summary-total">
+
+                            <div class="coupon-section" style="margin: 15px 0; padding-top: 15px; border-top: 1px dashed #ddd;">
+                                <label style="font-size: 14px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">
+                                    <i class="fas fa-ticket-alt"></i> มีคูปองส่วนลดไหม?
+                                </label>
+                                <div style="display: flex; gap: 5px;">
+                                    <input type="text" id="couponCode" placeholder="กรอกรหัสคูปอง" 
+                                           style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-transform: uppercase;">
+                                    <button type="button" onclick="applyCoupon()" 
+                                            style="padding: 8px 12px; background: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                        ใช้
+                                    </button>
+                                </div>
+                                <small id="couponMessage" style="display: block; margin-top: 5px; font-size: 13px; min-height: 20px;"></small>
+                            </div>
+
+                            <div class="summary-row discount-row" style="display: none; color: #28a745; margin-bottom: 10px;">
+                                <span>ส่วนลดคูปอง</span>
+                                <span id="discount-display">-฿0.00</span>
+                            </div>
+                            
+                            <div class="summary-divider" style="border-top: 2px solid #eee; margin: 10px 0;"></div>
+                            
+                            <div class="summary-total" style="font-size: 1.2em; font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 20px;">
                                 <span>ยอดสุทธิ</span>
-                                <span class="final-price">
+                                <span class="final-price" id="total-display">
                                     <fmt:formatNumber value="${totalCartPrice}" type="currency" currencySymbol="฿"/>
                                 </span>
                             </div>
                             
-                            <a href="checkout" class="btn-checkout">
+                            <input type="hidden" name="appliedCouponCode" id="appliedCouponCode">
+                            <input type="hidden" name="discountAmount" id="discountAmount" value="0">
+                            
+                            <button type="button" onclick="goToCheckout()" class="btn-checkout" 
+                                    style="width: 100%; padding: 15px; background: #00571d; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer;">
                                 ดำเนินการสั่งซื้อ <i class="fas fa-arrow-right"></i>
-                            </a>
+                            </button>
                         </div>
                     </div>
 
@@ -189,6 +213,68 @@
             if (newVal >= 1 && (isNaN(max) || newVal <= max)) {
                 input.value = newVal;
             }
+        }
+    </script>
+
+    <script>
+
+            let currentTotal = parseFloat('${totalCartPrice != null ? totalCartPrice : 0}');
+        function applyCoupon() {
+            let code = document.getElementById("couponCode").value.trim();
+            let msg = document.getElementById("couponMessage");
+            
+            if(code === "") {
+                msg.innerHTML = "<span style='color:red;'>กรุณากรอกรหัสคูปอง</span>";
+                return;
+            }
+
+            $.ajax({
+                url: "checkCoupon", 
+                type: "POST",
+                data: { 
+                    code: code,
+                    totalAmount: currentTotal 
+                },
+                success: function(response) {
+                    if (response.startsWith("INVALID")) {
+
+                        let errorText = response.split(":")[1];
+                        msg.innerHTML = "<span style='color:red;'><i class='fas fa-times-circle'></i> " + errorText + "</span>";
+                        resetCoupon();
+                    } else {
+
+                        let discount = parseFloat(response);
+                        let finalPrice = currentTotal - discount;
+                        
+                        msg.innerHTML = "<span style='color:green;'><i class='fas fa-check-circle'></i> ใช้คูปองสำเร็จ! ลดไป " + discount.toLocaleString() + " บาท</span>";
+                        
+                        document.querySelector(".discount-row").style.display = "flex";
+                        document.getElementById("discount-display").innerText = "-฿" + discount.toLocaleString();
+                        document.getElementById("total-display").innerText = "฿" + finalPrice.toLocaleString();
+                        
+                        document.getElementById("appliedCouponCode").value = code;
+                        document.getElementById("discountAmount").value = discount;
+                    }
+                },
+                error: function() {
+                    msg.innerHTML = "<span style='color:red;'>เกิดข้อผิดพลาดในการเชื่อมต่อ Server</span>";
+                }
+            });
+        }
+
+        function resetCoupon() {
+            document.querySelector(".discount-row").style.display = "none";
+            document.getElementById("total-display").innerText = "฿" + currentTotal.toLocaleString();
+            document.getElementById("appliedCouponCode").value = "";
+            document.getElementById("discountAmount").value = "0";
+        }
+
+        function goToCheckout() {
+
+            let code = document.getElementById("appliedCouponCode").value;
+            let discount = document.getElementById("discountAmount").value;
+            
+            window.location.href = "checkout?coupon=" + encodeURIComponent(code) + "&discount=" + discount;
         }
     </script>
 

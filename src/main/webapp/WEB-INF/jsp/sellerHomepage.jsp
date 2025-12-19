@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
@@ -33,6 +32,10 @@
 
                 <a href="SellerOrders" class="menu-btn">
                     <i class="fas fa-clipboard-list"></i> คำสั่งซื้อลูกค้า
+                </a>
+
+                <a href="ManageCoupons" class="menu-btn">
+                    <i class="fas fa-tags"></i> จัดการคูปอง
                 </a>
                 
                 <a href="AddProduct" class="menu-btn add-product-btn">
@@ -87,6 +90,12 @@
             <span class="action-title">ตรวจสอบสลิป</span>
             <span class="action-desc">ยืนยันการชำระเงิน</span>
         </a>
+        
+        <a href="ManageCoupons" class="action-card coupons">
+            <i class="fas fa-tags action-icon"></i>
+            <span class="action-title">จัดการคูปอง</span>
+            <span class="action-desc">สร้างส่วนลด/โปรโมชั่น</span>
+        </a>
     </div>
 
     <div class="container">
@@ -139,8 +148,6 @@
                     <c:forEach items="${products}" var="p">
                         <div class="product-card">
                             <div class="product-img-box">
-                                
-                                <%-- ✅ Logic รูปภาพ (Hybrid) ✅ --%>
                                 <c:choose>
                                     <c:when test="${p.productImg.startsWith('assets')}">
                                         <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
@@ -151,16 +158,13 @@
                                 </c:choose>
 
                                 <div class="card-actions">
-                                    <%-- ✅ เพิ่มปุ่มดูรายละเอียด (Eye Icon) ✅ --%>
                                     <a href="ProductDetail?pid=${p.productId}" class="btn-circle" title="ดูรายละเอียด" style="background-color: #17a2b8; color: white;">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    
                                     <a href="EditProduct?id=${p.productId}" class="btn-circle btn-edit" title="แก้ไข">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <a href="DeleteProduct?id=${p.productId}" class="btn-circle btn-delete" title="ลบ"
-                                       onclick="return confirm('ยืนยันการลบสินค้านี้?');">
+                                    <a href="DeleteProduct?id=${p.productId}" class="btn-circle btn-delete" title="ลบ" onclick="return confirm('ยืนยันการลบสินค้านี้?');">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>

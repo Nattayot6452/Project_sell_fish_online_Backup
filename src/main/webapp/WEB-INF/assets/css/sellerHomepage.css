@@ -12,6 +12,7 @@
     --warning-color: #ffc107;
     --info-color: #17a2b8;
     --success-color: #28a745;
+    --purple-color: #6f42c1; /* ✅ เพิ่มสีม่วงสำหรับคูปอง */
 }
 
 body {
@@ -70,7 +71,7 @@ body {
 .dropdown-content a:hover { background-color: #f8f9fa; color: var(--primary-color); }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); top: 100%; } }
 
-/* --- Hero Slider (เหมือนหน้า Main) --- */
+/* --- Hero Slider --- */
 .hero-section {
     position: relative; height: 400px; overflow: hidden; margin-bottom: 40px;
 }
@@ -89,7 +90,7 @@ body {
 .hero-content h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 .hero-content p { font-size: 20px; margin-bottom: 30px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
 
-/* Quick Action Cards (แทนหมวดหมู่) */
+/* Quick Action Cards */
 .dashboard-actions {
     display: flex; justify-content: center; gap: 30px; margin-top: -60px; position: relative; z-index: 10; padding: 0 20px; margin-bottom: 50px;
 }
@@ -97,19 +98,25 @@ body {
     background: white; width: 220px; padding: 30px 20px; border-radius: 15px;
     text-align: center; text-decoration: none; color: var(--text-dark);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s;
-    border-bottom: 4px solid transparent;
+    border-bottom: 4px solid transparent; /* ใช้ Border Bottom เหมือนกันทุกอัน */
 }
 .action-card:hover { transform: translateY(-10px); }
+
+/* สีของขีดด้านล่างแต่ละการ์ด */
 .action-card.add { border-bottom-color: var(--info-color); }
 .action-card.orders { border-bottom-color: var(--warning-color); }
 .action-card.slips { border-bottom-color: var(--success-color); }
+.action-card.coupons { border-bottom-color: var(--purple-color); } /* ✅ เพิ่มสีม่วง */
 
 .action-icon {
     font-size: 40px; margin-bottom: 15px; display: block;
 }
+
+/* สีของไอคอนแต่ละการ์ด */
 .action-card.add .action-icon { color: var(--info-color); }
 .action-card.orders .action-icon { color: var(--warning-color); }
 .action-card.slips .action-icon { color: var(--success-color); }
+.action-card.coupons .action-icon { color: var(--purple-color); } /* ✅ เพิ่มสีม่วง */
 
 .action-title { font-size: 18px; font-weight: bold; display: block; }
 .action-desc { font-size: 13px; color: #888; margin-top: 5px; display: block; }
@@ -136,7 +143,6 @@ body {
 }
 .product-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
-/* Edit/Delete Buttons Overlay */
 .card-actions {
     position: absolute; top: 10px; right: 10px;
     display: flex; gap: 8px;
@@ -161,18 +167,7 @@ body {
 .product-name { font-size: 16px; margin: 0 0 10px; color: var(--text-dark); height: 44px; overflow: hidden; }
 .price { font-size: 18px; font-weight: bold; color: var(--primary-color); }
 
-/* Empty State */
 .empty-state { text-align: center; padding: 60px; color: #888; grid-column: 1 / -1; }
 .empty-icon { font-size: 60px; margin-bottom: 20px; color: #ddd; }
 
-/* Footer */
 .site-footer { text-align: center; padding: 20px; background: var(--primary-color); color: rgba(255,255,255,0.8); margin-top: 40px; }
-
- .seller-badge { background: #ffc107; color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; }
-        .seller-actions { margin-top: 30px; padding: 25px; border: 2px dashed #ffc107; border-radius: 15px; background: #fffdf5; }
-        .seller-actions h3 { margin-top: 0; color: #d39e00; }
-        .btn-ready { background-color: #ffc107; color: #333; }
-        .btn-complete { background-color: #28a745; color: white; }
-        .btn-cancel-order { background-color: #dc3545; color: white; }
-        .btn-action { display: inline-block; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-right: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .btn-action:hover { transform: translateY(-2px); opacity: 0.9; }

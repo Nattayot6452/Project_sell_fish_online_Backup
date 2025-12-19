@@ -15,8 +15,8 @@ public class HibernateConnection {
 
 	public static SessionFactory doHibernateConnection() {
 		Properties database = new Properties();
-		// database.setProperty("hibernate.hbm2ddl.auto", "create");
-		// //ต้องใช้อันนี้ก่อนแล้วปิดคอมเม้น update ไว้ แล้วrun จะเป็นการสร้างตาราง
+		 database.setProperty("hibernate.hbm2ddl.auto", "create");
+		 //ต้องใช้อันนี้ก่อนแล้วปิดคอมเม้น update ไว้ แล้วrun จะเป็นการสร้างตาราง
 		database.setProperty("hibernate.hbm2ddl.auto", "update"); // หลังจากสร้างตารางแล้วให้เอาออก
 		database.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
 		database.setProperty("hibernate.connection.username", uname);
@@ -36,7 +36,8 @@ public class HibernateConnection {
 				.addAnnotatedClass(Member.class)
 				.addAnnotatedClass(FavoriteProduct.class)
 				.addAnnotatedClass(Seller.class)
-				.addAnnotatedClass(Admin.class);
+				.addAnnotatedClass(Admin.class)
+				.addAnnotatedClass(Coupon.class);
 
 		StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
 		sessionFactory = cfg.buildSessionFactory(ssrb.build());
