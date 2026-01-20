@@ -1,6 +1,6 @@
 package com.springmvc.controller;
 
-import com.springmvc.model.*;
+import com.springmvc.model.*; 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,6 @@ public class CheckoutController {
         ModelAndView mav = new ModelAndView("checkout");
         mav.addObject("cartItems", cartItems);
         mav.addObject("totalCartPrice", totalCartPrice);
-        
         mav.addObject("couponCode", couponCode);
         mav.addObject("discount", discount);
         mav.addObject("finalPrice", finalPrice);
@@ -64,7 +63,7 @@ public class CheckoutController {
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public ModelAndView createOrder(
             @RequestParam("paymentMethod") String paymentMethod,
-            @RequestParam(value = "couponCode", required = false) String couponCode,  
+            @RequestParam(value = "couponCode", required = false) String couponCode, 
             @RequestParam(value = "discountAmount", defaultValue = "0.0") Double discountAmount, 
             HttpSession session) {
         
@@ -81,13 +80,13 @@ public class CheckoutController {
         double totalCartPriceForOrder = 0.0;
         ProductManager pm = new ProductManager();
         
+        //เช็คสต็อกสินค้าก่อน
         for (Map.Entry<String, Integer> entry : cartSessionData.entrySet()) {
             Product product = pm.getProduct(entry.getKey());
             if (product != null) {
                 if(product.getStock() < entry.getValue()) {
-
+                    // ถ้าของหมด ให้เด้งกลับ
                     ModelAndView mavError = new ModelAndView("checkout");
-                
                     List<CartItem> currentCartItems = new ArrayList<>();
                     double currentTotal = 0.0;
                     ProductManager pmForError = new ProductManager();
@@ -99,7 +98,6 @@ public class CheckoutController {
                              currentTotal += i.getItemTotal();
                          }
                     }
-
                     mavError.addObject("cartItems", currentCartItems); 
                     mavError.addObject("totalCartPrice", currentTotal);
                     mavError.addObject("finalPrice", currentTotal - discountAmount);
@@ -123,8 +121,7 @@ public class CheckoutController {
         newOrder.setMember(user);
         newOrder.setOrderDate(new Date(System.currentTimeMillis()));
         newOrder.setStatus("รอดำเนินการชำระเงิน");
-        newOrder.setTotalAmount(finalTotal); 
-        
+        newOrder.setTotalAmount(finalTotal);
         newOrder.setDiscountAmount(discountAmount);
         newOrder.setCouponCode(couponCode);
 
@@ -138,6 +135,8 @@ public class CheckoutController {
             detail.setPrice(item.getProduct().getPrice());
             orderDetails.add(detail);
         }
+
+        newOrder.setOrderDetails(orderDetails);
         
         OrderManager om = new OrderManager();
         boolean saved = om.saveNewOrder(newOrder, orderDetails);
@@ -150,6 +149,17 @@ public class CheckoutController {
             return mavError;
         }
 
+        // ตัดสต็อกสินค้า
+        for (CartItem item : cartItemsForOrder) {
+            Product p = item.getProduct();
+            int newStock = p.getStock() - item.getQuantity();
+            if (newStock < 0) newStock = 0;
+            
+            p.setStock(newStock);
+            pm.updateProduct(p); 
+        }
+
+        // ตัดสต็อกคูปอง
         if (couponCode != null && !couponCode.isEmpty()) {
             CouponManager cm = new CouponManager();
             Coupon c = cm.getCouponByCode(couponCode);
@@ -213,6 +223,7 @@ public class CheckoutController {
                 String uploadDir = "/app/uploads/slips/"; 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs(); 
+                
                 String originalFileName = slipImage.getOriginalFilename();
                 String fileExtension = "";
                 if (originalFileName != null && originalFileName.contains(".")) {
@@ -285,16 +296,13 @@ public class CheckoutController {
    
     @RequestMapping(value = "/History", method = RequestMethod.GET)
     public ModelAndView showHistoryPage(HttpSession session, HttpServletRequest request) { 
-        
         Member user = (Member) session.getAttribute("user");
         if (user == null) {
             return new ModelAndView("redirect:/Login");
         }
-        
         OrderManager om = new OrderManager();
         List<Orders> allOrders = om.getOrdersByMemberId(user.getMemberId());
         List<Orders> historyList = new ArrayList<>();
-        
         if (allOrders != null) {
             for (Orders order : allOrders) {
                 String status = order.getStatus();
@@ -303,10 +311,8 @@ public class CheckoutController {
                 }
             }
         }
-        
         ModelAndView mav = new ModelAndView("history");
         mav.addObject("orderList", historyList); 
-        
         return mav;
     }
 }

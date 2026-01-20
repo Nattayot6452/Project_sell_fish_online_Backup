@@ -1,13 +1,13 @@
 package com.springmvc.controller;
 
-import com.springmvc.model.OrderManager;
-import com.springmvc.model.Orders;
+import com.springmvc.model.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.List;
 
 @Controller
 public class OrderDetailController {
@@ -45,8 +45,44 @@ public class OrderDetailController {
         }
 
         OrderManager om = new OrderManager();
-        om.updateOrderStatus(orderId, status);
+        
+        if ("Cancelled".equals(status) || "ยกเลิกคำสั่งซื้อ".equals(status) || "ชำระเงินไม่ผ่าน".equals(status)) {
+            
+            Orders order = om.getOrderWithDetails(orderId);
+            
+            if (order != null && !"Cancelled".equals(order.getStatus()) && !"ยกเลิกคำสั่งซื้อ".equals(order.getStatus())) {
+                
+                ProductManager pm = new ProductManager();
+                List<OrderDetail> details = order.getOrderDetails(); 
+                
+                if (details != null) {
+                    for (OrderDetail detail : details) {
+                        Product p = detail.getProduct();
+                        if (p != null) {
 
+                            int currentStock = p.getStock();
+                            int returnQty = detail.getQuantity();
+                            p.setStock(currentStock + returnQty);
+                            
+                            pm.updateProduct(p); 
+                            System.out.println(">>> Restored Stock for " + p.getProductName() + ": " + p.getStock());
+                        }
+                    }
+                }
+
+                if (order.getCouponCode() != null && !order.getCouponCode().isEmpty()) {
+                    CouponManager cm = new CouponManager();
+                    Coupon c = cm.getCouponByCode(order.getCouponCode());
+                    if (c != null) {
+                        c.setUsageCount(c.getUsageCount() - 1);
+                        cm.updateCoupon(c);
+                        System.out.println(">>> Restored Coupon Usage: " + c.getCouponCode());
+                    }
+                }
+            }
+        }
+
+        om.updateOrderStatus(orderId, status);
         return new ModelAndView("redirect:/OrderDetail?orderId=" + orderId);
     }
     

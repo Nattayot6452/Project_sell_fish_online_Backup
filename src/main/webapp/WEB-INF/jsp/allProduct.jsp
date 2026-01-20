@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.springmvc.model.*" %>
 <%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -10,8 +9,10 @@
 <head>
     <meta charset="UTF-8">
     <title>สินค้าทั้งหมด | Fish Online</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/allProduct.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/allProduct.css?v=<%=System.currentTimeMillis()%>">
+    
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -30,7 +31,6 @@
 
             <div class="nav-links">
                 <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
-                
                 <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
                 
                 <c:if test="${not empty sessionScope.user}">
@@ -62,7 +62,7 @@
         </div>
     </nav>
 
-    <div class="container main-container">
+    <div class="main-container">
         
         <div class="page-header">
             <h1><i class="fas fa-store"></i> สินค้าทั้งหมด</h1>
@@ -89,7 +89,10 @@
                     <label for="sortBy"><i class="fas fa-sort-amount-down"></i> เรียงตาม:</label>
                     <div class="select-wrapper">
                         <select name="sortBy" id="sortBy" onchange="this.form.submit()">
-                            <option value="default" ${param.sortBy == 'default' ? 'selected' : ''}>ค่าเริ่มต้น</option>
+                            <option value="default" ${param.sortBy == 'default' ? 'selected' : ''}>แนะนำ</option>
+                            <option value="best_selling" ${param.sortBy == 'best_selling' ? 'selected' : ''}>สินค้าขายดี</option>
+                            <option value="newest" ${param.sortBy == 'newest' ? 'selected' : ''}>ใหม่ที่สุด</option>
+                            <option value="oldest" ${param.sortBy == 'oldest' ? 'selected' : ''}>เก่าที่สุด</option>
                             <option value="price_asc" ${param.sortBy == 'price_asc' ? 'selected' : ''}>ราคา: ต่ำ ➜ สูง</option>
                             <option value="price_desc" ${param.sortBy == 'price_desc' ? 'selected' : ''}>ราคา: สูง ➜ ต่ำ</option>
                             <option value="name_asc" ${param.sortBy == 'name_asc' ? 'selected' : ''}>ชื่อ: A-Z</option>
@@ -104,9 +107,11 @@
             <c:forEach items="${Product}" var="p">
                 <div class="product-card">
                     <div class="product-img-box">
-                        
-                        <%-- ✅ Logic รูปภาพ (Hybrid) ✅ --%>
+                        <%-- ✅✅✅ ไฮไลท์: เช็คภาพ Null เพื่อป้องกันหน้าพังถ้าข้อมูลสินค้าไม่สมบูรณ์ ✅✅✅ --%>
                         <c:choose>
+                            <c:when test="${empty p.productImg}">
+                                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="No Image" style="opacity: 0.5;">
+                            </c:when>
                             <c:when test="${p.productImg.startsWith('assets')}">
                                 <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
                             </c:when>
@@ -114,7 +119,6 @@
                                 <img src="${pageContext.request.contextPath}/profile-uploads/${p.productImg}" alt="${p.productName}">
                             </c:otherwise>
                         </c:choose>
-                        <%-- ✅ จบ Logic ✅ --%>
                         
                         <div class="card-actions">
                             <a href="${empty sessionScope.user ? 'Login' : 'addToCart?productId='.concat(p.productId)}"
@@ -137,11 +141,17 @@
 
                     <div class="product-info">
                         <h3 class="product-name">${p.productName}</h3>
-                        <div class="price-row">
-                            <span class="price">
+                        
+                        <div class="price-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                            <span class="price" style="font-size: 1.1rem; font-weight: bold; color: #00571d;">
                                 <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/>
                             </span>
-                            <span class="stock-info">เหลือ ${p.stock} ตัว</span>
+                            
+                            <span class="stock-badge-info ${p.stock < 5 ? 'low-stock' : ''}">
+                                <i class="fas fa-box-open"></i> 
+                                ${p.stock > 0 ? p.stock : 'หมด'} 
+                                ${p.stock > 0 ? 'ตัว' : ''}
+                            </span>
                         </div>
                     </div>
                 </div>

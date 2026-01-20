@@ -13,6 +13,8 @@ import com.springmvc.model.Product;
 import com.springmvc.model.ProductManager;
 import com.springmvc.model.Review;
 import com.springmvc.model.ReviewManager;
+import com.springmvc.model.Species;
+import com.springmvc.model.SpeciesManager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.Session;
@@ -21,30 +23,52 @@ import org.hibernate.SessionFactory;
 @Controller
 public class ProductController {
 	
-	 @RequestMapping(value="/AllProduct", method=RequestMethod.GET)
-	    public ModelAndView productPage(HttpServletRequest request) {
+	@RequestMapping(value="/AllProduct", method=RequestMethod.GET)
+    public ModelAndView productPage(
+            @RequestParam(value = "category", defaultValue = "all") String category,
+            @RequestParam(value = "sortBy", defaultValue = "default") String sortBy,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            HttpServletRequest request) {
 
-	        ProductManager pm = new ProductManager();
-	        List<Product> products = pm.getListProducts();
+        int pageSize = 15;
+        ProductManager pm = new ProductManager();
+        SpeciesManager sm = new SpeciesManager();
 
-	        ModelAndView mav = new ModelAndView("products");
-	        
-	        mav.addObject("Product", products);
-	        return mav;
-	    }
+        List<Product> products = pm.getProductsWithFilter(category, sortBy, page, pageSize);
+        
+        long totalProducts = pm.countProducts(category);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+        List<Species> speciesList = sm.getAllSpecies(); 
+
+        ModelAndView mav = new ModelAndView("allProduct"); 
+        
+        mav.addObject("Product", products);
+        mav.addObject("speciesList", speciesList);
+        mav.addObject("currentPage", page);
+        mav.addObject("totalPages", totalPages);
+        
+        return mav;
+    }
 	 
-	 @RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
-		public ModelAndView searchProducts(HttpServletRequest request) {
-			String searchtext = request.getParameter("searchtext");
-			
-			ModelAndView mav = new ModelAndView("products");
-			ProductManager pm = new ProductManager();
-			List<Product> products = pm.getSearchProductsBySpecies(searchtext);
-			mav.addObject("Product", products);
-			return mav;
-		}
+	@RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
+    public ModelAndView searchProducts(HttpServletRequest request) {
+        String searchtext = request.getParameter("searchtext");
+        
+        ModelAndView mav = new ModelAndView("allProduct");
+        
+        ProductManager pm = new ProductManager();
+        SpeciesManager sm = new SpeciesManager();
+        
+        List<Product> products = pm.getSearchProductsBySpecies(searchtext);
+        List<Species> speciesList = sm.getAllSpecies();
+        mav.addObject("Product", products);
+        mav.addObject("speciesList", speciesList);
+        
+        return mav;
+    }
 	 
-	 @RequestMapping(value="/ProductDetail", method=RequestMethod.GET)
+	@RequestMapping(value="/ProductDetail", method=RequestMethod.GET)
     public ModelAndView openProductDetail(
             @RequestParam("pid") String pid,
             @RequestParam(value = "sort", defaultValue = "newest") String sort, 
@@ -67,7 +91,7 @@ public class ProductController {
         return mav;
     }
 
-	 public boolean deleteProduct(String productId) {
+	public boolean deleteProduct(String productId) {
         boolean result = false;
         Session session = null;
         try {

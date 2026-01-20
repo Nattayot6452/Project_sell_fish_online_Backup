@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.springmvc.model.*" %>
 <%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -16,20 +15,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* CSS ปรับแต่งเพิ่มเติมเฉพาะหน้านี้ */
         .seller-badge { background: #ffc107; color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; }
-        
-        /* สไตล์ปุ่มสำหรับ Seller */
-        .seller-actions-row {
-            display: flex; gap: 10px; width: 100%; align-items: center;
-        }
+        .seller-actions-row { display: flex; gap: 10px; width: 100%; align-items: center; }
         .btn-edit-product {
             background-color: #ffc107; color: #333; border: none; flex: 1;
             padding: 12px; border-radius: 50px; text-decoration: none; font-weight: bold; text-align: center;
             transition: transform 0.2s;
         }
         .btn-edit-product:hover { background-color: #e0a800; transform: translateY(-2px); }
-        
         .btn-delete-product {
             background-color: #dc3545; color: white; border: none; flex: 1;
             padding: 12px; border-radius: 50px; text-decoration: none; font-weight: bold; text-align: center;
@@ -40,10 +33,8 @@
 </head>
 <body>
 
-    <%-- ✅✅✅ แยก Navbar ตามสิทธิ์การใช้งาน (Seller vs User) ✅✅✅ --%>
+    <%-- Navbar --%>
     <c:choose>
-        
-        <%-- 🟢 1. Navbar สำหรับ SELLER --%>
         <c:when test="${not empty sessionScope.seller}">
             <nav class="navbar">
                 <div class="nav-container">
@@ -81,8 +72,6 @@
                 </div>
             </nav>
         </c:when>
-
-        <%-- 🔵 2. Navbar สำหรับ USER --%>
         <c:otherwise>
             <nav class="navbar">
                 <div class="nav-container">
@@ -145,7 +134,6 @@
             <c:when test="${not empty product}">
                 
                 <div class="product-wrapper">
-                    
                     <div class="product-gallery">
                         <div class="main-img-box">
                             <c:choose>
@@ -160,9 +148,15 @@
                     </div>
 
                     <div class="product-details-info">
-                        <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
-                            ${product.stock > 0 ? 'มีสินค้าพร้อมส่ง' : 'สินค้าหมดชั่วคราว'}
-                        </span>
+                        <%-- ✅✅✅ ส่วนที่แก้ไข: เพิ่มจำนวนคงเหลือ (Stock) ✅✅✅ --%>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
+                                ${product.stock > 0 ? 'มีสินค้าพร้อมส่ง' : 'สินค้าหมดชั่วคราว'}
+                            </span>
+                            <span style="color: #666; font-size: 0.95em; font-weight: 500;">
+                                (เหลือ ${product.stock} ชิ้น)
+                            </span>
+                        </div>
                         
                         <h1 class="product-title">${product.productName}</h1>
                         <p class="product-category">รหัสสินค้า: ${product.productId} | หมวดหมู่: ${product.species.speciesName}</p>
@@ -177,45 +171,30 @@
 
                         <div class="specs-grid">
                             <div class="spec-item">
-                                <i class="fas fa-globe-asia"></i>
-                                <span>แหล่งกำเนิด</span>
-                                <strong>${product.origin}</strong>
+                                <i class="fas fa-globe-asia"></i> <span>แหล่งกำเนิด</span> <strong>${product.origin}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-water"></i>
-                                <span>ประเภทน้ำ</span>
-                                <strong>${product.waterType}</strong>
+                                <i class="fas fa-water"></i> <span>ประเภทน้ำ</span> <strong>${product.waterType}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-thermometer-half"></i>
-                                <span>อุณหภูมิ</span>
-                                <strong>${product.temperature}</strong>
+                                <i class="fas fa-thermometer-half"></i> <span>อุณหภูมิ</span> <strong>${product.temperature}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-ruler"></i>
-                                <span>ขนาดโตเต็มวัย</span>
-                                <strong>${product.size}</strong>
+                                <i class="fas fa-ruler"></i> <span>ขนาดโตเต็มวัย</span> <strong>${product.size}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-heartbeat"></i>
-                                <span>อายุขัยเฉลี่ย</span>
-                                <strong>${product.lifeSpan}</strong>
+                                <i class="fas fa-heartbeat"></i> <span>อายุขัยเฉลี่ย</span> <strong>${product.lifeSpan}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-hand-holding-heart"></i>
-                                <span>ระดับการดูแล</span>
-                                <strong>${product.careLevel}</strong>
+                                <i class="fas fa-hand-holding-heart"></i> <span>ระดับการดูแล</span> <strong>${product.careLevel}</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-paw"></i>
-                                <span>นิสัย</span>
-                                <strong>${product.isAggressive}</strong>
+                                <i class="fas fa-paw"></i> <span>นิสัย</span> <strong>${product.isAggressive}</strong>
                             </div>
                         </div>
 
                         <div class="purchase-action">
                             <c:choose>
-                                <%-- ✅ กรณีเป็น Seller: แสดงปุ่มแก้ไข และ ลบ --%>
                                 <c:when test="${not empty sessionScope.seller}">
                                     <div class="seller-actions-row">
                                         <a href="EditProduct?id=${product.productId}" class="btn-edit-product">
@@ -231,7 +210,6 @@
                                     </div>
                                 </c:when>
 
-                                <%-- กรณีเป็น User/Guest: แสดงปุ่มซื้อ --%>
                                 <c:otherwise>
                                     <c:if test="${product.stock > 0}">
                                         <div class="quantity-control">
@@ -255,11 +233,12 @@
                             <p class="out-stock-msg"><i class="fas fa-exclamation-circle"></i> ขออภัย สินค้าหมดชั่วคราว</p>
                         </c:if>
                     </div>
-                </div> <%-- ✅✅✅ ส่วนแสดงรีวิวสินค้า (Review Section) เพิ่มใหม่ตรงนี้ ✅✅✅ --%>
+                </div>
+
+                <%-- Review Section --%>
                 <div class="reviews-container">
                     <div class="reviews-header">
                         <h3><i class="fas fa-star"></i> รีวิวจากผู้ใช้งาน (${totalReviews})</h3>
-                        
                         <div class="rating-summary">
                             <span class="big-score">${avgRating}</span>
                             <div class="stars-display">
@@ -321,7 +300,6 @@
                         </c:choose>
                     </div>
                 </div>
-                <%-- ✅✅✅ จบส่วนรีวิว ✅✅✅ --%>
 
             </c:when>
             <c:otherwise>
