@@ -23,22 +23,33 @@ import java.util.Map;
 public class CartController {
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.GET)
-    public ModelAndView addToCart(@RequestParam("productId") String productId, HttpSession session) {
+    public ModelAndView addToCart(
+            @RequestParam("productId") String productId,
+            @RequestParam(value = "quantity", defaultValue = "1") int quantity,
+            HttpSession session) {
+        
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart == null) { cart = new HashMap<>(); }
+        
         int currentQuantityInCart = cart.getOrDefault(productId, 0);
-        cart.put(productId, currentQuantityInCart + 1);
+        
+        cart.put(productId, currentQuantityInCart + quantity);
+        
         session.setAttribute("cart", cart);
         System.out.println("Added to cart: " + cart);
+        
         return new ModelAndView("redirect:/AllProduct");
     }
 
     @RequestMapping(value = "/Cart", method = RequestMethod.GET)
     public ModelAndView showCart(HttpSession session) {
+
         ModelAndView mav = new ModelAndView("cart");
         Map<String, Integer> cartSessionData = (Map<String, Integer>) session.getAttribute("cart");
+
         List<CartItem> cartItems = new ArrayList<>();
         double totalCartPrice = 0.0;
+
         ProductManager pm = new ProductManager();
         if (cartSessionData != null && !cartSessionData.isEmpty()) {
             for (Map.Entry<String, Integer> entry : cartSessionData.entrySet()) {
@@ -58,7 +69,9 @@ public class CartController {
 
     @RequestMapping(value = "/removeFromCart", method = RequestMethod.GET)
     public ModelAndView removeFromCart(@RequestParam("productId") String productId, HttpSession session) {
+
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        
         if (cart != null && cart.containsKey(productId)) {
             cart.remove(productId);
             session.setAttribute("cart", cart);
