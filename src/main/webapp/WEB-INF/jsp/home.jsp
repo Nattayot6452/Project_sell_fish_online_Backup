@@ -88,30 +88,35 @@
 
     <div class="section-container">
         <h2 class="section-title"><i class="fas fa-layer-group"></i> หมวดหมู่ยอดนิยม</h2>
+
         <div class="categories-grid">
-            <a href="AllProduct?category=ปลากัด" class="category-card">
+
+            <a href="AllProduct?category=ปลากัดไทย" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/betta.jpg" alt="ปลากัด">
                 </div>
                 <span>ปลากัด</span>
             </a>
+
             <a href="AllProduct?category=ปลาหางนกยูง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/guppy.jpg" alt="ปลาหางนกยูง">
                 </div>
                 <span>ปลาหางนกยูง</span>
             </a>
+
             <a href="AllProduct?category=ปลาทอง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/goldfish.jpg" alt="ปลาทอง">
                 </div>
                 <span>ปลาทอง</span>
             </a>
-            <a href="AllProduct?category=ปลาเล็ก" class="category-card">
+
+            <a href="AllProduct?category=ปลาเนออน" class="category-card">
                 <div class="cat-img-wrapper">
-                    <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเล็ก">
+                    <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเนออน">
                 </div>
-                <span>ปลาเล็ก</span>
+                <span>ปลาเล็ก/ปลาเนออน</span>
             </a>
         </div>
     </div>

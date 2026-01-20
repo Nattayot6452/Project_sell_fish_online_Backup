@@ -88,30 +88,35 @@
 
     <div class="section-container">
         <h2 class="section-title"><i class="fas fa-layer-group"></i> หมวดหมู่ยอดนิยม</h2>
+
         <div class="categories-grid">
-            <a href="AllProduct?category=ปลากัด" class="category-card">
+
+            <a href="AllProduct?category=ปลากัดไทย" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/betta.jpg" alt="ปลากัด">
                 </div>
                 <span>ปลากัด</span>
             </a>
+
             <a href="AllProduct?category=ปลาหางนกยูง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/guppy.jpg" alt="ปลาหางนกยูง">
                 </div>
                 <span>ปลาหางนกยูง</span>
             </a>
+
             <a href="AllProduct?category=ปลาทอง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/goldfish.jpg" alt="ปลาทอง">
                 </div>
                 <span>ปลาทอง</span>
             </a>
-            <a href="AllProduct?category=ปลาเล็ก" class="category-card">
+
+            <a href="AllProduct?category=ปลาเนออน" class="category-card">
                 <div class="cat-img-wrapper">
-                    <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเล็ก">
+                    <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเนออน">
                 </div>
-                <span>ปลาเล็ก</span>
+                <span>ปลาเล็ก/ปลาเนออน</span>
             </a>
         </div>
     </div>
@@ -129,18 +134,14 @@
                         <div class="product-card">
                             <div class="product-img-box">
                                 
-                                <%-- vvvvv 🟢 แก้ไข: เพิ่ม Logic Hybrid (เก่า/ใหม่) 🟢 vvvvv --%>
                                 <c:choose>
-                                    <%-- กรณีรูปเก่า (Assets) --%>
                                     <c:when test="${p.productImg.startsWith('assets')}">
                                         <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
                                     </c:when>
-                                    <%-- กรณีรูปใหม่ (Uploads) --%>
                                     <c:otherwise>
                                         <img src="${pageContext.request.contextPath}/profile-uploads/${p.productImg}" alt="${p.productName}">
                                     </c:otherwise>
                                 </c:choose>
-                                <%-- ^^^^^ 🟢 (สิ้นสุดการแก้ไข) 🟢 ^^^^^ --%>
                                 
                                 <div class="card-actions">
                                     <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
