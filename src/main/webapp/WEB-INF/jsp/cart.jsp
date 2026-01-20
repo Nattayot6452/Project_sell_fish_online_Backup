@@ -155,13 +155,11 @@
                                 <div style="display: flex; gap: 5px;">
                                     <input type="text" id="couponCode" placeholder="กรอกรหัสคูปอง" 
                                            style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-transform: uppercase;">
-                                    <button type="button" onclick="applyCoupon()" 
-                                            style="padding: 8px 12px; background: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                        ใช้
+                                    <button type="button" onclick="checkCoupon()" style="padding: 8px 12px; background: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                            ใช้
                                     </button>
                                 </div>
-                                <small id="couponMessage" style="display: block; margin-top: 5px; font-size: 13px; min-height: 20px;"></small>
-                            </div>
+                                <small id="couponMsg" style="display: block; margin-top: 5px; font-size: 13px; min-height: 20px;"></small>                            </div>
 
                             <div class="summary-row discount-row" style="display: none; color: #28a745; margin-bottom: 10px;">
                                 <span>ส่วนลดคูปอง</span>
@@ -218,35 +216,33 @@
 
     <script>
 
-            let currentTotal = parseFloat('${totalCartPrice != null ? totalCartPrice : 0}');
-        function applyCoupon() {
-            let code = document.getElementById("couponCode").value.trim();
-            let msg = document.getElementById("couponMessage");
-            
-            if(code === "") {
+        let currentTotal = parseFloat("${totalCartPrice != null ? totalCartPrice : 0}");
+
+        function checkCoupon() {
+            let code = document.getElementById("couponCode").value;
+            let msg = document.getElementById("couponMsg");
+
+            if (code.trim() === "") {
                 msg.innerHTML = "<span style='color:red;'>กรุณากรอกรหัสคูปอง</span>";
                 return;
             }
 
             $.ajax({
-                url: "checkCoupon", 
-                type: "POST",
-                data: { 
-                    code: code,
-                    totalAmount: currentTotal 
-                },
+                type: "GET",
+                url: "checkCoupon",
+                data: { code: code },
                 success: function(response) {
-                    if (response.startsWith("INVALID")) {
 
-                        let errorText = response.split(":")[1];
-                        msg.innerHTML = "<span style='color:red;'><i class='fas fa-times-circle'></i> " + errorText + "</span>";
+                    if (!response.startsWith("VALID")) {
+                        msg.innerHTML = "<span style='color:red;'>" + response + "</span>";
                         resetCoupon();
                     } else {
 
-                        let discount = parseFloat(response);
-                        let finalPrice = currentTotal - discount;
-                        
-                        msg.innerHTML = "<span style='color:green;'><i class='fas fa-check-circle'></i> ใช้คูปองสำเร็จ! ลดไป " + discount.toLocaleString() + " บาท</span>";
+                        let parts = response.split("|");
+                        let discount = parseFloat(parts[1]);
+                        let finalPrice = parseFloat(parts[2]);
+
+                        msg.innerHTML = "<span style='color:green;'>ใช้คูปองสำเร็จ! ลด " + discount.toLocaleString() + " บาท</span>";
                         
                         document.querySelector(".discount-row").style.display = "flex";
                         document.getElementById("discount-display").innerText = "-฿" + discount.toLocaleString();
@@ -264,13 +260,13 @@
 
         function resetCoupon() {
             document.querySelector(".discount-row").style.display = "none";
-            document.getElementById("total-display").innerText = "฿" + currentTotal.toLocaleString();
+
+            document.getElementById("total-display").innerText = "฿" + currentTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById("appliedCouponCode").value = "";
             document.getElementById("discountAmount").value = "0";
         }
 
         function goToCheckout() {
-
             let code = document.getElementById("appliedCouponCode").value;
             let discount = document.getElementById("discountAmount").value;
             

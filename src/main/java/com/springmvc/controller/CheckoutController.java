@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -22,17 +23,13 @@ public class CheckoutController {
     @RequestMapping(value = "/checkout", method = RequestMethod.GET)
     public ModelAndView showCheckoutPage(
             @RequestParam(value = "coupon", required = false) String couponCode,
-            @RequestParam(value = "discount", defaultValue = "0.0") Double discount,
             HttpSession session) {
         
         Member user = (Member) session.getAttribute("user");
-        if (user == null) {
-            return new ModelAndView("redirect:/Login");
-        }
+        if (user == null) return new ModelAndView("redirect:/Login");
+        
         Map<String, Integer> cartSessionData = (Map<String, Integer>) session.getAttribute("cart");
-        if (cartSessionData == null || cartSessionData.isEmpty()) {
-            return new ModelAndView("redirect:/Cart");
-        }
+        if (cartSessionData == null || cartSessionData.isEmpty()) return new ModelAndView("redirect:/Cart");
         
         List<CartItem> cartItems = new ArrayList<>();
         double totalCartPrice = 0.0;
@@ -47,6 +44,42 @@ public class CheckoutController {
             }
         }
 
+        double discount = 0.0;
+        String couponMsg = null; 
+
+        if (couponCode != null && !couponCode.isEmpty()) {
+            CouponManager cm = new CouponManager();
+            Coupon coupon = cm.getCouponByCode(couponCode);
+
+            if (coupon != null) {
+                java.util.Date now = new java.util.Date();
+                if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
+                     couponMsg = "คูปองหมดอายุแล้ว";
+                     couponCode = null;
+                }
+                else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+                     couponMsg = "คูปองถูกใช้ครบสิทธิ์แล้ว";
+                     couponCode = null;
+                }
+                else if (totalCartPrice < coupon.getMinOrderAmount()) {
+                     couponMsg = "ยอดซื้อไม่ถึงขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท";
+                     couponCode = null;
+                }
+                else {
+                    if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
+                         discount = totalCartPrice * (coupon.getDiscountValue() / 100.0);
+                     } else {
+                         discount = coupon.getDiscountValue();
+                     }
+                     if (discount > totalCartPrice) discount = totalCartPrice;
+                     couponMsg = "ใช้คูปองสำเร็จ! ลด " + discount + " บาท";
+                }
+            } else {
+                couponMsg = "ไม่พบรหัสคูปองนี้";
+                couponCode = null;
+            }
+        }
+
         double finalPrice = totalCartPrice - discount;
         if (finalPrice < 0) finalPrice = 0;
 
@@ -56,6 +89,7 @@ public class CheckoutController {
         mav.addObject("couponCode", couponCode);
         mav.addObject("discount", discount);
         mav.addObject("finalPrice", finalPrice);
+        mav.addObject("couponMsg", couponMsg);
         
         return mav;
     }
@@ -80,12 +114,11 @@ public class CheckoutController {
         double totalCartPriceForOrder = 0.0;
         ProductManager pm = new ProductManager();
         
-        //เช็คสต็อกสินค้าก่อน
         for (Map.Entry<String, Integer> entry : cartSessionData.entrySet()) {
             Product product = pm.getProduct(entry.getKey());
             if (product != null) {
                 if(product.getStock() < entry.getValue()) {
-                    // ถ้าของหมด ให้เด้งกลับ
+
                     ModelAndView mavError = new ModelAndView("checkout");
                     List<CartItem> currentCartItems = new ArrayList<>();
                     double currentTotal = 0.0;
@@ -149,7 +182,6 @@ public class CheckoutController {
             return mavError;
         }
 
-        // ตัดสต็อกสินค้า
         for (CartItem item : cartItemsForOrder) {
             Product p = item.getProduct();
             int newStock = p.getStock() - item.getQuantity();
@@ -159,7 +191,6 @@ public class CheckoutController {
             pm.updateProduct(p); 
         }
 
-        // ตัดสต็อกคูปอง
         if (couponCode != null && !couponCode.isEmpty()) {
             CouponManager cm = new CouponManager();
             Coupon c = cm.getCouponByCode(couponCode);
@@ -174,6 +205,57 @@ public class CheckoutController {
         return new ModelAndView("redirect:/uploadSlip?orderId=" + newOrderId); 
     }
     
+    @RequestMapping(value = "/checkCoupon", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @ResponseBody 
+    public String checkCoupon(@RequestParam("code") String code, HttpSession session) {
+        
+        if (code == null || code.trim().isEmpty()) {
+            return "กรุณากรอกรหัสคูปอง";
+        }
+
+        CouponManager cm = new CouponManager();
+        Coupon coupon = cm.getCouponByCode(code);
+        
+        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        double totalCartPrice = 0.0;
+        ProductManager pm = new ProductManager();
+        if (cart != null) {
+            for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+                Product p = pm.getProduct(entry.getKey());
+                if (p != null) totalCartPrice += (p.getPrice() * entry.getValue());
+            }
+        }
+
+        if (coupon != null) {
+            java.util.Date now = new java.util.Date();
+            
+            if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
+                 return "คูปองนี้หมดอายุแล้ว";
+            }
+            else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+                 return "คูปองนี้ถูกใช้ครบสิทธิ์แล้ว";
+            }
+            else if (totalCartPrice < coupon.getMinOrderAmount()) {
+                 return "ต้องซื้อขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท ถึงจะใช้โค้ดนี้ได้";
+            }
+            else {
+
+                double discount = 0.0;
+                 if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
+                     discount = totalCartPrice * (coupon.getDiscountValue() / 100.0);
+                 } else {
+                     discount = coupon.getDiscountValue();
+                 }
+                 
+                 if (discount > totalCartPrice) discount = totalCartPrice;
+                 
+                 return "VALID|" + discount + "|" + (totalCartPrice - discount);
+            }
+        } else {
+            return "ไม่พบรหัสคูปองนี้ในระบบ";
+        }
+    }
+
     @RequestMapping(value = "/uploadSlip", method = RequestMethod.GET)
     public ModelAndView showUploadSlipPage(
             @RequestParam("orderId") String orderId,

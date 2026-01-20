@@ -5,5 +5,6 @@
   // evaluate expressions for hover during debugging so runtime values show up
   "debug.evaluateForHovers": true,
   // enable editor hover (for mouse-over value/tooltips)
-  "editor.hover.enabled": "on"
+  "editor.hover.enabled": "on",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

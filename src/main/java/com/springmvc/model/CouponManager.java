@@ -4,6 +4,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 public class CouponManager {
 
@@ -44,21 +45,37 @@ public class CouponManager {
         return list;
     }
 
+    // public Coupon getCouponByCode(String code) {
+    //     Coupon coupon = null;
+    //     Session session = null;
+    //     try {
+    //         SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+    //         session = sessionFactory.openSession();
+            
+    //         coupon = session.get(Coupon.class, code);
+            
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         if (session != null) session.close();
+    //     }
+    //     return coupon;
+    // }
+
     public Coupon getCouponByCode(String code) {
-        Coupon coupon = null;
         Session session = null;
         try {
-            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
-            session = sessionFactory.openSession();
-            
-            coupon = session.get(Coupon.class, code);
-            
+            session = HibernateConnection.doHibernateConnection().openSession();
+            // ค้นหาคูปองจาก Code (สมมติชื่อ field คือ couponCode)
+            Query<Coupon> query = session.createQuery("FROM Coupon WHERE couponCode = :code", Coupon.class);
+            query.setParameter("code", code);
+            return query.uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return coupon;
+        return null;
     }
 
     public boolean updateCoupon(Coupon coupon) {
