@@ -144,16 +144,19 @@
                                 </c:choose>
                                 
                                 <div class="card-actions">
+                                <c:if test="${p.stock > 0}">
                                     <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
                                         <i class="fas fa-cart-plus"></i>
                                     </a>
-                                    <a href="addToFavorites?productId=${p.productId}" class="action-btn" title="เพิ่มรายการโปรด">
-                                        <i class="fas fa-heart"></i>
-                                    </a>
-                                    <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </div>
+                                </c:if>
+
+                                <a href="addToFavorites?productId=${p.productId}" class="action-btn" title="เพิ่มรายการโปรด">
+                                    <i class="fas fa-heart"></i>
+                                </a>
+                                <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
                                 <c:if test="${p.stock == 0}">
                                     <div class="out-of-stock-badge">สินค้าหมด</div>
                                 </c:if>

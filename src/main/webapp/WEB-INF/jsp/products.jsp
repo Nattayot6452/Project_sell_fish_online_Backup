@@ -82,7 +82,6 @@
                         <div class="product-card">
                             <div class="product-img-box">
                                 
-                                <%-- ✅ Logic รูปภาพ (Hybrid) ✅ --%>
                                 <c:choose>
                                     <c:when test="${products.productImg.startsWith('assets')}">
                                         <img src="${pageContext.request.contextPath}/${products.productImg}" 
@@ -93,21 +92,21 @@
                                              alt="${products.productName}">
                                     </c:otherwise>
                                 </c:choose>
-                                <%-- ✅ จบ Logic ✅ --%>
                                 
                                 <div class="card-actions">
-                                    <a href="${empty sessionScope.user ? 'Login' : 'addToCart?productId='.concat(products.productId)}"
-                                       class="action-btn" title="หยิบใส่ตะกร้า">
-                                       <i class="fas fa-cart-plus"></i>
+                                <c:if test="${p.stock > 0}">
+                                    <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
+                                        <i class="fas fa-cart-plus"></i>
                                     </a>
-                                    <a href="${empty sessionScope.user ? 'Login' : 'addToFavorites?productId='.concat(products.productId)}"
-                                       class="action-btn" title="เพิ่มรายการโปรด">
-                                       <i class="fas fa-heart"></i>
-                                    </a>
-                                    <a href="ProductDetail?pid=${products.productId}" class="action-btn" title="ดูรายละเอียด">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </div>
+                                </c:if>
+
+                                <a href="addToFavorites?productId=${p.productId}" class="action-btn" title="เพิ่มรายการโปรด">
+                                    <i class="fas fa-heart"></i>
+                                </a>
+                                <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
 
                                 <c:if test="${products.stock == 0}">
                                     <div class="out-of-stock-badge">สินค้าหมด</div>

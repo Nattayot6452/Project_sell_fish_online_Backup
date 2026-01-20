@@ -107,7 +107,6 @@
             <c:forEach items="${Product}" var="p">
                 <div class="product-card">
                     <div class="product-img-box">
-                        <%-- ✅✅✅ ไฮไลท์: เช็คภาพ Null เพื่อป้องกันหน้าพังถ้าข้อมูลสินค้าไม่สมบูรณ์ ✅✅✅ --%>
                         <c:choose>
                             <c:when test="${empty p.productImg}">
                                 <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="No Image" style="opacity: 0.5;">
@@ -121,18 +120,21 @@
                         </c:choose>
                         
                         <div class="card-actions">
+                        <c:if test="${p.stock > 0}">
                             <a href="${empty sessionScope.user ? 'Login' : 'addToCart?productId='.concat(p.productId)}"
-                               class="action-btn" title="หยิบใส่ตะกร้า">
-                               <i class="fas fa-cart-plus"></i>
+                            class="action-btn" title="หยิบใส่ตะกร้า">
+                            <i class="fas fa-cart-plus"></i>
                             </a>
-                            <a href="${empty sessionScope.user ? 'Login' : 'addToFavorites?productId='.concat(p.productId)}"
-                               class="action-btn" title="เพิ่มรายการโปรด">
-                               <i class="fas fa-heart"></i>
-                            </a>
-                            <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                        </div>
+                        </c:if>
+
+                        <a href="${empty sessionScope.user ? 'Login' : 'addToFavorites?productId='.concat(p.productId)}"
+                        class="action-btn" title="เพิ่มรายการโปรด">
+                        <i class="fas fa-heart"></i>
+                        </a>
+                        <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
+                        <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
 
                         <c:if test="${p.stock == 0}">
                             <div class="out-of-stock-badge">สินค้าหมด</div>

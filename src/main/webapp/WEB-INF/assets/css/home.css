@@ -384,6 +384,22 @@ body {
     transform: scale(1.1);
 }
 
+.out-of-stock-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 2;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+}
+
 /* Action Buttons Overlay */
 .card-actions {
     position: absolute;

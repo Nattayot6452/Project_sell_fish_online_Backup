@@ -2,8 +2,6 @@ package com.springmvc.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping; 
 import org.springframework.web.bind.annotation.RequestMethod; 
@@ -25,31 +23,44 @@ public class CartController {
     @RequestMapping(value = "/addToCart", method = RequestMethod.GET)
     public ModelAndView addToCart(
             @RequestParam("productId") String productId,
-            @RequestParam(value = "quantity", defaultValue = "1") int quantity,
-            HttpSession session) {
+            @RequestParam(value = "quantity", defaultValue = "1") int quantity, 
+            HttpSession session,
+            HttpServletRequest request) { 
         
+        ProductManager pm = new ProductManager();
+        Product product = pm.getProduct(productId);
+        
+        if (product == null) {
+             return new ModelAndView("redirect:/AllProduct");
+        }
+
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart == null) { cart = new HashMap<>(); }
         
         int currentQuantityInCart = cart.getOrDefault(productId, 0);
+        int totalWanted = currentQuantityInCart + quantity;
+
+        if (product.getStock() <= 0 || product.getStock() < totalWanted) {
+            System.out.println("❌ ใส่ตะกร้าไม่ได้! สต็อกมี: " + product.getStock() + ", ขอ: " + totalWanted);
+            
+            String referer = request.getHeader("Referer");
+            return new ModelAndView("redirect:" + (referer != null ? referer : "/AllProduct") + "?error=outOfStock");
+        }
         
-        cart.put(productId, currentQuantityInCart + quantity);
-        
+        cart.put(productId, totalWanted);
         session.setAttribute("cart", cart);
-        System.out.println("Added to cart: " + cart);
+        System.out.println("✅ Added to cart: " + product.getProductName() + " (Qty: " + totalWanted + ")");
         
-        return new ModelAndView("redirect:/AllProduct");
+        String referer = request.getHeader("Referer");
+        return new ModelAndView("redirect:" + (referer != null ? referer : "/AllProduct"));
     }
 
     @RequestMapping(value = "/Cart", method = RequestMethod.GET)
     public ModelAndView showCart(HttpSession session) {
-
         ModelAndView mav = new ModelAndView("cart");
         Map<String, Integer> cartSessionData = (Map<String, Integer>) session.getAttribute("cart");
-
         List<CartItem> cartItems = new ArrayList<>();
         double totalCartPrice = 0.0;
-
         ProductManager pm = new ProductManager();
         if (cartSessionData != null && !cartSessionData.isEmpty()) {
             for (Map.Entry<String, Integer> entry : cartSessionData.entrySet()) {
@@ -58,34 +69,30 @@ public class CartController {
                     CartItem item = new CartItem(product, entry.getValue());
                     cartItems.add(item);
                     totalCartPrice += item.getItemTotal();
-                } else { System.err.println(/*...*/);}
+                }
             }
         }
         mav.addObject("cartItems", cartItems);
         mav.addObject("totalCartPrice", totalCartPrice);
-        System.out.println("Showing cart: " + cartItems.size() + " items, Total: " + totalCartPrice);
         return mav;
     }
 
     @RequestMapping(value = "/removeFromCart", method = RequestMethod.GET)
     public ModelAndView removeFromCart(@RequestParam("productId") String productId, HttpSession session) {
-
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-        
         if (cart != null && cart.containsKey(productId)) {
             cart.remove(productId);
             session.setAttribute("cart", cart);
-            System.out.println("Removed product " + productId + " from cart. New cart: " + cart);
-        } else { System.out.println(/*...*/); }
+        }
         return new ModelAndView("redirect:/Cart");
     }
 
     @RequestMapping(value = "/updateFullCart", method = RequestMethod.POST)
     public ModelAndView updateFullCart(HttpServletRequest request, HttpSession session) {
-
         Map<String, Integer> updatedCart = new HashMap<>();
-
         Map<String, String[]> parameterMap = request.getParameterMap();
+        
+        ProductManager pm = new ProductManager(); // ต้องใช้เช็คสต็อกตอนอัปเดตด้วย
 
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             String paramName = entry.getKey();
@@ -95,23 +102,23 @@ public class CartController {
                 try {
                     String productId = paramName.substring("quantity_".length());
                     int newQuantity = Integer.parseInt(paramValues[0]);
-                    if (newQuantity > 0) {
-                                          updatedCart.put(productId, newQuantity); 
-                    } else {
-                        System.out.println("Quantity for product " + productId + " is <= 0, removing from cart.");
+                    
+                    // เช็คสต็อกอีกรอบกันเหนียว
+                    Product p = pm.getProduct(productId);
+                    if (p != null && newQuantity > 0) {
+                        if (newQuantity <= p.getStock()) {
+                             updatedCart.put(productId, newQuantity); 
+                        } else {
+                             // ถ้าขอเกิน ให้ใส่เท่าที่มี
+                             updatedCart.put(productId, p.getStock()); 
+                        }
                     }
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid quantity format for parameter: " + paramName);
                 } catch (Exception e) {
-                    System.err.println("Error processing cart update: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
-
         session.setAttribute("cart", updatedCart);
-        System.out.println("Cart updated via form: " + updatedCart);
-
         return new ModelAndView("redirect:/Cart");
     }
-    
 }
