@@ -115,6 +115,9 @@
 
                             <div class="product-info">
                                 <h3 class="product-name">${products.productName}</h3>
+                                <small style="color: #999; font-size: 12px; display: block; margin-bottom: 5px;">
+                                    ID: ${products.productId}
+                                </small>
                                 <div class="price-row">
                                     <span class="price">
                                         <fmt:formatNumber value="${products.price}" type="currency" currencySymbol="฿"/>
