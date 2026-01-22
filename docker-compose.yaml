@@ -29,7 +29,7 @@ services:
     volumes:
       - ./target/Fishonline_6452-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/fish-online.war
       
-      - C:/Eclipse_Works/Fishonline_6452/src/main/webapp/WEB-INF/assets/images:/app/uploads
+      - ./src/main/webapp/WEB-INF/assets/images:/app/images
     environment:
       # bind JPDA to all interfaces so host debugger can attach
       JPDA_ADDRESS: "0.0.0.0:8000"
@@ -39,7 +39,7 @@ services:
       CATALINA_OPTS: "-Dspring.profiles.active=docker -Xmx512m -Xms256m"
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: project_tutor2
+      DB_NAME: fishdatabase
       DB_USER: root
       DB_PASSWORD: 1234
     entrypoint: ["catalina.sh", "jpda", "run"]
