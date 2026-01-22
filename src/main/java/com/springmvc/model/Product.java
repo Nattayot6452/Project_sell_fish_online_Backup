@@ -17,6 +17,9 @@ import javax.persistence.Table;
 @Table(name = "product")
 public class Product {
 
+	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<ProductImage> galleryImages;
+
     @Id
     @Column(name = "product_id")
     private String productId;
@@ -223,6 +226,8 @@ public class Product {
 		this.species = species;
 	}
 
+	public List<ProductImage> getGalleryImages() { return galleryImages; }
+    public void setGalleryImages(List<ProductImage> galleryImages) { this.galleryImages = galleryImages; }
 	
 	
 }

@@ -114,4 +114,21 @@ public class SpeciesManager {
         }
         return result;
     }
+
+    public Species getSpecies(String speciesId) {
+        Species species = null;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            // ใช้ session.get เพื่อดึงข้อมูล Species ตาม ID แบบธรรมดา
+            species = session.get(Species.class, speciesId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return species;
+    }
+    
 }

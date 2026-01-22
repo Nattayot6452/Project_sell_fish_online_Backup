@@ -47,7 +47,8 @@ public class HibernateConnection {
 				.addAnnotatedClass(Seller.class)
 				.addAnnotatedClass(Admin.class)
 				.addAnnotatedClass(Coupon.class)
-				.addAnnotatedClass(Notification.class);
+				.addAnnotatedClass(Notification.class)
+				.addAnnotatedClass(ProductImage.class);
 
 		StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
 		sessionFactory = cfg.buildSessionFactory(ssrb.build());
