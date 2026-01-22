@@ -153,17 +153,19 @@ body {
     height: 200px;
     position: relative;
     overflow: hidden;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: #f8f9fa;
+    display: block;
 }
 
 .product-img-box img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     transition: transform 0.5s;
+    display: block;
+    max-width: none;
+    max-height: none;
 }
 
 .product-card:hover .product-img-box img {
