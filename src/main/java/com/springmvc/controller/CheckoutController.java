@@ -182,6 +182,9 @@ public class CheckoutController {
             return mavError;
         }
 
+        NotificationManager nm = new NotificationManager();
+        nm.createNotification("0", "SELLER", "📦 มีคำสั่งซื้อใหม่เข้ามา! รหัส #" + newOrderId, "SellerOrders");
+
         for (CartItem item : cartItemsForOrder) {
             Product p = item.getProduct();
             int newStock = p.getStock() - item.getQuantity();
@@ -342,6 +345,8 @@ public class CheckoutController {
 
         if (success) {
             om.updateOrderStatus(orderId, "กำลังตรวจสอบ");
+            NotificationManager nm = new NotificationManager();
+            nm.createNotification("0", "SELLER", "💰 ลูกค้าแจ้งโอนเงินสำหรับออเดอร์ #" + orderId, "SellerOrders");
             return new ModelAndView("redirect:/Orders?upload=success");
         } else {
             mavError = new ModelAndView("uploadSlip");

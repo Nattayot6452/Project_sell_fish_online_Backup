@@ -13,17 +13,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="Home" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Fish Online</span>
-            </a>
-            <div class="nav-links">
-                <a href="History" class="back-link"><i class="fas fa-arrow-left"></i> กลับไปประวัติการสั่งซื้อ</a>
-            </div>
-        </div>
-    </nav>
+      <jsp:include page="navbar.jsp" />
 
     <div class="container main-container">
         <div class="review-card">

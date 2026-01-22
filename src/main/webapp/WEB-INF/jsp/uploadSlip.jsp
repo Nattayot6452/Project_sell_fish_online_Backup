@@ -14,52 +14,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="Home" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Fish Online</span>
-            </a>
-            
-            <form action="SearchProducts" method="POST" class="search-wrapper">
-                <input type="text" name="searchtext" placeholder="ค้นหาปลาที่คุณชอบ...">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-
-            <div class="nav-links">
-                <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
-                
-                <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
-                
-                <c:if test="${not empty sessionScope.user}">
-                    <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
-
-                    <div class="dropdown">
-                        <a href="Profile" class="dropbtn user-profile">
-                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" class="nav-avatar">
-                            สวัสดี, ${sessionScope.user.memberName}
-                            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </a>
-                        <div class="dropdown-content">
-                            <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
-                            
-                            <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a> 
-                            <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
-                            <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
-                            <div style="border-top: 1px solid #eee; margin: 5px 0;"></div>
-                            <a href="Logout" class="menu-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-                        </div>
-                    </div>
-                </c:if>
-                
-                <c:if test="${empty sessionScope.user}">
-                    <a href="Login" class="btn-login"><i class="fas fa-user"></i> เข้าสู่ระบบ</a>
-                </c:if>
-            </div>
-        </div>
-    </nav>
+        <jsp:include page="navbar.jsp" />
 
     <div class="container main-container">
         

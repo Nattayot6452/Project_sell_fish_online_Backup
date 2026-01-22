@@ -16,51 +16,7 @@
 </head>
 <body>
 
-   <nav class="navbar">
-        <div class="nav-container">
-            <a href="Home" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Fish Online</span>
-            </a>
-            
-            <form action="SearchProducts" method="POST" class="search-wrapper">
-                <input type="text" name="searchtext" placeholder="ค้นหาปลาที่คุณชอบ...">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-
-            <div class="nav-links">
-                <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
-                
-                <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
-                
-                <c:if test="${not empty sessionScope.user}">
-                    <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
-
-                    <div class="dropdown">
-                        <a href="Profile" class="dropbtn user-profile">
-                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" class="nav-avatar">
-                            สวัสดี, ${sessionScope.user.memberName}
-                            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </a>
-                        <div class="dropdown-content">
-                            <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
-                            <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a> 
-                            <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
-                            <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
-                            <div style="border-top: 1px solid #eee; margin: 5px 0;"></div>
-                            <a href="Logout" class="menu-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-                        </div>
-                    </div>
-                </c:if>
-                
-                <c:if test="${empty sessionScope.user}">
-                    <a href="Login" class="btn-login"><i class="fas fa-user"></i> เข้าสู่ระบบ</a>
-                </c:if>
-            </div>
-        </div>
-    </nav>
+   <jsp:include page="navbar.jsp" />
 
     <div class="hero-section">
         <div class="slider-container">
@@ -86,32 +42,30 @@
         </div>
     </div>
 
-    <div class="section-container">
-        <h2 class="section-title"><i class="fas fa-layer-group"></i> หมวดหมู่ยอดนิยม</h2>
-
+   <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-star"></i> หมวดหมู่ยอดนิยม</h2>
+        </div>
+        
         <div class="categories-grid">
-
             <a href="AllProduct?category=ปลากัดไทย" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/betta.jpg" alt="ปลากัด">
                 </div>
                 <span>ปลากัด</span>
             </a>
-
             <a href="AllProduct?category=ปลาหางนกยูง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/guppy.jpg" alt="ปลาหางนกยูง">
                 </div>
                 <span>ปลาหางนกยูง</span>
             </a>
-
             <a href="AllProduct?category=ปลาทอง" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/goldfish.jpg" alt="ปลาทอง">
                 </div>
                 <span>ปลาทอง</span>
             </a>
-
             <a href="AllProduct?category=ปลาเนออน" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเนออน">
@@ -123,7 +77,7 @@
 
     <div class="section-container bg-light">
         <div class="section-header">
-            <h2 class="section-title"><i class="fas fa-star"></i> สินค้าแนะนำสำหรับคุณ</h2>
+            <h2 class="section-title"><i class="fas fa-fire"></i> สินค้าแนะนำ</h2>
             <a href="AllProduct" class="view-all-link">ดูทั้งหมด <i class="fas fa-angle-right"></i></a>
         </div>
 

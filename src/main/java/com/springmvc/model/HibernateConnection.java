@@ -1,5 +1,7 @@
 package com.springmvc.model;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -44,10 +46,21 @@ public class HibernateConnection {
 				.addAnnotatedClass(FavoriteProduct.class)
 				.addAnnotatedClass(Seller.class)
 				.addAnnotatedClass(Admin.class)
-				.addAnnotatedClass(Coupon.class);
+				.addAnnotatedClass(Coupon.class)
+				.addAnnotatedClass(Notification.class);
 
 		StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
 		sessionFactory = cfg.buildSessionFactory(ssrb.build());
 		return sessionFactory;
 	}
+
+	public static Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(url, uname, pwd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
