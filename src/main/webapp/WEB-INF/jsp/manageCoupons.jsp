@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
+<jsp:useBean id="now" class="java.util.Date" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* สไตล์สำหรับปุ่ม Edit/Delete เฉพาะหน้านี้ */
         .action-btn {
             display: inline-flex; justify-content: center; align-items: center;
             width: 32px; height: 32px; border-radius: 50%;
@@ -25,6 +26,13 @@
         
         .btn-delete { background-color: #dc3545; color: white; }
         .btn-delete:hover { background-color: #c82333; transform: scale(1.1); }
+
+        /* Status Badges */
+        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; min-width: 80px; text-align: center; }
+        .bg-active { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .bg-inactive { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .bg-expired { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        .bg-full { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
     </style>
 </head>
 <body style="margin: 0; font-family: sans-serif;">
@@ -35,6 +43,7 @@
             <h3 style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #4b545c; padding-bottom: 15px;">
                 Seller Center
             </h3>
+    
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom: 15px;">
                     <a href="SellerCenter" style="color: #adb5bd; text-decoration: none; display: block; padding: 10px; border-radius: 5px;">
@@ -68,6 +77,11 @@
                     <i class="fas fa-trash-alt"></i> ลบคูปองเรียบร้อยแล้ว
                 </div>
             </c:if>
+            <c:if test="${param.msg == 'updated'}">
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                    <i class="fas fa-check-circle"></i> อัปเดตข้อมูลคูปองเรียบร้อยแล้ว!
+                </div>
+            </c:if>
 
             <table class="seller-table">
                 <thead>
@@ -82,7 +96,10 @@
                 </thead>
                 <tbody>
                     <c:forEach items="${coupons}" var="c">
+
                         <c:set var="percentUsed" value="${c.usageLimit > 0 ? (c.usageCount * 100) / c.usageLimit : 0}" />
+
+                        <c:set var="progressBarStyle" value="background: #17a2b8; height: 100%; width: ${percentUsed}%;" />
 
                         <tr>
                             <td><span class="badge-code">${c.couponCode}</span></td>
@@ -92,7 +109,7 @@
                                         <span style="font-weight:bold; color:#0056b3;">฿${c.discountValue}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span style="font-weight:bold; color:#e83e8c;">${c.discountValue}%</span>
+                                         <span style="font-weight:bold; color:#e83e8c;">${c.discountValue}%</span>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -108,14 +125,28 @@
                             </td>
                             <td>
                                 <div style="width: 120px; background: #e9ecef; border-radius: 4px; height: 8px; margin-bottom: 5px; overflow: hidden;">
-                                    <div style="background: #17a2b8; height: 100%; width: ${percentUsed}%;"></div>
+                                    
+                                    <div style="${progressBarStyle}"></div>
+                                    
                                 </div>
                                 <small style="color: #555;">${c.usageCount} / ${c.usageLimit} สิทธิ์</small>
                             </td>
+                            
                             <td>
-                                <span class="${c.status == 'ACTIVE' ? 'status-active' : 'status-inactive'}">
-                                    ${c.status}
-                                </span>
+                                <c:choose>
+                                    <c:when test="${c.status == 'INACTIVE'}">
+                                        <span class="status-badge bg-inactive">INACTIVE</span>
+                                    </c:when>
+                                    <c:when test="${c.expireDate != null && c.expireDate.before(now)}">
+                                        <span class="status-badge bg-expired">EXPIRED</span>
+                                    </c:when>
+                                    <c:when test="${c.usageLimit > 0 && c.usageCount >= c.usageLimit}">
+                                        <span class="status-badge bg-full">SOLD OUT</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="status-badge bg-active">ACTIVE</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                             
                             <td style="text-align: center;">

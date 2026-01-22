@@ -7,6 +7,7 @@ body {
     margin: 0; 
 }
 
+/* --- Navbar --- */
 .navbar {
     background-color: #ffffff;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -46,6 +47,7 @@ body {
     gap: 20px;
 }
 
+/* --- Main Layout --- */
 .main-container {
     max-width: 600px;
     margin: 80px auto;
@@ -82,36 +84,43 @@ body {
 .product-text h3 { margin: 0 0 5px; color: #333; font-size: 18px; }
 .product-text p { margin: 0; color: #666; font-size: 14px; }
 
-/* Star Rating System */
+/* --- Star Rating System --- */
 .rating-box { margin-bottom: 25px; }
 .rating-box label { display: block; font-weight: bold; margin-bottom: 10px; color: #333; }
 
+/* ✅✅✅ จุดที่แก้: ปิดปีกกา } ให้เรียบร้อย ✅✅✅ */
 .stars {
     display: inline-block;
-    direction: rtl;
+    direction: rtl; /* ทำให้เลือกดาวจากซ้ายไปขวาได้ถูกต้อง */
+}
 
-.stars input[type="radio"] { display: none; }
+.stars input[type="radio"] { 
+    display: none; /* ซ่อนวงกลม Radio Button */
+}
 
 .stars label {
     display: inline-block;
     width: 40px;
     font-size: 35px;
-    color: #ddd;
+    color: #ddd; /* สีดาวตอนยังไม่เลือก */
     cursor: pointer;
     transition: color 0.2s;
     margin: 0;
     line-height: 1;
 }
 
-.stars label:before { content: '★'; }
+.stars label:before { 
+    content: '★'; /* ใส่รูปดาว */
+}
 
+/* Logic เปลี่ยนสีดาวเมื่อเอาเมาส์ชี้ หรือเลือกแล้ว */
 .stars input:checked ~ label,
 .stars label:hover,
 .stars label:hover ~ label {
-    color: #ffc107;
+    color: #ffc107; /* สีเหลืองทอง */
 }
 
-/* Comment Box */
+/* --- Comment Box --- */
 .comment-box { text-align: left; margin-bottom: 25px; }
 .comment-box label { display: block; font-weight: bold; margin-bottom: 10px; color: #333; }
 .comment-box textarea {
@@ -125,7 +134,7 @@ body {
 }
 .comment-box textarea:focus { outline: none; border-color: #00571d; }
 
-/* Button */
+/* --- Buttons --- */
 .btn-submit {
     background: #00571d;
     color: white;
@@ -143,4 +152,3 @@ body {
 /* Back Link */
 .back-link { text-decoration: none; color: #666; font-size: 14px; display: flex; align-items: center; gap: 5px; }
 .back-link:hover { color: #00571d; }
-}

@@ -108,7 +108,6 @@
                                                 <fmt:formatNumber value="${detail.price * detail.quantity}" type="currency" currencySymbol="฿"/>
                                             </span>
 
-                                            <%-- ✅✅✅ ปุ่มเขียนรีวิว (แสดงเฉพาะเมื่อสถานะ Completed) ✅✅✅ --%>
                                             <c:if test="${order.status == 'Completed'}">
                                                 <a href="WriteReview?productId=${detail.product.productId}" class="btn-review">
                                                     <i class="fas fa-star"></i> เขียนรีวิว
