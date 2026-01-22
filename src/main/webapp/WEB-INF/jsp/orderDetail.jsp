@@ -48,27 +48,7 @@
 
     <c:choose>
         <c:when test="${not empty sessionScope.seller}">
-            <nav class="navbar">
-                <div class="nav-container">
-                    <a href="SellerCenter" class="brand-logo">
-                        <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                        <span>Seller Center</span>
-                    </a>
-                    <div style="flex: 1;"></div>
-                    <div class="nav-links">
-                        <a href="SellerCenter" class="menu-btn" style="color: #333; text-decoration: none;"><i class="fas fa-boxes"></i> สินค้า</a>
-                        <a href="SellerOrders" class="menu-btn" style="color: #333; text-decoration: none;"><i class="fas fa-clipboard-list"></i> คำสั่งซื้อ</a>
-                        <div class="dropdown">
-                            <a href="#" class="menu-btn" style="color: #333; font-weight: bold; text-decoration: none;">
-                                <i class="fas fa-user-tie"></i> เจ้าหน้าที่ <span class="seller-badge" style="background:#ffc107; color:#333; padding:2px 8px; border-radius:10px; font-size:11px;">Seller</span>
-                            </a>
-                            <div class="dropdown-content">
-                                <a href="Logout" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+                <%@ include file="sellerNavbar.jsp" %>
         </c:when>
         <c:otherwise>
             <jsp:include page="navbar.jsp" />
