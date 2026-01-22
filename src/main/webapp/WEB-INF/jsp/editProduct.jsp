@@ -13,17 +13,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="SellerCenter" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Seller Center</span>
-            </a>
-            <div class="nav-links">
-                <a href="SellerCenter" class="back-link"><i class="fas fa-arrow-left"></i> กลับไปหน้ารายการ</a>
-            </div>
-        </div>
-    </nav>
+        <%@ include file="sellerNavbar.jsp" %>
 
     <div class="container main-container">
         

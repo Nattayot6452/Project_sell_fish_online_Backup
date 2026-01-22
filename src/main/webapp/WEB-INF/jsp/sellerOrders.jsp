@@ -14,43 +14,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="SellerCenter" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Seller Center</span>
-            </a>
-            <div class="nav-links">
-                <div class="dropdown">
-                    <a href="#" class="menu-btn">
-                        <i class="fas fa-boxes"></i> จัดการสินค้า <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="SellerCenter"><i class="fas fa-list"></i> รายการสินค้าทั้งหมด</a>
-                        <a href="AddProduct"><i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่</a>
-                    </div>
-                </div>
-
-                <a href="SellerOrders" class="menu-btn" style="background-color: #e8f5e9; color: #00571d;">
-                    <i class="fas fa-clipboard-list"></i> คำสั่งซื้อลูกค้า
-                </a>
-                
-                <a href="AddProduct" class="menu-btn add-product-btn">
-                    <i class="fas fa-plus-circle"></i> เพิ่มสินค้า
-                </a>
-
-                <div class="dropdown">
-                    <a href="#" class="menu-btn">
-                        <i class="fas fa-user-tie"></i> เจ้าหน้าที่ <span class="seller-badge">Seller</span>
-                        <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="Logout" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <%@ include file="sellerNavbar.jsp" %>
 
     <div class="container main-container">
         

@@ -36,41 +36,7 @@
     <%-- Navbar --%>
     <c:choose>
         <c:when test="${not empty sessionScope.seller}">
-            <nav class="navbar">
-                <div class="nav-container">
-                    <a href="SellerCenter" class="brand-logo">
-                        <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                        <span>Seller Center</span>
-                    </a>
-                    <div style="flex: 1;"></div>
-                    <div class="nav-links">
-                        <div class="dropdown">
-                            <a href="#" class="menu-btn" style="color: #333; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-boxes"></i> จัดการสินค้า <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                            </a>
-                            <div class="dropdown-content">
-                                <a href="SellerCenter"><i class="fas fa-list"></i> รายการสินค้าทั้งหมด</a>
-                                <a href="AddProduct"><i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่</a>
-                            </div>
-                        </div>
-                        <a href="SellerOrders" class="menu-btn" style="color: #333; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-clipboard-list"></i> คำสั่งซื้อลูกค้า
-                        </a>
-                        <a href="AddProduct" class="menu-btn add-product-btn" style="background-color: #17a2b8; color: white !important; padding: 8px 15px; border-radius: 50px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-plus-circle"></i> เพิ่มสินค้า
-                        </a>
-                        <div class="dropdown">
-                            <a href="#" class="menu-btn" style="color: #333; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-user-tie"></i> เจ้าหน้าที่ <span class="seller-badge">Seller</span>
-                                <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                            </a>
-                            <div class="dropdown-content">
-                                <a href="Logout" class="menu-logout" style="color: #dc3545 !important;"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <jsp:include page="sellerNavbar.jsp" />
         </c:when>
         <c:otherwise>
             <jsp:include page="navbar.jsp" />
