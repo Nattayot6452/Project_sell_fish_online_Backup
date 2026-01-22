@@ -242,21 +242,34 @@
                         </tr>
                     </c:forEach>
                 </tbody>
-                <tfoot>
+               <tfoot>
+                    <c:if test="${order.discountAmount > 0}">
+                        <tr>
+                            <td colspan="3" class="text-right" style="color: #28a745; border-top: 1px solid #dee2e6;">
+                                <i class="fas fa-tag"></i> ส่วนลด 
+                                <c:if test="${not empty order.couponCode}">
+                                    (Code: ${order.couponCode})
+                                </c:if>
+                            </td>
+                            <td class="text-right" style="color: #28a745; font-weight: bold; border-top: 1px solid #dee2e6;">
+                                -<fmt:formatNumber value="${order.discountAmount}" type="currency" currencySymbol="฿"/>
+                            </td>
+                        </tr>
+                    </c:if>
+
                     <tr>
-                        <td colspan="3" class="text-right label-total">ยอดรวมทั้งหมด</td>
-                        <td class="text-right value-total"><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/></td>
+                        <td colspan="3" class="text-right label-total" style="font-size: 1.1em; font-weight: bold;">ยอดรวมสุทธิ</td>
+                        <td class="text-right value-total" style="font-size: 1.1em; font-weight: bold; color: #00571d;">
+                            <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
 
-        <%-- ✅✅✅ ส่วนปุ่ม Actions ของแต่ละฝั่ง ✅✅✅ --%>
-        
-        <%-- 1. ฝั่ง MEMBER: ปุ่มขอยกเลิก --%>
-        <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
+            <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
             <div style="margin-top: 20px; text-align: right;">
-                <%-- ปุ่มจะโชว์ถ้ายังไม่เสร็จ, ไม่ยกเลิก, และยังไม่ได้ขอยกเลิก --%>
+
                 <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
                     <a href="requestCancellation?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
                        onclick="return confirm('ต้องการขอยกเลิกคำสั่งซื้อใช่หรือไม่? \n(ร้านค้าจะต้องอนุมัติก่อน)');">
@@ -264,7 +277,6 @@
                     </a>
                 </c:if>
                 
-                <%-- ถ้ากดไปแล้ว ให้ขึ้นข้อความรอ --%>
                 <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                     <span style="color: #c62828; font-weight: bold;">
                         <i class="fas fa-clock"></i> กำลังรอร้านค้าอนุมัติการยกเลิก...
@@ -273,13 +285,11 @@
             </div>
         </c:if>
 
-        <%-- 2. ฝั่ง SELLER: จัดการสถานะ --%>
         <c:if test="${not empty sessionScope.seller or not empty sessionScope.admin}">
             <div class="seller-actions">
                 <h3><i class="fas fa-user-cog"></i> จัดการสถานะ (สำหรับเจ้าหน้าที่)</h3>
                 <div class="action-buttons">
                     
-                    <%-- เคสปกติ: Flow จัดส่งสินค้า --%>
                     <c:if test="${order.status == 'กำลังตรวจสอบ'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=กำลังจัดเตรียม" 
                            class="btn-action btn-ready" onclick="return confirm('ยืนยันว่าสลิปถูกต้อง? \nเปลี่ยนสถานะเป็น: กำลังจัดเตรียม');">
@@ -301,7 +311,6 @@
                         </a>
                     </c:if>
                     
-                    <%-- ✅ เคสพิเศษ: ลูกค้าขอยกเลิกมา --%>
                     <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
                            class="btn-action btn-approve-cancel" onclick="return confirm('ยืนยันให้ลูกค้ายกเลิกคำสั่งซื้อนี้?');">
@@ -313,7 +322,6 @@
                         </a>
                     </c:if>
 
-                    <%-- ปุ่มยกเลิกฉุกเฉิน (แสดงตลอดถ้ายังไม่จบ) --%>
                     <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
                            class="btn-action btn-cancel-order" onclick="return confirm('ต้องการยกเลิกออเดอร์นี้ทันที?');">
