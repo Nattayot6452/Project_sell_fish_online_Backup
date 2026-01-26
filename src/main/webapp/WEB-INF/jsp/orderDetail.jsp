@@ -137,8 +137,8 @@
                         </div>
                         <div class="slip-preview">
                             <p>หลักฐานการโอน:</p>
-                            <a href="${pageContext.request.contextPath}/profile-uploads/slips/${order.payment.filePath}" target="_blank">
-                                <img src="${pageContext.request.contextPath}/profile-uploads/slips/${order.payment.filePath}" alt="Slip">
+                            <a href="${pageContext.request.contextPath}/displayImage?name=slips/${order.payment.filePath}" target="_blank">
+                            <img src="${pageContext.request.contextPath}/displayImage?name=slips/${order.payment.filePath}" alt="Slip"></a>
                             </a>
                         </div>
                     </c:when>

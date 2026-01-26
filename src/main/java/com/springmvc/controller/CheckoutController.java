@@ -305,7 +305,7 @@ public class CheckoutController {
 
         if (slipImage != null && !slipImage.isEmpty()) {
             try {
-                String uploadDir = "/app/uploads/slips/"; 
+                String uploadDir = "/app/images/slips/"; 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs(); 
                 

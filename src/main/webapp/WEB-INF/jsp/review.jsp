@@ -21,12 +21,12 @@
             <div class="product-info-section">
                 <h2>ความรู้สึกของคุณต่อสินค้านี้</h2>
                 <div class="product-preview">
-                    <c:choose>
+                   <c:choose>
                         <c:when test="${product.productImg.startsWith('assets')}">
                             <img src="${pageContext.request.contextPath}/${product.productImg}" alt="${product.productName}">
                         </c:when>
                         <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/profile-uploads/${product.productImg}" alt="${product.productName}">
+                            <img src="${pageContext.request.contextPath}/displayImage?name=${product.productImg}" alt="${product.productName}">
                         </c:otherwise>
                     </c:choose>
                     <div class="product-text">
