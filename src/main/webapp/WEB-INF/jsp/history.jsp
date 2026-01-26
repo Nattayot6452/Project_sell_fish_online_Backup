@@ -53,10 +53,9 @@
                                                     <img src="${pageContext.request.contextPath}/${detail.product.productImg}" alt="${detail.product.productName}">
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <img src="${pageContext.request.contextPath}/profile-uploads/${detail.product.productImg}" alt="${detail.product.productName}">
+                                                    <img src="${pageContext.request.contextPath}/displayImage?name=${detail.product.productImg}" alt="${detail.product.productName}">
                                                 </c:otherwise>
                                             </c:choose>
-                                            
                                             <div class="product-text">
                                                 <a href="ProductDetail?pid=${detail.product.productId}" class="product-name">
                                                     ${detail.product.productName}
