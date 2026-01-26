@@ -34,16 +34,14 @@
                         <div class="product-card">
                             <div class="product-img-box">
                                 
-                                <%-- ✅ Logic รูปภาพ (Hybrid) ✅ --%>
                                 <c:choose>
                                     <c:when test="${p.productImg.startsWith('assets')}">
                                         <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="${pageContext.request.contextPath}/profile-uploads/${p.productImg}" alt="${p.productName}">
+                                        <img src="${pageContext.request.contextPath}/displayImage?name=${p.productImg}" alt="${p.productName}">
                                     </c:otherwise>
                                 </c:choose>
-                                <%-- ✅ จบ Logic ✅ --%>
                                 
                                 <a href="RemoveFavorite?favId=${fav.favoriteId}" class="btn-remove" 
                                    title="ลบออกจากรายการโปรด"
