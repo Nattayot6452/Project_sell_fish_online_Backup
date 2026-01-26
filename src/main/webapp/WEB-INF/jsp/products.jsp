@@ -39,19 +39,17 @@
                         <div class="product-card">
                             <div class="product-img-box">
                                 
-                                <c:choose>
-                                    <c:when test="${products.productImg.startsWith('assets')}">
-                                        <img src="${pageContext.request.contextPath}/${products.productImg}" 
-                                             alt="${products.productName}">
+                               <c:choose>
+                                    <c:when test="${p.productImg.startsWith('assets')}">
+                                        <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="${pageContext.request.contextPath}/profile-uploads/${products.productImg}" 
-                                             alt="${products.productName}">
+                                        <img src="${pageContext.request.contextPath}/displayImage?name=${p.productImg}" alt="${p.productName}">
                                     </c:otherwise>
                                 </c:choose>
                                 
                                 <div class="card-actions">
-                                <c:if test="${p.stock > 0}">
+                                <c:if test="${products.stock > 0}">
                                     <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
                                         <i class="fas fa-cart-plus"></i>
                                     </a>

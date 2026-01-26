@@ -23,7 +23,7 @@
             </div>
             
             <div class="profile-img-container">
-                <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" 
+                <img src="${pageContext.request.contextPath}/displayImage?name=user/${sessionScope.user.memberImg}" 
                      alt="รูปโปรไฟล์" class="profile-img">
             </div>
 

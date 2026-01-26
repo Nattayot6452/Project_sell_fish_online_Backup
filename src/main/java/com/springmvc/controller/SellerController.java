@@ -241,4 +241,91 @@ public class SellerController {
         mav.addObject("orderList", orderList);
         return mav;
     }
+
+    @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
+    public String updateProduct(
+            @RequestParam("productId") String productId,
+            @RequestParam("oldImage") String oldImage,
+            @RequestParam("productName") String productName,
+            @RequestParam("speciesId") String speciesId,
+            @RequestParam("price") Double price,
+            @RequestParam("stock") Integer stock,
+            @RequestParam("description") String description,
+            @RequestParam("size") String size,
+            @RequestParam("origin") String origin,
+            @RequestParam("lifeSpan") String lifeSpan,
+            @RequestParam("temperature") String temperature,
+            @RequestParam("waterType") String waterType,
+            @RequestParam("careLevel") String careLevel,
+            @RequestParam("isAggressive") String isAggressive,
+            @RequestParam(value = "productImage", required = false) MultipartFile file,
+            HttpSession session) {
+
+        if (session.getAttribute("seller") == null) {
+            return "redirect:/Login";
+        }
+
+        Session hibernateSession = null;
+        try {
+
+            String imagePathToSave = oldImage; 
+
+            if (file != null && !file.isEmpty()) {
+
+                String baseDir = "/app/images";
+                String subDir = "products";
+                File uploadPath = new File(baseDir + File.separator + subDir);
+                if (!uploadPath.exists()) uploadPath.mkdirs();
+
+                String originalName = file.getOriginalFilename();
+                String extension = "";
+                if (originalName != null && originalName.contains(".")) {
+                    extension = originalName.substring(originalName.lastIndexOf("."));
+                }
+
+                String newFileName = UUID.randomUUID().toString() + extension;
+                
+                File fileSave = new File(uploadPath, newFileName);
+                file.transferTo(fileSave);
+
+                imagePathToSave = subDir + "/" + newFileName;
+            }
+
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            hibernateSession = sessionFactory.openSession();
+            hibernateSession.beginTransaction();
+
+            Product product = hibernateSession.get(Product.class, productId);
+            if (product != null) {
+                product.setProductName(productName);
+                product.setPrice(price);
+                product.setStock(stock);
+                product.setDescription(description);
+                product.setProductImg(imagePathToSave); 
+
+                product.setSize(size);
+                product.setOrigin(origin);
+                product.setLifeSpan(lifeSpan);
+                product.setTemperature(temperature);
+                product.setWaterType(waterType);
+                product.setCareLevel(careLevel);
+                product.setIsAggressive(isAggressive);
+
+                SpeciesManager sm = new SpeciesManager();
+                product.setSpecies(sm.getSpecies(speciesId));
+
+                hibernateSession.update(product);
+                hibernateSession.getTransaction().commit();
+            }
+
+            return "redirect:/SellerCenter?success=updated";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (hibernateSession != null) hibernateSession.getTransaction().rollback();
+            return "redirect:/EditProduct?id=" + productId + "&error=exception";
+        } finally {
+            if (hibernateSession != null) hibernateSession.close();
+        }
+    }
 }

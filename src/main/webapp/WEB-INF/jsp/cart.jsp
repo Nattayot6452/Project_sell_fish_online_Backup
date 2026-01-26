@@ -45,14 +45,12 @@
                                     <tr>
                                         <td class="product-col">
                                             <div class="product-detail-flex">
-                                                <c:choose>
+                                                 <c:choose>
                                                     <c:when test="${item.product.productImg.startsWith('assets')}">
-                                                        <img src="${pageContext.request.contextPath}/${item.product.productImg}" 
-                                                             alt="${item.product.productName}">
+                                                        <img src="${pageContext.request.contextPath}/${item.product.productImg}" alt="${item.product.productName}">
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/profile-uploads/${item.product.productImg}" 
-                                                             alt="${item.product.productName}">
+                                                        <img src="${pageContext.request.contextPath}/displayImage?name=${item.product.productImg}" alt="${item.product.productName}">
                                                     </c:otherwise>
                                                 </c:choose>
 

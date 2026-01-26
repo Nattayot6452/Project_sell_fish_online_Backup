@@ -91,7 +91,7 @@
 
                  <div class="dropdown">
                         <a href="Profile" class="dropbtn user-profile">
-                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" class="nav-avatar">
+                            <img src="${pageContext.request.contextPath}/displayImage?name=user/${sessionScope.user.memberImg}" class="nav-avatar">
                             สวัสดี, ${sessionScope.user.memberName}
                             <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
                         </a>

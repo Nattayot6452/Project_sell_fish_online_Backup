@@ -68,17 +68,16 @@
                         <div class="main-img-box">
                             <c:choose>
                                 <c:when test="${product.productImg.startsWith('assets')}">
-                                    <img src="${pageContext.request.contextPath}/${product.productImg}" alt="${product.productName}" id="mainImage">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="${pageContext.request.contextPath}/profile-uploads/${product.productImg}" alt="${product.productName}" id="mainImage">
-                                </c:otherwise>
-                            </c:choose>
+                                <img id="mainImg" src="${pageContext.request.contextPath}/${product.productImg}" alt="${product.productName}">
+                            </c:when>
+                            <c:otherwise>
+                                <img id="mainImg" src="${pageContext.request.contextPath}/displayImage?name=${product.productImg}" alt="${product.productName}">
+                            </c:otherwise>
+                        </c:choose>
                         </div>
                     </div>
 
                     <div class="product-details-info">
-                        <%-- ✅✅✅ ส่วนที่แก้ไข: เพิ่มจำนวนคงเหลือ (Stock) ✅✅✅ --%>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
                                 ${product.stock > 0 ? 'มีสินค้าพร้อมส่ง' : 'สินค้าหมดชั่วคราว'}
@@ -199,8 +198,8 @@
                                 <c:forEach items="${reviews}" var="review">
                                     <div class="review-card">
                                         <div class="reviewer-info">
-                                            <img src="${pageContext.request.contextPath}/profile-uploads/user/${not empty review.member.memberImg ? review.member.memberImg : 'default.png'}" 
-                                                 alt="User" class="reviewer-img">
+                                <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty review.member.memberImg ? review.member.memberImg : 'default.png'}" 
+                                    class="reviewer-img">
                                             <div>
                                                 <span class="reviewer-name">${review.member.memberName}</span>
                                                 <div class="review-meta">

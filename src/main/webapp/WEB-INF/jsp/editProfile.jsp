@@ -25,7 +25,7 @@
 
             <div class="card-body">
                 <div class="current-img-wrapper">
-                    <img src="${pageContext.request.contextPath}/profile-uploads/user/${sessionScope.user.memberImg}" 
+                    <img src="${pageContext.request.contextPath}/displayImage?name=user/${sessionScope.user.memberImg}" 
                          alt="Profile Image" class="profile-img-preview">
                     <div class="edit-icon-overlay"><i class="fas fa-camera"></i></div>
                 </div>

@@ -70,7 +70,7 @@ public class MemberController {
             if (profileImg != null && !profileImg.isEmpty()) {
                 fileName = profileImg.getOriginalFilename();
                 
-                String uploadDir = "/app/uploads/user/"; 
+                String uploadDir = "/app/images/user/";
                 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();

@@ -88,7 +88,7 @@
                                         <img src="${pageContext.request.contextPath}/${p.productImg}" alt="${p.productName}">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="${pageContext.request.contextPath}/profile-uploads/${p.productImg}" alt="${p.productName}">
+                                        <img src="${pageContext.request.contextPath}/displayImage?name=${p.productImg}" alt="${p.productName}">
                                     </c:otherwise>
                                 </c:choose>
                                 
@@ -160,7 +160,5 @@
       });
     </script>
     
-    <%-- ❌ สังเกตว่า Script Notification หายไปแล้ว เพราะย้ายไปอยู่ใน navbar.jsp แล้วครับ --%>
-
 </body>
 </html>
