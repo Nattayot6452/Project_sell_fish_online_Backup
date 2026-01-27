@@ -45,7 +45,7 @@
                                 
                                 <a href="RemoveFavorite?favId=${fav.favoriteId}" class="btn-remove" 
                                    title="ลบออกจากรายการโปรด"
-                                   onclick="return confirm('คุณต้องการลบสินค้านี้ออกจากรายการโปรดใช่หรือไม่?');">
+                                   onclick="confirmRemoveFavorite(event, this.href);">
                                     <i class="fas fa-times"></i>
                                 </a>
 
@@ -95,6 +95,30 @@
     <footer class="site-footer">
         <p>&copy; 2025 Fish Online Shop. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmRemoveFavorite(event, url) {
+        event.preventDefault(); 
+
+        Swal.fire({
+            title: 'ลบจากรายการโปรด?',
+            text: "สินค้านี้จะถูกนำออกจากรายการโปรดของคุณ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',  
+            cancelButtonColor: '#718096',   
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; 
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

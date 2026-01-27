@@ -221,7 +221,7 @@
 
                 <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
                     <a href="requestCancellation?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
-                       onclick="return confirm('ต้องการขอยกเลิกคำสั่งซื้อใช่หรือไม่? \n(ร้านค้าจะต้องอนุมัติก่อน)');">
+                       onclick="confirmAction(event, this.href, 'ขอยกเลิกคำสั่งซื้อ?', 'ร้านค้าจะต้องอนุมัติก่อน คำสั่งซื้อจึงจะยกเลิกสมบูรณ์')">
                        <i class="fas fa-times-circle"></i> ขอยกเลิกคำสั่งซื้อ
                     </a>
                 </c:if>
@@ -241,39 +241,39 @@
                     
                     <c:if test="${order.status == 'กำลังตรวจสอบ'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=กำลังจัดเตรียม" 
-                           class="btn-action btn-ready" onclick="return confirm('ยืนยันว่าสลิปถูกต้อง? \nเปลี่ยนสถานะเป็น: กำลังจัดเตรียม');">
+                           class="btn-action btn-ready" onclick="confirmAction(event, this.href, 'ยืนยันสลิปถูกต้อง?', 'สถานะจะเปลี่ยนเป็น: กำลังจัดเตรียมสินค้า')">
                             <i class="fas fa-box"></i> ยืนยันสลิป / เริ่มจัดเตรียม
                         </a>
                     </c:if>
 
                     <c:if test="${order.status == 'กำลังจัดเตรียม'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=สินค้าพร้อมรับ" 
-                           class="btn-action btn-shipping" onclick="return confirm('จัดเตรียมเสร็จแล้ว? \nเปลี่ยนสถานะเป็น: สินค้าพร้อมรับ');">
+                           class="btn-action btn-shipping" onclick="confirmAction(event, this.href, 'สินค้าพร้อมรับแล้ว?', 'ระบบจะแจ้งเตือนให้ลูกค้ามารับสินค้า')">
                             <i class="fas fa-store"></i> จัดเตรียมสินค้าเสร็จสิ้น
                         </a>
                     </c:if>
 
                     <c:if test="${order.status == 'สินค้าพร้อมรับ'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Completed" 
-                           class="btn-action btn-complete" onclick="return confirm('ลูกค้าได้รับสินค้าแล้ว?');">
+                           class="btn-action btn-complete" onclick="confirmAction(event, this.href, 'ปิดจ๊อบออเดอร์นี้?', 'ยืนยันว่าลูกค้าได้รับสินค้าเรียบร้อยแล้ว')">
                             <i class="fas fa-hand-holding"></i> ลูกค้ารับสินค้าแล้ว
                         </a>
                     </c:if>
                     
                     <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
-                           class="btn-action btn-approve-cancel" onclick="return confirm('ยืนยันให้ลูกค้ายกเลิกคำสั่งซื้อนี้?');">
+                           class="btn-action btn-approve-cancel" onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', 'อนุมัติให้ลูกค้ายกเลิกคำสั่งซื้อนี้ ใช่หรือไม่?')">
                             <i class="fas fa-check-circle"></i> อนุมัติการยกเลิก
                         </a>
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=กำลังจัดเตรียม" 
-                           class="btn-action btn-reject-cancel" onclick="return confirm('ปฏิเสธการยกเลิก และดำเนินการต่อ?');">
+                           class="btn-action btn-reject-cancel" onclick="confirmAction(event, this.href, 'ปฏิเสธการยกเลิก?', 'สถานะจะกลับไปเป็นกำลังจัดเตรียมสินค้า')">
                             <i class="fas fa-undo"></i> ปฏิเสธ (จัดเตรียมต่อ)
                         </a>
                     </c:if>
 
                     <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
-                           class="btn-action btn-cancel-order" onclick="return confirm('ต้องการยกเลิกออเดอร์นี้ทันที?');">
+                           class="btn-action btn-cancel-order" onclick="confirmAction(event, this.href, 'ยกเลิกออเดอร์นี้?', 'ออเดอร์จะถูกยกเลิกทันทีและไม่สามารถกู้คืนได้!')">
                             <i class="fas fa-times"></i> ยกเลิกออเดอร์ (Force Cancel)
                         </a>
                     </c:if>
@@ -287,6 +287,48 @@
     <footer class="site-footer">
         <p>&copy; 2025 Fish Online Shop. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    function confirmAction(event, url, title, text) {
+        event.preventDefault(); 
+        Swal.fire({
+            title: title || 'คุณแน่ใจไหม?',
+            text: text || "การกระทำนี้ไม่สามารถย้อนกลับได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',  
+            cancelButtonColor: '#d33',      
+            confirmButtonText: 'ใช่, ยืนยัน!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                if (title.includes('ยกเลิก') || title.includes('ปฏิเสธ')) {
+
+                }
+                window.location.href = url; 
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        
+        if (msg === 'updated') {
+            Swal.fire({
+                icon: 'success',
+                title: 'อัปเดตสถานะเรียบร้อย',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -79,7 +79,7 @@
                                         </td>
                                         <td class="action-col">
                                             <a href="removeFromCart?productId=${item.product.productId}" class="btn-remove"
-                                               onclick="return confirm('ต้องการลบสินค้านี้ออกจากตะกร้า?');">
+                                               onclick="confirmDeleteCartItem(event, this.href);">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
@@ -228,6 +228,31 @@
             window.location.href = "checkout?coupon=" + encodeURIComponent(code) + "&discount=" + discount;
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    function confirmDeleteCartItem(event, url) {
+        event.preventDefault(); 
+
+        Swal.fire({
+            title: 'ต้องการลบสินค้านี้?',
+            text: "สินค้านี้จะถูกนำออกจากตะกร้าของคุณ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',  
+            cancelButtonColor: '#718096',  
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true 
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; 
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
