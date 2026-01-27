@@ -18,8 +18,8 @@
             <a href="ManageUsers"><i class="fas fa-users"></i> จัดการสมาชิก</a>
         </li>
 
-        <li class="${currentUri.contains('SellerOrders') ? 'active' : ''}">
-            <a href="SellerOrders"><i class="fas fa-clipboard-list"></i> รายการคำสั่งซื้อ</a>
+        <li class="${currentUri.contains('AdminOrders') ? 'active' : ''}">
+            <a href="AdminOrders"><i class="fas fa-clipboard-list"></i> รายการคำสั่งซื้อ</a>
         </li>
         
         <li class="${currentUri.contains('AddSpecies') ? 'active' : ''}">

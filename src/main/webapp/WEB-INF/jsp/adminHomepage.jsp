@@ -86,7 +86,7 @@
                                         ${order.status}
                                     </td>
                                     <td>
-                                        <a href="OrderDetail?orderId=${order.ordersId}" class="btn-small"><i class="fas fa-eye"></i></a>
+                                        <a href="AdminOrderDetail?orderId=${order.ordersId}" class="btn-small"><i class="fas fa-eye"></i></a>
                                     </td>
                                 </tr>
                             </c:forEach>

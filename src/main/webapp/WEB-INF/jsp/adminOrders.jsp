@@ -83,7 +83,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="OrderDetail?orderId=${order.ordersId}" class="btn-small" title="ดูรายละเอียด">
+                                                <a href="AdminOrderDetail?orderId=${order.ordersId}" class="btn-small" title="ดูรายละเอียด">
                                                     <i class="fas fa-eye"></i> ตรวจสอบ
                                                 </a>
                                             </td>

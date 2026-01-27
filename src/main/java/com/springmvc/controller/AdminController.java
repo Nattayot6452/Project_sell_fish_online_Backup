@@ -234,4 +234,18 @@ public class AdminController {
         mav.addObject("orderList", allOrders);
         return mav;
     }
+    @RequestMapping(value = "/AdminOrderDetail", method = RequestMethod.GET)
+    public ModelAndView showAdminOrderDetail(@RequestParam("orderId") String orderId, HttpSession session) {
+
+        if (session.getAttribute("admin") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        OrderManager om = new OrderManager();
+        Orders order = om.getOrderById(orderId);
+
+        ModelAndView mav = new ModelAndView("adminOrderDetail");
+        mav.addObject("order", order);
+        return mav;
+    }
 }

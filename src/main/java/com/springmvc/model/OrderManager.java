@@ -1,5 +1,6 @@
 package com.springmvc.model;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -28,7 +29,7 @@ public class OrderManager {
         return list;
     }
 
-    public Orders getOrderById(String orderId) {
+   public Orders getOrderById(String orderId) {
         Orders order = null; 
         Session session = null;
         try {
@@ -36,6 +37,12 @@ public class OrderManager {
             session = sessionFactory.openSession();
             
             order = session.get(Orders.class, orderId);
+            
+            if (order != null) {
+                Hibernate.initialize(order.getOrderDetails()); 
+                Hibernate.initialize(order.getMember());      
+                Hibernate.initialize(order.getPayment());     
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
