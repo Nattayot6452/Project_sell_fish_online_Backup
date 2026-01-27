@@ -30,8 +30,8 @@
             <a href="ManageSpecies"><i class="fas fa-dna"></i> จัดการสายพันธุ์</a>
         </li>
 
-        <li class="${currentUri.contains('AllProduct') ? 'active' : ''}">
-            <a href="AllProduct"><i class="fas fa-boxes"></i> ตรวจสอบสินค้า</a>
+        <li class="${currentUri.contains('AdminAllProducts') ? 'active' : ''}">
+            <a href="AdminAllProducts"><i class="fas fa-boxes"></i> ตรวจสอบสินค้า</a>
         </li>
     </ul>
 

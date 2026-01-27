@@ -248,4 +248,30 @@ public class AdminController {
         mav.addObject("order", order);
         return mav;
     }
+
+    @RequestMapping(value = "/AdminAllProducts", method = RequestMethod.GET)
+    public ModelAndView showAdminAllProducts(HttpSession session) {
+        if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
+
+        ProductManager pm = new ProductManager();
+        List<Product> productList = pm.getListProducts();
+
+        ModelAndView mav = new ModelAndView("adminAllProduct"); 
+        mav.addObject("productList", productList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/AdminProductDetail", method = RequestMethod.GET)
+    public ModelAndView showAdminProductDetail(@RequestParam("pid") String productId, HttpSession session) {
+        if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
+
+        ProductManager pm = new ProductManager();
+
+        Product product = pm.getProduct(productId); 
+
+        ModelAndView mav = new ModelAndView("adminProductDetail");
+        mav.addObject("product", product);
+        return mav;
+    }
+    
 }
