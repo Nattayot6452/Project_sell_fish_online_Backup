@@ -36,6 +36,7 @@
     </style>
 </head>
 <body style="margin: 0; font-family: sans-serif;">
+    <jsp:include page="loading.jsp" />
 
     <div style="display: flex; min-height: 100vh;">
         

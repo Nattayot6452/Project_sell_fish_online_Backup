@@ -48,7 +48,7 @@
 
     <c:choose>
         <c:when test="${not empty sessionScope.seller}">
-                <%@ include file="sellerNavbar.jsp" %>
+                <jsp:include page="sellerNavbar.jsp" />
         </c:when>
         <c:otherwise>
             <jsp:include page="navbar.jsp" />

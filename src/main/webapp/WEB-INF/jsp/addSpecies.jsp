@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/addSpecies.css">
 </head>
 <body>
+    <jsp:include page="loading.jsp" />
+
     <div class="admin-wrapper">
         <jsp:include page="adminNavbar.jsp" />
         <div class="content">

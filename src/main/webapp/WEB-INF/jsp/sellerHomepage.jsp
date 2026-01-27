@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <%@ include file="sellerNavbar.jsp" %>
+    <jsp:include page="sellerNavbar.jsp" />
 
     <div class="hero-section">
         <div class="slider-container">

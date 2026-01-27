@@ -13,8 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <jsp:include page="loading.jsp" />
 
-    <%@ include file="sellerNavbar.jsp" %>
+    <jsp:include page="sellerNavbar.jsp" />
 
     <div class="container main-container">
         

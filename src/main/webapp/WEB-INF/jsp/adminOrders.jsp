@@ -20,6 +20,7 @@
     </style>
 </head>
 <body>
+    <jsp:include page="loading.jsp" />
 
     <div class="admin-wrapper">
         

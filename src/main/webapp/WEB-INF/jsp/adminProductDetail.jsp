@@ -46,6 +46,7 @@
     </style>
 </head>
 <body>
+
     <div class="admin-wrapper">
         <jsp:include page="adminNavbar.jsp" />
 
