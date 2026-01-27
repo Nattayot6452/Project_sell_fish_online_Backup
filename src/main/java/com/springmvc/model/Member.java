@@ -45,7 +45,6 @@ public class Member {
 
 	public Member() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Member(String memberId, String email, String memberName, String password, String phone, String memberImg) {

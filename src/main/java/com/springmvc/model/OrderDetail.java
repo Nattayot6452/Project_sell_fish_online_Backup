@@ -31,7 +31,6 @@ public class OrderDetail {
 
 	public OrderDetail() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public OrderDetail(String orderDetailId, Integer quantity, Double price, Orders orders, Product product) {

@@ -72,7 +72,6 @@ public class Product {
 
 	public Product() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Product(String productId, String productName, String description, Double price, Integer stock,

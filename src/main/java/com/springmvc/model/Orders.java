@@ -50,7 +50,6 @@ public class Orders {
 
 	public Orders() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Orders(String ordersId, Date orderDate, String status, Double totalAmount, List<OrderDetail> orderDetails,

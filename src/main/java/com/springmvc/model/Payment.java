@@ -32,7 +32,6 @@ public class Payment {
 
 	public Payment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Payment(String slipId, Date uploadDate, String filePath, Double total, Orders orders) {

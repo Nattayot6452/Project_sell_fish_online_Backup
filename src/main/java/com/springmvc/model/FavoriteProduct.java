@@ -23,7 +23,6 @@ public class FavoriteProduct {
 
 	public FavoriteProduct() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public FavoriteProduct(String favoriteId, Member member, Product product) {
