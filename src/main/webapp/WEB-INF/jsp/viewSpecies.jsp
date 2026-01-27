@@ -35,7 +35,7 @@
                         </a>
                         
                         <a href="RemoveSpecies?id=${species.speciesId}" 
-                           onclick="return confirm('⚠️ คำเตือน: การลบสายพันธุ์นี้อาจทำให้สินค้าที่สังกัดสายพันธุ์นี้หายไปด้วย \n\nยืนยันที่จะลบหรือไม่?');"
+                           onclick="confirmDelete(event, this.href);"
                            style="background: #e53e3e; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
                             <i class="fas fa-trash-alt"></i> ลบ
                         </a>
@@ -111,5 +111,53 @@
             </div>
         </div>
     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    function confirmDelete(event, url) {
+        event.preventDefault(); 
+
+        Swal.fire({
+            title: 'ยืนยันการลบ?',
+            text: "สายพันธุ์นี้อาจทำให้สินค้าที่เกี่ยวข้องถูกลบด้วย!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',  
+            cancelButtonColor: '#718096',   
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; 
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        const error = urlParams.get('error');
+
+        if (msg === 'deleted') {
+            Swal.fire({
+                icon: 'success',
+                title: 'ลบสินค้าเรียบร้อย!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else if (msg === 'saved' || msg === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'บันทึกสำเร็จ!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

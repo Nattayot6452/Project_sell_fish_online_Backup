@@ -152,12 +152,12 @@
                     <div class="btn-action-group">
                         <c:if test="${order.status != 'Cancelled' && order.status != 'Completed'}">
                             <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
-                               class="btn-admin btn-cancel" onclick="return confirm('⚠️ คำเตือน: คุณต้องการยกเลิกออเดอร์นี้ทันทีหรือไม่?');">
+                               class="btn-admin btn-cancel" onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', '⚠️ คำเตือน: คุณต้องการยกเลิกออเดอร์นี้ทันทีหรือไม่?')">
                                 <i class="fas fa-ban"></i> ยกเลิกออเดอร์ (Force Cancel)
                             </a>
                             
                             <a href="updateOrderStatus?orderId=${order.ordersId}&status=Completed" 
-                               class="btn-admin btn-confirm" onclick="return confirm('ยืนยันว่าออเดอร์นี้เสร็จสมบูรณ์?');">
+                               class="btn-admin btn-confirm" onclick="confirmAction(event, this.href, 'ออเดอร์เสร็จสมบูรณ์?', 'ยืนยันว่าออเดอร์นี้ดำเนินการเรียบร้อยและลูกค้าได้รับสินค้าแล้ว')">
                                 <i class="fas fa-check-circle"></i> ปรับสถานะเป็นสำเร็จ (Force Complete)
                             </a>
                         </c:if>
@@ -170,6 +170,27 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmAction(event, url, title, text) {
+        event.preventDefault();
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่, ยืนยัน',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

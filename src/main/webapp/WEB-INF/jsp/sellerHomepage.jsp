@@ -123,7 +123,7 @@
                                     <a href="EditProduct?id=${p.productId}" class="btn-circle btn-edit" title="แก้ไข">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <a href="DeleteProduct?id=${p.productId}" class="btn-circle btn-delete" title="ลบ" onclick="return confirm('ยืนยันการลบสินค้านี้?');">
+                                    <a href="DeleteProduct?id=${p.productId}" class="btn-circle btn-delete" title="ลบ" onclick="confirmDelete(event, this.href);">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>
@@ -192,6 +192,53 @@
 
                 const newUrl = window.location.pathname;
                 window.history.replaceState({}, document.title, newUrl);
+            });
+        }
+    });
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    function confirmDelete(event, url) {
+        event.preventDefault(); 
+
+        Swal.fire({
+            title: 'ยืนยันการลบ?',
+            text: "สินค้านี้จะถูกลบออกจากร้านของคุณและไม่สามารถกู้คืนได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',  
+            cancelButtonColor: '#718096',   
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; 
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        const error = urlParams.get('error');
+
+        if (msg === 'deleted') {
+            Swal.fire({
+                icon: 'success',
+                title: 'ลบสินค้าเรียบร้อย!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else if (msg === 'saved' || msg === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'บันทึกสำเร็จ!',
+                showConfirmButton: false,
+                timer: 1500
             });
         }
     });

@@ -41,7 +41,7 @@
 
                         <div style="margin-top: 30px;">
                             <a href="BanUser?id=${member.memberId}" class="btn-logout" 
-                               onclick="return confirm('ยืนยันการลบสมาชิกคนนี้?');">
+                               onclick="confirmAction(event, this.href, 'ยืนยันการลบสมาชิกคนนี้?', 'การกระทำนี้ไม่สามารถย้อนกลับได้');">
                                 <i class="fas fa-ban"></i> Ban / Delete User
                             </a>
                         </div>
@@ -87,5 +87,28 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmAction(event, url, title, text) {
+        event.preventDefault(); 
+        
+        Swal.fire({
+            title: title || 'คุณแน่ใจไหม?',
+            text: text || "การกระทำนี้ไม่สามารถย้อนกลับได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e', 
+            cancelButtonColor: '#888',
+            confirmButtonText: 'ใช่, ยืนยันเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

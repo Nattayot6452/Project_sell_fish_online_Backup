@@ -130,7 +130,7 @@
                                             <i class="fas fa-pen"></i> แก้ไข
                                         </a>
                                         <a href="DeleteProduct?id=${product.productId}" class="btn-delete-product"
-                                           onclick="return confirm('⚠️ ยืนยันการลบสินค้า: ${product.productName}? \nการกระทำนี้ไม่สามารถย้อนกลับได้');">
+                                           onclick="confirmDelete(event, this.href);">
                                             <i class="fas fa-trash-alt"></i> ลบสินค้า
                                         </a>
                                         <a href="SellerCenter" class="btn-fav" title="กลับหลังบ้าน" style="width: auto; padding: 0 20px;">
@@ -276,5 +276,30 @@
             window.location.href = "addToCart?productId=" + productId + "&quantity=" + qty;
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    function confirmDelete(event, url) {
+        event.preventDefault(); 
+
+        Swal.fire({
+            title: '⚠️ ยืนยันการลบสินค้า?',
+            text: "${product.productName} \nการกระทำนี้ไม่สามารถย้อนกลับได้",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',  
+            cancelButtonColor: '#718096',   
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; 
+            }
+        });
+    }
+</script>
 </body>
 </html>
