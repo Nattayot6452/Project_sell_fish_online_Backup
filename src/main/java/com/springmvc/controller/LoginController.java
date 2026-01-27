@@ -46,51 +46,64 @@ public class LoginController {
         return mav;
     }
     
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+   @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(HttpServletRequest request, HttpSession session) {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String role = request.getParameter("role");
-		
-		System.out.println("Login Attempt: User=" + email + " Role=" + role);
-	    
-		if ("user".equals(role)) {
-			String hashedPassword = password;
-		    try {
-		    	hashedPassword = PasswordUtil.getInstance().createPassword(password , "itmjusci");
-		    } catch (Exception e ) {
-		    	e.printStackTrace();
-		    }
-		    
-			RegisterManager rm = new RegisterManager();
-			Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword); 
+        
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String role = request.getParameter("role");
+        
+        System.out.println("Login Attempt: User=" + email + " Role=" + role);
+        
+        if ("user".equals(role)) {
+            String hashedPassword = password;
+            try {
+
+                hashedPassword = PasswordUtil.getInstance().createPassword(password , "itmjusci");
+            } catch (Exception e ) {
+                e.printStackTrace();
+            }
+            
+            RegisterManager rm = new RegisterManager();
+            Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword); 
 
             if (user != null) {
                 session.setAttribute("user", user);
-                return new ModelAndView("redirect:/Main"); 
+                return new ModelAndView("redirect:/Main?msg=login_success"); 
             }
-		}
+        }
 
-		else if ("staff".equals(role)) {
-			StaffManager sm = new StaffManager();
-			Staff staff = sm.getStaffByEmailAndPassword(email, password); 
+        else if ("staff".equals(role)) {
+            
+            String hashedPassword = password;
+            try {
+                hashedPassword = PasswordUtil.getInstance().createPassword(password, "itmjusci");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-			if (staff != null) {
-				if (staff.getId() == 1) { 
-					session.setAttribute("admin", staff);
-					return new ModelAndView("redirect:/AdminCenter");
-				} else {
-					session.setAttribute("seller", staff);
+            StaffManager sm = new StaffManager();
+
+            Staff staff = sm.getStaffByEmailAndPassword(email, hashedPassword); 
+
+            if (staff != null) {
+                if (staff.getId() == 1) { 
+                    session.setAttribute("admin", staff);
+
+                    return new ModelAndView("redirect:/AdminCenter?msg=login_success");
+                } else {
+                    session.setAttribute("seller", staff);
                     System.out.println("Seller Login Success: " + staff.getEmail());
-					return new ModelAndView("redirect:/SellerCenter");
-				}
-			}
-		}
 
-	    ModelAndView mav = new ModelAndView("login");
-	    mav.addObject("error", "อีเมล หรือ รหัสผ่าน ไม่ถูกต้อง");
-	    return mav;
-	}
+                    return new ModelAndView("redirect:/SellerCenter?msg=login_success");
+                }
+            }
+        }
+
+        ModelAndView mav = new ModelAndView("login");
+        mav.addObject("error", "อีเมล หรือ รหัสผ่าน ไม่ถูกต้อง");
+        return mav;
+    }
     
     @RequestMapping(value="/Logout", method=RequestMethod.GET)
     public ModelAndView logout(HttpSession session) {

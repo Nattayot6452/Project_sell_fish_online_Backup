@@ -172,5 +172,30 @@
       });
     </script>
 
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+
+        if (msg === 'login_success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'เข้าสู่ระบบสำเร็จ!',
+                text: 'ยินดีต้อนรับเข้าสู่ระบบ',
+                showConfirmButton: false,
+                timer: 1500, 
+                position: 'center'
+            }).then(() => {
+
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

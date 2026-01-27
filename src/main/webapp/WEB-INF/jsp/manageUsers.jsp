@@ -61,7 +61,7 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="BanUser?id=${m.memberId}" class="btn-small" style="background: #fed7d7; color: #c53030;" 
-                                           onclick="return confirm('⚠️ ยืนยันการลบสมาชิกคนนี้? \nการกระทำนี้ไม่สามารถย้อนกลับได้');" title="Ban User">
+                                           onclick="confirmAction(event, this.href, 'ยืนยันการลบ/แบนสมาชิก?', 'สมาชิกคนนี้จะไม่สามารถใช้งานได้อีก')">
                                             <i class="fas fa-ban"></i>
                                         </a>
                                     </td>
@@ -73,5 +73,50 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        const error = urlParams.get('error');
+
+        if (msg === 'success' || msg === 'saved' || msg === 'updated' || msg === 'deleted' || msg === 'banned') {
+            Swal.fire({
+                icon: 'success',
+                title: 'ดำเนินการสำเร็จ!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถทำรายการได้ในขณะนี้',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    });
+
+    function confirmAction(event, url, title, text) {
+        event.preventDefault(); 
+        
+        Swal.fire({
+            title: title || 'คุณแน่ใจไหม?',
+            text: text || "การกระทำนี้ไม่สามารถย้อนกลับได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e', 
+            cancelButtonColor: '#888',
+            confirmButtonText: 'ใช่, ยืนยันเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
