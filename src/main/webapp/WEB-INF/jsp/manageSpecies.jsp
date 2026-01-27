@@ -11,28 +11,14 @@
 </head>
 <body>
     <div class="admin-wrapper">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <h3>Admin Panel</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li><a href="AdminCenter"><i class="fas fa-chart-line"></i> ภาพรวมระบบ</a></li>
-                <li><a href="ManageUsers"><i class="fas fa-users"></i> จัดการสมาชิก</a></li>
-                <li><a href="SellerOrders"><i class="fas fa-clipboard-list"></i> รายการคำสั่งซื้อ</a></li>
-                 <li><a href="AddSpecies"><i class="fas fa-dna"></i> เพิ่มสายพันธุ์ปลา</li>
-                <li class="active"><a href="ManageSpecies"><i class="fas fa-dna"></i> จัดการสายพันธุ์</a></li>
-                <li><a href="AllProduct"><i class="fas fa-boxes"></i> ตรวจสอบสินค้า</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <a href="Logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-            </div>
-        </nav>
-
+        <jsp:include page="adminNavbar.jsp" />
         <div class="content">
             <nav class="top-navbar">
                 <div class="navbar-title">จัดการข้อมูลสายพันธุ์</div>
-                <div class="admin-profile"><span>Admin</span></div>
+                <div class="admin-profile">
+                    <img src="${pageContext.request.contextPath}/assets/images/icon/admin-avatar.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2942/2942813.png'" alt="Admin">
+                    <span>Admin</span>
+                </div>
             </nav>
 
             <div class="dashboard-container">

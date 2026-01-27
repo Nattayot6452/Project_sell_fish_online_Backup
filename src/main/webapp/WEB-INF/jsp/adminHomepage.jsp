@@ -14,40 +14,7 @@
 <body>
 
     <div class="admin-wrapper">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <h3>Admin Panel</h3>
-            </div>
-            
-            <ul class="list-unstyled components">
-                <li class="active">
-                    <a href="AdminCenter"><i class="fas fa-chart-line"></i> ภาพรวมระบบ</a>
-                </li>
-                <li>
-                    <a href="ManageUsers"><i class="fas fa-users"></i> จัดการสมาชิก</a>
-                </li>
-                <li>
-                    <a href="SellerOrders"><i class="fas fa-clipboard-list"></i> รายการคำสั่งซื้อ</a>
-                </li>
-                
-                <li>
-                    <a href="AddSpecies"><i class="fas fa-dna"></i> เพิ่มสายพันธุ์ปลา</a>
-                </li>
-                
-                <li>
-                    <a href="ManageSpecies"><i class="fas fa-dna"></i> จัดการสายพันธุ์</a>
-                </li>
-
-                <li>
-                    <a href="AllProduct"><i class="fas fa-boxes"></i> ตรวจสอบสินค้า</a>
-                </li>
-            </ul>
-
-            <div class="sidebar-footer">
-                <a href="Logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-            </div>
-        </nav>
+        <jsp:include page="adminNavbar.jsp" />
 
         <div class="content">
             <nav class="top-navbar">
