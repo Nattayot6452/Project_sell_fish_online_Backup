@@ -3,6 +3,7 @@ package com.springmvc.controller;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,10 +23,11 @@ import com.springmvc.model.Orders;
 import com.springmvc.model.Product;
 import com.springmvc.model.ProductImage;
 import com.springmvc.model.ProductManager;
+import com.springmvc.model.ReviewManager;
 import com.springmvc.model.Seller;
 import com.springmvc.model.Species;
 import com.springmvc.model.SpeciesManager;
-import com.springmvc.model.Member;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,17 +44,26 @@ public class SellerController {
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "category", required = false) String category,
             HttpSession session) {
-        
+
         if (session.getAttribute("seller") == null) {
             return new ModelAndView("redirect:/Login");
         }
 
         ProductManager pm = new ProductManager();
+        ReviewManager rm = new ReviewManager(); 
+
         List<Product> products;
         if ((search != null && !search.isEmpty()) || (category != null && !category.equals("all"))) {
             products = pm.searchProducts(search, category);
         } else {
             products = pm.getListProducts();
+        }
+
+        Map<String, Double> productRatings = new HashMap<>();
+        if (products != null) {
+            for (Product p : products) {
+                productRatings.put(p.getProductId(), rm.getAverageRating(p.getProductId()));
+            }
         }
 
         List<Species> speciesList = pm.getAllSpecies();
@@ -62,7 +73,9 @@ public class SellerController {
         mav.addObject("speciesList", speciesList);
         mav.addObject("paramSearch", search);
         mav.addObject("paramCategory", category);
-        
+
+        mav.addObject("productRatings", productRatings);
+
         return mav;
     }
 

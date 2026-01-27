@@ -133,6 +133,25 @@
                             <div class="product-info">
                                 <h3 class="product-name">${p.productName}</h3>
                                 <small style="color: #999; font-size: 12px; display: block; margin-bottom: 5px;">
+                                   <div class="rating-container" style="margin-bottom: 8px;">
+                                        <c:set var="rating" value="${productRatings[p.productId]}" />
+                                        <span style="color: #ffc107; font-size: 13px;">
+                                            <c:forEach begin="1" end="5" var="i">
+                                                <c:choose>
+                                                    <c:when test="${rating >= i}">
+                                                        <i class="fas fa-star"></i>
+                                                    </c:when>
+                                                    <c:when test="${rating >= i - 0.5}">
+                                                        <i class="fas fa-star-half-alt"></i>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="far fa-star"></i>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:forEach>
+                                        </span>
+                                        <span style="font-size: 11px; color: #777; margin-left: 3px;">(${rating})</span>
+                                    </div>
                                     ID: ${p.productId}
                                 </small>
                                 <div class="price">
