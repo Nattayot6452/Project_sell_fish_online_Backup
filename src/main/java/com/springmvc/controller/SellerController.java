@@ -15,14 +15,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.springmvc.model.Admin;
 import com.springmvc.model.HibernateConnection;
 import com.springmvc.model.OrderManager;
 import com.springmvc.model.Orders;
 import com.springmvc.model.Product;
 import com.springmvc.model.ProductImage;
 import com.springmvc.model.ProductManager;
+import com.springmvc.model.Seller;
 import com.springmvc.model.Species;
 import com.springmvc.model.SpeciesManager;
+import com.springmvc.model.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -230,14 +233,28 @@ public class SellerController {
         }
     }
     
-    @RequestMapping(value = "/SellerOrders", method = RequestMethod.GET)
+   @RequestMapping(value = "/SellerOrders", method = RequestMethod.GET)
     public ModelAndView showSellerOrders(HttpSession session) {
-        if (session.getAttribute("seller") == null) {
+        
+        Seller seller = (Seller) session.getAttribute("seller");
+        Admin admin = (Admin) session.getAttribute("admin");   
+        
+        if (seller == null && admin == null) {
             return new ModelAndView("redirect:/Login");
         }
+
         OrderManager om = new OrderManager();
-        List<Orders> orderList = om.getAllOrders();
         ModelAndView mav = new ModelAndView("sellerOrders");
+        List<Orders> orderList = null;
+
+        if (admin != null) {
+
+            orderList = om.getAllOrders(); 
+        } else {
+
+            orderList = om.getAllOrders(); 
+        }
+
         mav.addObject("orderList", orderList);
         return mav;
     }

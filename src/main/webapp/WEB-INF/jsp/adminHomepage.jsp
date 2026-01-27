@@ -61,7 +61,7 @@
                 <div class="recent-section">
                     <div class="section-header">
                         <h3><i class="fas fa-clock"></i> คำสั่งซื้อล่าสุด</h3>
-                        <a href="SellerOrders" class="btn-view-all">ดูทั้งหมด</a>
+                        <a href="AdminOrders" class="btn-view-all">ดูทั้งหมด</a>
                     </div>
                     <table class="admin-table">
                         <thead>

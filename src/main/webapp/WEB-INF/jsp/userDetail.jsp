@@ -12,35 +12,23 @@
 </head>
 <body>
     <div class="admin-wrapper">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <h3>Admin Panel</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li><a href="AdminCenter"><i class="fas fa-chart-line"></i> ภาพรวมระบบ</a></li>
-                <li class="active"><a href="ManageUsers"><i class="fas fa-users"></i> จัดการสมาชิก</a></li>
-                <li><a href="SellerOrders"><i class="fas fa-clipboard-list"></i> รายการคำสั่งซื้อ</a></li>
-                <li><a href="AllProduct"><i class="fas fa-boxes"></i> ตรวจสอบสินค้า</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <a href="Logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
-            </div>
-        </nav>
-
+        <jsp:include page="adminNavbar.jsp" />
         <div class="content">
             <nav class="top-navbar">
                 <a href="ManageUsers" style="text-decoration: none; color: #333; font-weight: bold;">
                     <i class="fas fa-arrow-left"></i> ย้อนกลับ
                 </a>
-                <div class="admin-profile"><span>Admin</span></div>
+                <div class="admin-profile">
+                    <img src="${pageContext.request.contextPath}/assets/images/icon/admin-avatar.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2942/2942813.png'" alt="Admin">
+                    <span>Admin</span>
+                </div>
             </nav>
 
             <div class="dashboard-container">
                 <div class="stats-grid" style="grid-template-columns: 1fr 2fr; align-items: start;">
                     
                     <div class="card" style="display: block; text-align: center;">
-                        <img src="${pageContext.request.contextPath}/profile-uploads/user/${member.memberImg}" 
+                        <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty member.memberImg ? member.memberImg : 'default.png'}" 
                              style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #eee;"
                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                         <h2 style="margin: 0; color: #333;">${member.memberName}</h2>

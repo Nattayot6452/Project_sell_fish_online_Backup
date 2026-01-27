@@ -49,7 +49,7 @@
                                 <tr>
                                     <td>#${m.memberId}</td>
                                     <td>
-                                        <img src="${pageContext.request.contextPath}/profile-uploads/user/${m.memberImg}" 
+                                        <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty m.memberImg ? m.memberImg : 'default.png'}" 
                                              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;" 
                                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                                     </td>
