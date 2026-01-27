@@ -62,7 +62,7 @@
 
         <div class="product-grid">
             <c:forEach items="${Product}" var="p">
-                <div class="product-card">
+                <div class="product-card" data-aos="fade-up" data-aos-duration="1000">
                     <div class="product-img-box">
                         <c:choose>
                             <c:when test="${empty p.productImg}">

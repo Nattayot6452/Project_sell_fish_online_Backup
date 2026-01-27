@@ -183,3 +183,13 @@ body {
 .empty-icon { font-size: 60px; margin-bottom: 20px; color: #ddd; }
 
 .site-footer { text-align: center; padding: 20px; background: var(--primary-color); color: rgba(255,255,255,0.8); margin-top: 40px; }
+
+.product-card {
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-10px); 
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); 
+    border-color: #00571d; 
+}

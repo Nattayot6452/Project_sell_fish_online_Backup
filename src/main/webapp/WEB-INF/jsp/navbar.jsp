@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <style>
 
     .cart-link {
@@ -109,6 +111,46 @@
     </div>
 </nav>
 
+<button onclick="topFunction()" id="myBtn" title="Go to top" style="
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: #00571d; /* สีเขียวธีมร้าน */
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: 0.3s;
+">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+
+    let mybutton = document.getElementById("myBtn");
+
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        window.scrollTo({top: 0, behavior: 'smooth'}); 
+    }
+</script>
+
 <script>
     $(document).ready(function() {
         setInterval(fetchNotifications, 5000);
@@ -160,4 +202,9 @@
             document.getElementById("noti-content").style.display = "none";
         }
     });
+</script>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
 </script>

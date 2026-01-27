@@ -105,7 +105,7 @@
             <c:choose>
                 <c:when test="${not empty products}">
                     <c:forEach items="${products}" var="p">
-                        <div class="product-card">
+                        <div class="product-card" data-aos="fade-up" data-aos-duration="1000">
                             <div class="product-img-box">
                                 <c:choose>
                                     <c:when test="${p.productImg.startsWith('assets')}">
