@@ -1,5 +1,6 @@
 package com.springmvc.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import com.springmvc.model.Review;
 import com.springmvc.model.ReviewManager;
 import com.springmvc.model.Species;
 import com.springmvc.model.SpeciesManager;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.Session;
@@ -23,7 +25,7 @@ import org.hibernate.SessionFactory;
 @Controller
 public class ProductController {
 	
-	@RequestMapping(value="/AllProduct", method=RequestMethod.GET)
+    @RequestMapping(value="/AllProduct", method=RequestMethod.GET)
     public ModelAndView productPage(
             @RequestParam(value = "category", defaultValue = "all") String category,
             @RequestParam(value = "sortBy", defaultValue = "default") String sortBy,
@@ -34,37 +36,55 @@ public class ProductController {
         ProductManager pm = new ProductManager();
         SpeciesManager sm = new SpeciesManager();
 
+        ReviewManager rm = new ReviewManager(); 
+
         List<Product> products = pm.getProductsWithFilter(category, sortBy, page, pageSize);
-        
+
+        Map<String, Double> productRatings = new HashMap<>();
+        for (Product p : products) {
+            productRatings.put(p.getProductId(), rm.getAverageRating(p.getProductId()));
+        }
+
         long totalProducts = pm.countProducts(category);
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         List<Species> speciesList = sm.getAllSpecies(); 
 
         ModelAndView mav = new ModelAndView("allProduct"); 
-        
+
         mav.addObject("Product", products);
         mav.addObject("speciesList", speciesList);
         mav.addObject("currentPage", page);
         mav.addObject("totalPages", totalPages);
-        
+
+        mav.addObject("productRatings", productRatings);
+
         return mav;
     }
 	 
-	@RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
+    @RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
     public ModelAndView searchProducts(HttpServletRequest request) {
         String searchtext = request.getParameter("searchtext");
-        
+
         ModelAndView mav = new ModelAndView("allProduct");
-        
+
         ProductManager pm = new ProductManager();
         SpeciesManager sm = new SpeciesManager();
-        
+        ReviewManager rm = new ReviewManager(); 
+
         List<Product> products = pm.getSearchProductsBySpecies(searchtext);
+
+        Map<String, Double> productRatings = new HashMap<>();
+        for (Product p : products) {
+            productRatings.put(p.getProductId(), rm.getAverageRating(p.getProductId()));
+        }
+
         List<Species> speciesList = sm.getAllSpecies();
         mav.addObject("Product", products);
         mav.addObject("speciesList", speciesList);
-        
+
+        mav.addObject("productRatings", productRatings);
+
         return mav;
     }
 	 
