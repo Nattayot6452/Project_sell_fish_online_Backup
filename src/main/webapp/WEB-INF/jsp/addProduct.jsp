@@ -38,7 +38,6 @@
                           <select name="speciesId" required>
                                 <option value="" disabled selected>-- เลือกสายพันธุ์ --</option>
                                 
-                                <%-- ✅✅✅ ใช้ JSTL วนลูปแสดงข้อมูลจาก Database ✅✅✅ --%>
                                 <c:forEach items="${speciesList}" var="spec">
                                     <option value="${spec.speciesId}">
                                         ${spec.speciesName}

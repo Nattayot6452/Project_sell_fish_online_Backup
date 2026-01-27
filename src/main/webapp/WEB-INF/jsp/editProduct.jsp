@@ -138,7 +138,7 @@
                                 <img id="imagePreview" class="image-preview" src="${pageContext.request.contextPath}/${product.productImg}" style="display: block;">
                             </c:when>
                             <c:otherwise>
-                                <img id="imagePreview" class="image-preview" src="${pageContext.request.contextPath}/profile-uploads/${product.productImg}" style="display: block;">
+                                <img id="imagePreview" class="image-preview" src="${pageContext.request.contextPath}/${product.productImg.startsWith('assets') ? '' : 'displayImage?name='}${product.productImg}" style="display: block;">
                             </c:otherwise>
                         </c:choose>
                         
