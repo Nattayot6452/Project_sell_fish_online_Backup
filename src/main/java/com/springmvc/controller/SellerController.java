@@ -106,7 +106,7 @@ public class SellerController {
             @RequestParam("careLevel") String careLevel,
             @RequestParam("isAggressive") String isAggressive,
             @RequestParam("productImage") MultipartFile file,
-            @RequestParam(value = "galleryFiles", required = false) MultipartFile[] galleryFiles, 
+            @RequestParam(value = "extraImages", required = false) MultipartFile[] extraImages, 
             HttpSession session) {
 
         if (session.getAttribute("seller") == null) { return "redirect:/Login"; }
@@ -115,20 +115,13 @@ public class SellerController {
         try {
 
             String baseDir = "/app/images";
-            
             String subDir = "products";
             File uploadPath = new File(baseDir + File.separator + subDir);
             if (!uploadPath.exists()) uploadPath.mkdirs();
 
             String productId = "P" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
 
-            String originalName = file.getOriginalFilename();
-            String extension = "";
-            if (originalName != null && originalName.contains(".")) {
-                extension = originalName.substring(originalName.lastIndexOf("."));
-            }
-            String mainImageName = UUID.randomUUID().toString() + extension;
-            
+            String mainImageName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             File mainFileSave = new File(uploadPath, mainImageName);
             file.transferTo(mainFileSave);
 
@@ -138,7 +131,6 @@ public class SellerController {
             product.setPrice(price);
             product.setStock(stock);
             product.setDescription(description);
-            
             product.setProductImg(subDir + "/" + mainImageName);
             
             product.setSize(size);
@@ -152,34 +144,27 @@ public class SellerController {
             SpeciesManager sm = new SpeciesManager();
             product.setSpecies(sm.getSpecies(speciesId));
 
-            List<ProductImage> galleryList = new ArrayList<>();
-            if (galleryFiles != null && galleryFiles.length > 0) {
-                for (MultipartFile gFile : galleryFiles) {
-                    if (!gFile.isEmpty()) {
-                        String gName = gFile.getOriginalFilename();
-                        String gExt = "";
-                        if (gName != null && gName.contains(".")) {
-                            gExt = gName.substring(gName.lastIndexOf("."));
-                        }
-                        String gFileName = UUID.randomUUID().toString() + "_gallery" + gExt;
+            if (extraImages != null && extraImages.length > 0) {
+                for (MultipartFile extraFile : extraImages) {
+                    if (!extraFile.isEmpty()) {
+
+                        String extraName = UUID.randomUUID().toString() + "_extra_" + extraFile.getOriginalFilename();
+                        File extraFileSave = new File(uploadPath, extraName);
+                        extraFile.transferTo(extraFileSave);
+
+                        ProductImage pImage = new ProductImage(subDir + "/" + extraName, product);
                         
-                        File gFileSave = new File(uploadPath, gFileName);
-                        gFile.transferTo(gFileSave);
-
-                        ProductImage pi = new ProductImage();
-
-                        pi.setImagePath(subDir + "/" + gFileName);
-                        pi.setProduct(product);
-                        galleryList.add(pi);
+                        product.addImage(pImage); 
                     }
                 }
             }
-            product.setGalleryImages(galleryList);
 
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             hibernateSession = sessionFactory.openSession();
             hibernateSession.beginTransaction();
-            hibernateSession.save(product);
+            
+            hibernateSession.save(product); 
+            
             hibernateSession.getTransaction().commit();
 
             return "redirect:/SellerCenter?success=added";

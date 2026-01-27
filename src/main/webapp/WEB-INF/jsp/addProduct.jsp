@@ -112,14 +112,31 @@
 
                 <div class="form-section">
                     <h3>📷 รูปภาพสินค้า</h3>
-                    <div class="image-upload-box">
-                        <input type="file" name="productImage" id="productImage" accept="image/*" required onchange="previewImage(event)">
-                        <div class="upload-placeholder" id="uploadPlaceholder">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>คลิกเพื่ออัปโหลดรูปภาพ</p>
-                            <span>รองรับไฟล์ JPG, PNG</span>
+                    
+                    <div class="form-group">
+                        <label>รูปภาพหลัก (รูปปก) <span class="required">*</span></label>
+                        <div class="image-upload-box">
+                            <input type="file" name="productImage" id="productImage" accept="image/*" required onchange="previewImage(event, 'imagePreview', 'uploadPlaceholder')">
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>คลิกเพื่ออัปโหลดรูปภาพหลัก</p>
+                                <span>รองรับไฟล์ JPG, PNG</span>
+                            </div>
+                            <img id="imagePreview" class="image-preview" style="display: none;">
                         </div>
-                        <img id="imagePreview" class="image-preview" style="display: none;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>รูปภาพเพิ่มเติม (เลือกได้หลายรูป)</label>
+                        <div class="image-upload-box" style="border-style: dashed; border-color: #cbd5e0;">
+                            <input type="file" name="extraImages" id="extraImages" accept="image/*" multiple onchange="previewMultipleImages(event)">
+                            <div class="upload-placeholder" id="extraPlaceholder">
+                                <i class="fas fa-images"></i>
+                                <p>กด Ctrl ค้างไว้เพื่อเลือกหลายรูป</p>
+                                <span>(Optional)</span>
+                            </div>
+                        </div>
+                        <div id="galleryPreview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
                     </div>
                 </div>
 
@@ -131,20 +148,47 @@
             </form>
         </div>
     </div>
-
     <script>
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function(){
-                const output = document.getElementById('imagePreview');
-                const placeholder = document.getElementById('uploadPlaceholder');
+            function previewImage(event, imgId, placeholderId) {
+                const reader = new FileReader();
+                reader.onload = function(){
+                const output = document.getElementById(imgId);
+                const placeholder = document.getElementById(placeholderId);
                 output.src = reader.result;
                 output.style.display = 'block';
-                placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
+                    placeholder.style.display = 'none';
+                };
+                    if (event.target.files[0]) {
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    }
+
+                    function previewMultipleImages(event) {
+                        const files = event.target.files;
+                        const previewContainer = document.getElementById('galleryPreview');
+                        previewContainer.innerHTML = ""; 
+
+                        if (files) {
+
+                            document.getElementById('extraPlaceholder').style.display = 'none';
+
+                            Array.from(files).forEach(file => {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const img = document.createElement('img');
+                                    img.src = e.target.result;
+                                    img.style.width = "80px";
+                                    img.style.height = "80px";
+                                    img.style.objectFit = "cover";
+                                    img.style.borderRadius = "5px";
+                                    img.style.border = "1px solid #ddd";
+                                    previewContainer.appendChild(img);
+                                }
+                                reader.readAsDataURL(file);
+                            });
+                        }
+                    }
+        </script>
 
 </body>
 </html>

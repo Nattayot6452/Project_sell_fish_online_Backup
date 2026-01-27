@@ -29,11 +29,52 @@
             transition: transform 0.2s;
         }
         .btn-delete-product:hover { background-color: #c82333; transform: translateY(-2px); }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .thumb {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+        .thumb:hover { opacity: 1; }
+        .thumb.active {
+            border-color: #00571d; 
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .main-image-container {
+            width: 100%;
+            height: 400px; 
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            margin-bottom: 10px;
+        }
+        #mainImg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
-    <%-- Navbar --%>
     <c:choose>
         <c:when test="${not empty sessionScope.seller}">
             <jsp:include page="sellerNavbar.jsp" />
@@ -65,15 +106,41 @@
                 
                 <div class="product-wrapper">
                     <div class="product-gallery">
-                        <div class="main-img-box">
+                        <div class="main-image-container">
                             <c:choose>
                                 <c:when test="${product.productImg.startsWith('assets')}">
-                                <img id="mainImg" src="${pageContext.request.contextPath}/${product.productImg}" alt="${product.productName}">
-                            </c:when>
-                            <c:otherwise>
-                                <img id="mainImg" src="${pageContext.request.contextPath}/displayImage?name=${product.productImg}" alt="${product.productName}">
-                            </c:otherwise>
-                        </c:choose>
+                                    <img id="mainImg" src="${pageContext.request.contextPath}/${product.productImg}" alt="${product.productName}">
+                                </c:when>
+                                <c:otherwise>
+                                    <img id="mainImg" src="${pageContext.request.contextPath}/displayImage?name=${product.productImg}" alt="${product.productName}">
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        
+                        <div class="thumbnail-container">
+                            <c:choose>
+                                <c:when test="${product.productImg.startsWith('assets')}">
+                                    <img class="thumb active" src="${pageContext.request.contextPath}/${product.productImg}" 
+                                         onclick="changeImage(this.src, this)">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="thumb active" src="${pageContext.request.contextPath}/displayImage?name=${product.productImg}" 
+                                         onclick="changeImage(this.src, this)">
+                                </c:otherwise>
+                            </c:choose>
+                            
+                            <c:forEach items="${product.galleryImages}" var="img">
+                                <c:choose>
+                                    <c:when test="${img.imagePath.startsWith('assets')}">
+                                        <img class="thumb" src="${pageContext.request.contextPath}/${img.imagePath}" 
+                                             onclick="changeImage(this.src, this)">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img class="thumb" src="${pageContext.request.contextPath}/displayImage?name=${img.imagePath}" 
+                                             onclick="changeImage(this.src, this)">
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
                         </div>
                     </div>
 
@@ -198,8 +265,8 @@
                                 <c:forEach items="${reviews}" var="review">
                                     <div class="review-card">
                                         <div class="reviewer-info">
-                                <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty review.member.memberImg ? review.member.memberImg : 'default.png'}" 
-                                    class="reviewer-img">
+                                            <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty review.member.memberImg ? review.member.memberImg : 'default.png'}" 
+                                                 class="reviewer-img">
                                             <div>
                                                 <span class="reviewer-name">${review.member.memberName}</span>
                                                 <div class="review-meta">
@@ -279,27 +346,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+    <script>
+        function confirmDelete(event, url) {
+            event.preventDefault(); 
 
-    function confirmDelete(event, url) {
-        event.preventDefault(); 
+            Swal.fire({
+                title: '⚠️ ยืนยันการลบสินค้า?',
+                text: "${product.productName} \nการกระทำนี้ไม่สามารถย้อนกลับได้",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e53e3e',  
+                cancelButtonColor: '#718096',   
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; 
+                }
+            });
+        }
+    </script>
 
-        Swal.fire({
-            title: '⚠️ ยืนยันการลบสินค้า?',
-            text: "${product.productName} \nการกระทำนี้ไม่สามารถย้อนกลับได้",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#e53e3e',  
-            cancelButtonColor: '#718096',   
-            confirmButtonText: 'ใช่, ลบเลย!',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = url; 
-            }
-        });
-    }
-</script>
+    <script>
+
+        function changeImage(src, element) {
+
+            document.getElementById("mainImg").src = src;
+            
+            document.querySelectorAll('.thumb').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+
 </body>
 </html>

@@ -26,6 +26,13 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    public ProductImage() {}
+
+    public ProductImage(String imagePath, Product product) {
+        this.imagePath = imagePath;
+        this.product = product;
+    }
+
     // Getters & Setters
     public int getImageId() { return imageId; }
     public void setImageId(int imageId) { this.imageId = imageId; }

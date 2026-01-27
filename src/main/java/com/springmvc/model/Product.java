@@ -228,5 +228,13 @@ public class Product {
 	public List<ProductImage> getGalleryImages() { return galleryImages; }
     public void setGalleryImages(List<ProductImage> galleryImages) { this.galleryImages = galleryImages; }
 	
-	
+    public void addImage(ProductImage image) {
+        if (this.galleryImages == null) {
+            this.galleryImages = new ArrayList<>();
+        }
+        this.galleryImages.add(image);
+        image.setProduct(this);
+    }
+    
 }
+
