@@ -54,9 +54,9 @@ public class RegisterController {
 
             boolean result = rm.insertRegister(newMember);
 
-            if (result) {
-                mv.setViewName("login");
-                mv.addObject("message", "✅ สมัครสมาชิกสำเร็จแล้ว!");
+           if (result) {
+            
+                return new ModelAndView("redirect:/Login?msg=register_success");
             } else {
                 mv.addObject("add_result", "❌ ไม่สามารถบันทึกข้อมูลได้");
             }

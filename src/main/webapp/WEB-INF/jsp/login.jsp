@@ -126,5 +126,25 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+
+        if (msg === 'register_success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'สมัครสมาชิกสำเร็จ!',
+                text: 'กรุณาเข้าสู่ระบบด้วยบัญชีใหม่ของคุณ',
+                confirmButtonColor: '#3182ce',
+                confirmButtonText: 'ตกลง'
+            }).then(() => {
+
+                window.history.replaceState({}, document.title, window.location.pathname);
+            });
+        }
+    });
+</script>
 </body>
 </html>
