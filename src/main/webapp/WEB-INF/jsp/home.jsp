@@ -33,7 +33,7 @@
         <div class="hero-content">
             <h1>โลกแห่งปลาสวยงาม<br>รอคุณอยู่ที่นี่</h1>
             <p>คัดสรรปลาสายพันธุ์ดี แข็งแรง สีสวย พร้อมส่งตรงถึงหน้าบ้านคุณ รับประกันคุณภาพทุกตัว</p>
-            <a href="Products" class="cta-btn">ช้อปเลยตอนนี้ <i class="fas fa-arrow-right"></i></a>
+            <a href="AllProduct" class="cta-btn">ช้อปเลยตอนนี้ <i class="fas fa-arrow-right"></i></a>
         </div>
         
         <button class="prev"><i class="fas fa-chevron-left"></i></button>
