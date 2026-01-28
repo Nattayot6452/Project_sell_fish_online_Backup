@@ -2,7 +2,6 @@ package com.springmvc.controller;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springmvc.model.Admin;
@@ -32,6 +32,7 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.regex.Pattern;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -91,8 +92,8 @@ public class SellerController {
         return mav;
     }
 
-    @RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
-    public String saveProduct(
+   @RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
+    public ModelAndView saveProduct(
             @RequestParam("productName") String productName,
             @RequestParam("speciesId") String speciesId,
             @RequestParam("price") Double price,
@@ -109,10 +110,36 @@ public class SellerController {
             @RequestParam(value = "extraImages", required = false) MultipartFile[] extraImages, 
             HttpSession session) {
 
-        if (session.getAttribute("seller") == null) { return "redirect:/Login"; }
+        if (session.getAttribute("seller") == null) { return new ModelAndView("redirect:/Login"); }
 
-        Session hibernateSession = null;
+        ModelAndView mav = new ModelAndView("redirect:/AddProduct");
+
         try {
+         
+            productName = productName.trim();
+            description = description.trim();
+
+            String namePattern = "^[a-zA-Z0-9ก-๙\\s\\-_()]+$";
+            if (productName.isEmpty() || !Pattern.matches(namePattern, productName)) {
+                return new ModelAndView("redirect:/AddProduct?error=invalidName");
+            }
+
+            if (price <= 0 || stock < 0) {
+                return new ModelAndView("redirect:/AddProduct?error=invalidNumber");
+            }
+
+            description = HtmlUtils.htmlEscape(description);
+
+            if (file.isEmpty()) {
+                return new ModelAndView("redirect:/AddProduct?error=missingImage");
+            }
+            if (file.getSize() > 5 * 1024 * 1024) {
+                return new ModelAndView("redirect:/AddProduct?error=fileTooLarge");
+            }
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return new ModelAndView("redirect:/AddProduct?error=invalidFileType");
+            }
 
             String baseDir = "/app/images";
             String subDir = "products";
@@ -120,7 +147,6 @@ public class SellerController {
             if (!uploadPath.exists()) uploadPath.mkdirs();
 
             String productId = "P" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
-
             String mainImageName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             File mainFileSave = new File(uploadPath, mainImageName);
             file.transferTo(mainFileSave);
@@ -133,11 +159,11 @@ public class SellerController {
             product.setDescription(description);
             product.setProductImg(subDir + "/" + mainImageName);
             
-            product.setSize(size);
-            product.setOrigin(origin);
-            product.setLifeSpan(lifeSpan);
-            product.setTemperature(temperature);
-            product.setWaterType(waterType);
+            product.setSize(HtmlUtils.htmlEscape(size));
+            product.setOrigin(HtmlUtils.htmlEscape(origin));
+            product.setLifeSpan(HtmlUtils.htmlEscape(lifeSpan));
+            product.setTemperature(HtmlUtils.htmlEscape(temperature));
+            product.setWaterType(HtmlUtils.htmlEscape(waterType));
             product.setCareLevel(careLevel);
             product.setIsAggressive(isAggressive);
 
@@ -148,36 +174,34 @@ public class SellerController {
                 for (MultipartFile extraFile : extraImages) {
                     if (!extraFile.isEmpty()) {
 
+                        if (extraFile.getSize() > 5 * 1024 * 1024 || !extraFile.getContentType().startsWith("image/")) {
+                            continue;
+                        }
+
                         String extraName = UUID.randomUUID().toString() + "_extra_" + extraFile.getOriginalFilename();
                         File extraFileSave = new File(uploadPath, extraName);
                         extraFile.transferTo(extraFileSave);
-
-                        ProductImage pImage = new ProductImage(subDir + "/" + extraName, product);
                         
+                        ProductImage pImage = new ProductImage(subDir + "/" + extraName, product);
                         product.addImage(pImage); 
                     }
                 }
             }
 
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
-            hibernateSession = sessionFactory.openSession();
+            Session hibernateSession = sessionFactory.openSession();
             hibernateSession.beginTransaction();
-            
             hibernateSession.save(product); 
-            
             hibernateSession.getTransaction().commit();
+            hibernateSession.close();
 
-            return "redirect:/SellerCenter?success=added";
+            return new ModelAndView("redirect:/SellerCenter?success=added");
 
         } catch (Exception e) {
             e.printStackTrace();
-            if (hibernateSession != null) hibernateSession.getTransaction().rollback();
-            return "redirect:/AddProduct?error=exception";
-        } finally {
-            if (hibernateSession != null) hibernateSession.close();
+            return new ModelAndView("redirect:/AddProduct?error=exception");
         }
     }
-    
     
     @RequestMapping(value = "/DeleteProduct", method = RequestMethod.GET)
     public ModelAndView deleteProduct(@RequestParam("id") String productId, HttpSession session) {
