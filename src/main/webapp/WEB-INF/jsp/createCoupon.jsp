@@ -29,7 +29,13 @@
             
             <div class="form-group">
                 <label>รหัสคูปอง (Code) *</label>
-               <input type="text" name="couponCode" placeholder="เช่น SUMMER2025" required pattern="[A-Z0-9]+" title="กรอกได้เฉพาะภาษาอังกฤษตัวพิมพ์ใหญ่และตัวเลข" style="text-transform: uppercase; letter-spacing: 2px; font-weight: bold;"value="<c:out value='${param.couponCode}' />">
+               <input type="text"
+                    name="couponCode"
+                    placeholder="เช่น SUMMER2025"
+                    pattern="[A-Z0-9]+"
+                    title="กรอกได้เฉพาะภาษาอังกฤษตัวพิมพ์ใหญ่และตัวเลข"
+                    style="text-transform: uppercase; letter-spacing: 2px; font-weight: bold;"
+                    value="${param.couponCode}">
                 <small style="color: grey;">เฉพาะภาษาอังกฤษตัวพิมพ์ใหญ่และตัวเลขเท่านั้น</small>
             </div>
 
