@@ -34,8 +34,8 @@
                         <select name="category" id="category" onchange="this.form.submit()">
                             <option value="all" ${param.category == 'all' || empty param.category ? 'selected' : ''}>ทั้งหมด</option>
                             <c:forEach items="${speciesList}" var="species">
-                                <option value="${species.speciesName}" ${param.category == species.speciesName ? 'selected' : ''}>
-                                    ${species.speciesName}
+                                <option value="<c:out value="${species.speciesName}" />" ${param.category == species.speciesName ? 'selected' : ''}>
+                                    <c:out value="${species.speciesName}" />
                                 </option>
                             </c:forEach>
                         </select>
@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="product-info">
-                        <h3 class="product-name">${p.productName}</h3>
+                        <h3 class="product-name"><c:out value="${p.productName}" /></h3>
                         <div class="rating-container" style="margin-bottom: 5px;">
                             <c:set var="rating" value="${productRatings[p.productId]}" />
                             <span style="color: #ffc107; font-size: 14px;">

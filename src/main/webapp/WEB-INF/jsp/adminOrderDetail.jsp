@@ -70,9 +70,9 @@
                                  style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;"
                                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                         </div>
-                        <div class="info-row"><strong>ชื่อลูกค้า:</strong> <span>${order.member.memberName}</span></div>
-                        <div class="info-row"><strong>อีเมล:</strong> <span>${order.member.email}</span></div>
-                        <div class="info-row"><strong>เบอร์โทร:</strong> <span>${order.member.phone}</span></div>
+                        <div class="info-row"><strong>ชื่อลูกค้า:</strong> <span><c:out value="${order.member.memberName}" /></span></div>
+                        <div class="info-row"><strong>อีเมล:</strong> <span><c:out value="${order.member.email}" /></span></div>
+                        <div class="info-row"><strong>เบอร์โทร:</strong> <span><c:out value="${order.member.phone}" /></span></div>
                     </div>
 
                     <div class="detail-card">

@@ -70,7 +70,7 @@
                     <div class="order-items">
                         <c:forEach items="${cartItems}" var="item">
                             <div class="summary-item">
-                                <span class="item-name">${item.product.productName} <small>x${item.quantity}</small></span>
+                                <span class="item-name"><c:out value="${item.product.productName}" /> <small>x${item.quantity}</small></span>
                                 <span class="item-price"><fmt:formatNumber value="${item.itemTotal}" type="currency" currencySymbol="฿"/></span>
                             </div>
                         </c:forEach>

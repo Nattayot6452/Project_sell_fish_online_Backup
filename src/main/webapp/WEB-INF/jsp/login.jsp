@@ -100,7 +100,7 @@
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
                     <div class="input-wrapper">
-                        <input type="text" id="email" name="email" placeholder="ตัวอย่าง: user@email.com" required>
+                        <input type="email" id="email" name="email" placeholder="example@email.com" required value="<c:out value='${param.email}' />">
                     </div>
                 </div>
 

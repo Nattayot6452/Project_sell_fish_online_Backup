@@ -32,12 +32,12 @@
                         <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty member.memberImg ? member.memberImg : 'default.png'}" 
                              style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #eee;"
                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
-                        <h2 style="margin: 0; color: #333;">${member.memberName}</h2>
+                        <h2 style="margin: 0; color: #333;"><c:out value="${member.memberName}" /></h2>
                         <p style="color: #666; font-size: 14px;">Member ID: ${member.memberId}</p>
                         
                         <div style="text-align: left; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-                            <p><strong><i class="fas fa-envelope"></i> อีเมล:</strong> ${member.email}</p>
-                            <p><strong><i class="fas fa-phone"></i> เบอร์โทร:</strong> ${member.phone}</p>
+                            <p><strong><i class="fas fa-envelope"></i> อีเมล:</strong> <c:out value="${member.email}" /></p>
+                            <p><strong><i class="fas fa-phone"></i> เบอร์โทร:</strong> <c:out value="${member.phone}" /></p>
                         </div>
 
                         <div style="margin-top: 30px;">

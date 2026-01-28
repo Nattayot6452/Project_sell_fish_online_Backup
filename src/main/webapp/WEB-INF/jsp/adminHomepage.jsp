@@ -78,7 +78,7 @@
                             <c:forEach items="${recentOrders}" var="order">
                                 <tr>
                                     <td>#${order.ordersId}</td>
-                                    <td>${order.member.memberName}</td>
+                                    <td><c:out value="${order.member.memberName}" /></td>
                                     <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
                                     <td><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/></td>
                                     <td>

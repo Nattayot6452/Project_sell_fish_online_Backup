@@ -28,7 +28,7 @@
             </div>
 
             <div class="profile-body">
-                <h1 class="username">${sessionScope.user.memberName}</h1>
+                <h1 class="username"><c:out value="${sessionScope.user.memberName}" /></h1>
                 <span class="role-badge"><i class="fas fa-check-circle"></i> สมาชิกทั่วไป</span>
 
                 <div class="info-grid">
@@ -36,14 +36,14 @@
                         <div class="icon-box"><i class="fas fa-envelope"></i></div>
                         <div class="text-box">
                             <span class="label">อีเมล</span>
-                            <span class="value">${sessionScope.user.email}</span>
+                            <span class="value"><c:out value="${sessionScope.user.email}" /></span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="icon-box"><i class="fas fa-phone"></i></div>
                         <div class="text-box">
                             <span class="label">เบอร์โทรศัพท์</span>
-                            <span class="value">${sessionScope.user.phone}</span>
+                            <span class="value"><c:out value="${sessionScope.user.phone}" /></span>
                         </div>
                     </div>
                 </div>

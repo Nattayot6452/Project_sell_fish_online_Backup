@@ -55,9 +55,9 @@
                                              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;" 
                                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                                     </td>
-                                    <td style="font-weight: bold;">${m.memberName}</td>
-                                    <td>${m.email}</td>
-                                    <td>${m.phone}</td>
+                                    <td style="font-weight: bold;"><c:out value="${m.memberName}" /></td>
+                                    <td><c:out value="${m.email}" /></td>
+                                    <td><c:out value="${m.phone}" /></td>
                                     <td>
                                         <a href="UserDetail?id=${m.memberId}" class="btn-small" title="ดูรายละเอียด">
                                             <i class="fas fa-eye"></i>

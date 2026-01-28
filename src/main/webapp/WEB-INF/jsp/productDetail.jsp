@@ -282,7 +282,7 @@
                                             </div>
                                         </div>
                                         <div class="review-content">
-                                            <p>${review.comment}</p>
+                                            <p><c:out value="${review.comment}" /></p>
                                         </div>
                                     </div>
                                 </c:forEach>

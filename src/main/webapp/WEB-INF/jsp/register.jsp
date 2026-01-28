@@ -67,34 +67,30 @@
                 <p>เข้าร่วมครอบครัวคนรักปลาสวยงามกับเรา</p>
             </div>
 
-            <%-- ✅ แสดงข้อความแจ้งเตือน Error (ถ้ามี) --%>
             <c:if test="${not empty add_result}">
                 <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
                     ${add_result}
                 </div>
             </c:if>
 
-            <%-- ✅ แก้ไข 1: เปลี่ยน action เป็น saveRegister ให้ตรงกับ Controller --%>
             <form action="saveRegister" method="post" enctype="multipart/form-data">
                 
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="memberName"><i class="fas fa-user"></i> ชื่อผู้ใช้งาน</label>
-                        <%-- ✅ แก้ไข 2: เปลี่ยน name="memberName" เป็น name="name" ให้ตรงกับ @RequestParam("name") --%>
-                        <input type="text" id="memberName" name="name" placeholder="ชื่อเล่น หรือ นามแฝง" required>
+                        <input type="text" id="memberName" name="name" placeholder="ชื่อเล่น หรือ นามแฝง" required value="<c:out value='${param.name}' />">                    
                     </div>
-
                     <div class="form-group">
                         <label for="phone"><i class="fas fa-phone"></i> เบอร์โทรศัพท์</label>
-                        <%-- ตรงนี้ name="tel" ถูกต้องแล้ว (ตรงกับ Controller) --%>
-                        <input type="tel" id="phone" name="tel" placeholder="0812345678" required maxlength="10" 
+
+                        <input type="tel" id="phone" name="tel" placeholder="เบอร์โทรศัพท์" required maxlength="10" value="<c:out value='${param.tel}' />">
                                oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
-                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required value="<c:out value='${param.email}' />">
                 </div>
                 
                 <div class="form-group">

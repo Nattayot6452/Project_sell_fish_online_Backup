@@ -47,10 +47,10 @@
                                             <div class="product-detail-flex">
                                                  <c:choose>
                                                     <c:when test="${item.product.productImg.startsWith('assets')}">
-                                                        <img src="${pageContext.request.contextPath}/${item.product.productImg}" alt="${item.product.productName}">
+                                                        <img src="${pageContext.request.contextPath}/${item.product.productImg}" alt="<c:out value="${item.product.productName}" />">
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/displayImage?name=${item.product.productImg}" alt="${item.product.productName}">
+                                                        <img src="${pageContext.request.contextPath}/displayImage?name=${item.product.productImg}" alt="<c:out value="${item.product.productName}" />">
                                                     </c:otherwise>
                                                 </c:choose>
 
@@ -108,8 +108,7 @@
                                     <i class="fas fa-ticket-alt"></i> มีคูปองส่วนลดไหม?
                                 </label>
                                 <div style="display: flex; gap: 5px;">
-                                    <input type="text" id="couponCode" placeholder="กรอกรหัสคูปอง" 
-                                           style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-transform: uppercase;">
+                                    <input type="text" id="couponCode" name="couponCode" placeholder="กรอกรหัสคูปอง" value="<c:out value='${param.couponCode}' />" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-transform: uppercase;">
                                     <button type="button" onclick="checkCoupon()" style="padding: 8px 12px; background: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer;">
                                             ใช้
                                     </button>

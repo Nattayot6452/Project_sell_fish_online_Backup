@@ -82,8 +82,8 @@
                             style="width: 100%; padding: 10px 20px; border: 1px solid #ddd; border-radius: 50px; outline: none; cursor: pointer; background: white;">
                         <option value="all">📁 หมวดหมู่ทั้งหมด</option>
                         <c:forEach items="${speciesList}" var="sp">
-                            <option value="${sp.speciesId}" ${paramCategory == sp.speciesId ? 'selected' : ''}>
-                                ${sp.speciesName}
+                            <option value="<c:out value="${sp.speciesId}" />" ${paramCategory == sp.speciesId ? 'selected' : ''}>
+                                <c:out value="${sp.speciesName}" />
                             </option>
                         </c:forEach>
                     </select>
@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="product-info">
-                                <h3 class="product-name">${p.productName}</h3>
+                                <h3 class="product-name"><c:out value="${p.productName}" /></h3>
                                 <small style="color: #999; font-size: 12px; display: block; margin-bottom: 5px;">
                                    <div class="rating-container" style="margin-bottom: 8px;">
                                         <c:set var="rating" value="${productRatings[p.productId]}" />

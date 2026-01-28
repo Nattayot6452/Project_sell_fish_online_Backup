@@ -115,13 +115,13 @@
             <div class="card info-card">
                 <h3><i class="fas fa-user"></i> ข้อมูลลูกค้า</h3>
                 <div class="info-row">
-                    <span class="label">ชื่อผู้สั่ง:</span><span class="value">${order.member.memberName}</span>
+                    <span class="label">ชื่อผู้สั่ง:</span><span class="value"><c:out value="${order.member.memberName}" /></span>
                 </div>
                 <div class="info-row">
-                    <span class="label">อีเมล:</span><span class="value">${order.member.email}</span>
+                    <span class="label">อีเมล:</span><span class="value"><c:out value="${order.member.email}" /></span>
                 </div>
                 <div class="info-row">
-                    <span class="label">เบอร์โทร:</span><span class="value">${order.member.phone}</span>
+                    <span class="label">เบอร์โทร:</span><span class="value"><c:out value="${order.member.phone}" /></span>
                 </div>
             </div>
 

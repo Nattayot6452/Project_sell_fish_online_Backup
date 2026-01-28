@@ -52,8 +52,8 @@
                                              style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd;"
                                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/1156/1156477.png'">
                                     </td>
-                                    <td>${p.productName}</td>
-                                    <td><span class="badge" style="background: #e2e8f0; color: #4a5568;">${p.species.speciesName}</span></td>
+                                    <td><c:out value="${p.productName}" /></td>
+                                    <td><span class="badge" style="background: #e2e8f0; color: #4a5568;"><c:out value="${p.species.speciesName}" /></span></td>
                                     <td style="color: #28a745; font-weight: bold;">
                                         <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/>
                                     </td>

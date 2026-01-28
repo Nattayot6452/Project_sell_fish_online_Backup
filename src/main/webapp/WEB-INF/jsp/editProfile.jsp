@@ -37,7 +37,7 @@
                         <label for="memberName">ชื่อผู้ใช้งาน</label>
                         <div class="input-with-icon">
                             <i class="fas fa-user"></i>
-                            <input type="text" id="memberName" name="memberName" value="${sessionScope.user.memberName}" required>
+                            <input type="text" id="memberName" name="memberName" value="<c:out value='${sessionScope.user.memberName}' />" required>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                         <label for="email">อีเมล</label>
                         <div class="input-with-icon">
                             <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" value="${sessionScope.user.email}" required>
+                            <input type="email" id="email" name="email" value="<c:out value='${sessionScope.user.email}' />" required>
                         </div>
                     </div>
                     
@@ -53,7 +53,7 @@
                         <label for="phone">เบอร์โทรศัพท์</label>
                         <div class="input-with-icon">
                             <i class="fas fa-phone"></i>
-                            <input type="tel" id="phone" name="phone" value="${sessionScope.user.phone}" required
+                            <input type="tel" id="phone" name="phone" value="<c:out value='${sessionScope.user.phone}' />" required
                                    maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
