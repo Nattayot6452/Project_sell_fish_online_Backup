@@ -46,26 +46,42 @@ public class LoginController {
         return mav;
     }
     
-   @RequestMapping(value = "/login", method = RequestMethod.POST)
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(HttpServletRequest request, HttpSession session) {
         
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
-        
+
+        ModelAndView mav = new ModelAndView("login");
+
+        if (email == null || password == null || email.trim().isEmpty() || password.isEmpty()) {
+            mav.addObject("error", "❌ กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน");
+            return mav;
+        }
+
+        email = email.trim();
+
+        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        if (!java.util.regex.Pattern.matches(emailPattern, email)) {
+            mav.addObject("error", "❌ รูปแบบอีเมลไม่ถูกต้อง");
+            mav.addObject("email", email);
+            return mav;
+        }
+
         System.out.println("Login Attempt: User=" + email + " Role=" + role);
         
         if ("user".equals(role)) {
             String hashedPassword = password;
             try {
-
                 hashedPassword = PasswordUtil.getInstance().createPassword(password , "itmjusci");
             } catch (Exception e ) {
                 e.printStackTrace();
             }
             
             RegisterManager rm = new RegisterManager();
-            Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword); 
+
+            Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword);
 
             if (user != null) {
                 session.setAttribute("user", user);
@@ -83,25 +99,22 @@ public class LoginController {
             }
 
             StaffManager sm = new StaffManager();
-
             Staff staff = sm.getStaffByEmailAndPassword(email, hashedPassword); 
 
             if (staff != null) {
                 if (staff.getId() == 1) { 
                     session.setAttribute("admin", staff);
-
                     return new ModelAndView("redirect:/AdminCenter?msg=login_success");
                 } else {
                     session.setAttribute("seller", staff);
                     System.out.println("Seller Login Success: " + staff.getEmail());
-
                     return new ModelAndView("redirect:/SellerCenter?msg=login_success");
                 }
             }
         }
 
-        ModelAndView mav = new ModelAndView("login");
-        mav.addObject("error", "อีเมล หรือ รหัสผ่าน ไม่ถูกต้อง");
+        mav.addObject("error", "❌ อีเมล หรือ รหัสผ่าน ไม่ถูกต้อง");
+        mav.addObject("email", email); 
         return mav;
     }
     

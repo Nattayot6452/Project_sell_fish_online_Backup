@@ -84,7 +84,6 @@
                         </a>
                         <div class="dropdown-content">
                             <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
-                            
                             <a href="Favorites"><i class="fas fa-heart"></i> รายการโปรด</a> 
                             <a href="Orders"><i class="fas fa-box-open"></i> คำสั่งซื้อ</a>
                             <a href="History"><i class="fas fa-history"></i> ประวัติการสั่งซื้อ</a>
@@ -124,7 +123,13 @@
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
                     <div class="input-wrapper">
-                        <input type="email" id="email" name="email" placeholder="example@email.com" required value="<c:out value='${param.email}' />">
+                    <input type="email" id="email" name="email" 
+                        placeholder="example@email.com" 
+                        required 
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        title="กรุณากรอกรูปแบบอีเมลให้ถูกต้อง"
+                        value="<c:out value='${param.email}' />"
+                        oninput="sanitizeEmail(this)"> 
                     </div>
                 </div>
 
@@ -157,6 +162,17 @@
             const urlParams = new URLSearchParams(window.location.search);
             const msg = urlParams.get('msg');
 
+            const serverError = "${error}";
+            if (serverError && serverError.trim() !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เข้าสู่ระบบไม่สำเร็จ',
+                    text: serverError,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'ลองใหม่'
+                });
+            }
+
             if (msg === 'register_success') {
                 Swal.fire({
                     icon: 'success',
@@ -183,5 +199,13 @@
             }
         }
     </script>
+
+<script>
+    function sanitizeEmail(input) {
+        input.value = input.value.replace(/[<>"']/g, '');
+    }
+
+</script>
+
 </body>
 </html>
