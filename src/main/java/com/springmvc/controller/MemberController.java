@@ -1,6 +1,7 @@
 package com.springmvc.controller;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.springmvc.model.Member;
 import com.springmvc.model.RegisterManager;
+import com.springmvc.model.UserManager;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -57,27 +60,57 @@ public class MemberController {
             @RequestParam("profileImg") MultipartFile profileImg,
             HttpSession session
     ) {
+
         Member currentUser = (Member) session.getAttribute("user");
-        if (currentUser == null || !currentUser.getMemberId().equals(memberId)) {
+        if (currentUser == null) {
             return new ModelAndView("redirect:/Login"); 
         }
-
-        RegisterManager rm = new RegisterManager();
         
+        if (!currentUser.getMemberId().equals(memberId)) {
+            return new ModelAndView("redirect:/Logout"); 
+        }
+
+        ModelAndView mav = new ModelAndView("editProfile");
+        RegisterManager rm = new RegisterManager();
+        UserManager um = new UserManager();
+
         try {
+
+            memberName = memberName.trim();
+            phone = phone.trim();
+            email = email.trim();
+
+            if (memberName.isEmpty() || !Pattern.matches("^[a-zA-Z0-9ก-๙\\s]{4,50}$", memberName)) {
+                mav.addObject("error", "❌ ชื่อผู้ใช้ไม่ถูกต้อง (4-50 ตัวอักษร, ห้ามอักขระพิเศษ)");
+                return mav;
+            }
+
+            if (!Pattern.matches("^0[689][0-9]{8}$", phone)) {
+                mav.addObject("error", "❌ เบอร์โทรศัพท์ไม่ถูกต้อง (ต้องขึ้นต้นด้วย 06, 08, 09)");
+                return mav;
+            }
+
+            if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email)) {
+                mav.addObject("error", "❌ รูปแบบอีเมลไม่ถูกต้อง");
+                return mav;
+            }
+
+            if (!email.equals(currentUser.getEmail()) && um.checkEmailExists(email)) {
+                mav.addObject("error", "❌ อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น");
+                return mav;
+            }
+
             String fileName = currentUser.getMemberImg();
 
             if (profileImg != null && !profileImg.isEmpty()) {
-                fileName = profileImg.getOriginalFilename();
-                
-                String uploadDir = "/app/images/user/";
-                
+
+                String uploadDir = "/app/images/user/"; 
                 File dir = new File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();
                 
+                fileName = UUID.randomUUID().toString() + "_" + profileImg.getOriginalFilename();
                 File serverFile = new File(dir, fileName);
                 profileImg.transferTo(serverFile);
-                System.out.println("Profile image saved to: " + serverFile.getAbsolutePath());
             }
 
             Member updatedMember = new Member(
@@ -91,20 +124,19 @@ public class MemberController {
 
             boolean result = rm.updateRegister(updatedMember);
             if (result) {
+
                 session.setAttribute("user", updatedMember); 
-                return new ModelAndView("redirect:/Profile"); 
+                return new ModelAndView("redirect:/Profile?msg=update_success"); 
             } else {
-                ModelAndView mav = new ModelAndView("editProfile");
-                mav.addObject("error", "❌ อัปเดตข้อมูลไม่สำเร็จ");
+                mav.addObject("error", "❌ บันทึกข้อมูลไม่สำเร็จ");
                 return mav;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            ModelAndView mav = new ModelAndView("editProfile");
             mav.addObject("error", "เกิดข้อผิดพลาด: " + e.getMessage());
             return mav;
         }
     }
-	
 }
+	
