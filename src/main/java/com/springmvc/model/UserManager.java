@@ -82,4 +82,25 @@ public class UserManager {
         }
         return result;
     }
+
+    public boolean checkEmailExists(String email) {
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            String hql = "SELECT count(m) FROM Member m WHERE m.email = :email";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("email", email);
+            Long count = query.uniqueResult();
+            
+            return count != null && count > 0;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (session != null) session.close();
+        }
+    }
 }

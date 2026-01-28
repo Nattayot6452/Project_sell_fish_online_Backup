@@ -200,3 +200,28 @@ body {
 .login-footer a:hover {
     text-decoration: underline;
 }
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; 
+    box-sizing: border-box;
+}
+
+.toggle-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    z-index: 10;
+}
+
+.toggle-icon:hover {
+    color: #333;
+}

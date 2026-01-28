@@ -11,6 +11,30 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <style>
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+            box-sizing: border-box;
+        }
+        .toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            z-index: 10;
+        }
+        .toggle-icon:hover {
+            color: #333;
+        }
+    </style>
+
     <script>
         function setRole(role, btn) {
             document.getElementById("role").value = role;
@@ -106,8 +130,9 @@
 
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> รหัสผ่าน</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper password-container">
                         <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่านของคุณ" required>
+                        <i class="fas fa-eye toggle-icon" onclick="togglePassword('password', this)"></i>
                     </div>
                 </div>
 
@@ -127,24 +152,36 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const msg = urlParams.get('msg');
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const msg = urlParams.get('msg');
 
-        if (msg === 'register_success') {
-            Swal.fire({
-                icon: 'success',
-                title: 'สมัครสมาชิกสำเร็จ!',
-                text: 'กรุณาเข้าสู่ระบบด้วยบัญชีใหม่ของคุณ',
-                confirmButtonColor: '#3182ce',
-                confirmButtonText: 'ตกลง'
-            }).then(() => {
+            if (msg === 'register_success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สมัครสมาชิกสำเร็จ!',
+                    text: 'กรุณาเข้าสู่ระบบด้วยบัญชีใหม่ของคุณ',
+                    confirmButtonColor: '#3182ce',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+        });
 
-                window.history.replaceState({}, document.title, window.location.pathname);
-            });
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
         }
-    });
-</script>
+    </script>
 </body>
 </html>

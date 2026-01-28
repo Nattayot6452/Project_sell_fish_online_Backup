@@ -10,6 +10,31 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/register.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+            box-sizing: border-box;
+        }
+        .toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            z-index: 10;
+        }
+        .toggle-icon:hover {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <jsp:include page="loading.jsp" />
@@ -28,7 +53,6 @@
 
             <div class="nav-links">
                 <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
-                
                 <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
                 
                 <c:if test="${not empty sessionScope.user}">
@@ -67,35 +91,42 @@
                 <p>เข้าร่วมครอบครัวคนรักปลาสวยงามกับเรา</p>
             </div>
 
-            <c:if test="${not empty add_result}">
-                <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-                    ${add_result}
-                </div>
-            </c:if>
-
-            <form action="saveRegister" method="post" enctype="multipart/form-data">
+            <form action="saveRegister" method="post" enctype="multipart/form-data" id="registerForm">
                 
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="memberName"><i class="fas fa-user"></i> ชื่อผู้ใช้งาน</label>
-                        <input type="text" id="memberName" name="name" placeholder="ชื่อเล่น หรือ นามแฝง" required value="<c:out value='${param.name}' />">                    
+                        <input type="text" id="memberName" name="name" placeholder="ชื่อเล่น หรือ นามแฝง" required 
+                               value="<c:out value='${not empty name ? name : param.name}' />">                    
                     </div>
                     <div class="form-group">
                         <label for="phone"><i class="fas fa-phone"></i> เบอร์โทรศัพท์</label>
-
-                        <input type="tel" id="phone" name="tel" placeholder="เบอร์โทรศัพท์" required maxlength="10" value="<c:out value='${param.tel}' />">
+                        <input type="tel" id="phone" name="tel" placeholder="เบอร์โทรศัพท์" required maxlength="10" 
+                               value="<c:out value='${not empty tel ? tel : param.tel}' />"
                                oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
-                    <input type="email" id="email" name="email" placeholder="example@email.com" required value="<c:out value='${param.email}' />">
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required 
+                           value="<c:out value='${not empty email ? email : param.email}' />">
                 </div>
                 
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> รหัสผ่าน</label>
-                    <input type="password" id="password" name="password" placeholder="กำหนดรหัสผ่านของคุณ" required>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="กำหนดรหัสผ่านของคุณ" required>
+                        <i class="fas fa-eye toggle-icon" onclick="togglePassword('password', this)"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i>ยืนยันรหัสผ่าน</label>
+                    <div class="password-container">
+                        <input type="password" name="confirmPassword" id="confirmPassword" required placeholder="กรอกรหัสผ่านอีกครั้ง">
+                        <i class="fas fa-eye toggle-icon" onclick="togglePassword('confirmPassword', this)"></i>
+                    </div>
                 </div>
 
                 <div class="form-group file-group">
@@ -114,6 +145,64 @@
             </div>
         </div>
     </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        var serverError = "${error}"; 
+
+        if (serverError === 'email_duplicate') {
+            Swal.fire({
+                icon: 'error',
+                title: 'ขออภัย',
+                text: 'บัญชีนี้มีในระบบอยู่แล้ว กรุณาใช้อีเมลอื่น',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'ตกลง'
+            });
+        } else if (serverError === 'pass_mismatch') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'รหัสผ่านไม่ตรงกัน',
+                text: 'กรุณากรอกรหัสผ่านยืนยันให้ถูกต้อง',
+                confirmButtonColor: '#f9e547',
+                confirmButtonText: 'ลองใหม่',
+                color: '#333' 
+            });
+        }
+
+        const form = document.getElementById("registerForm");
+        
+        form.addEventListener("submit", function(event) {
+            var pass = document.getElementById("password").value;
+            var confirmPass = document.getElementById("confirmPassword").value;
+            
+            if (pass !== confirmPass) {
+                event.preventDefault();
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'รหัสผ่านไม่ตรงกัน',
+                    text: 'กรุณากรอกรหัสผ่านให้ตรงกัน',
+                    confirmButtonColor: '#00571d',
+                    confirmButtonText: 'ตกลง'
+                });
+            }
+        });
+    });
+
+    function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+    </script>
 
 </body>
 </html>
