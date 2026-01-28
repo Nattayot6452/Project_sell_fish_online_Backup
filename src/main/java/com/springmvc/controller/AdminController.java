@@ -198,7 +198,7 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/updateSpecies", method = RequestMethod.POST)
+   @RequestMapping(value = "/updateSpecies", method = RequestMethod.POST)
     public ModelAndView updateSpecies(
             @RequestParam("speciesId") String speciesId,
             @RequestParam("speciesName") String speciesName,
@@ -208,6 +208,30 @@ public class AdminController {
         if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
 
         try {
+
+            speciesName = speciesName.trim();
+            description = description.trim();
+
+            if (speciesName.isEmpty() || description.isEmpty()) {
+                return new ModelAndView("redirect:/EditSpecies?id=" + speciesId + "&error=empty");
+            }
+
+            if (speciesName.length() < 2 || speciesName.length() > 50) {
+                return new ModelAndView("redirect:/EditSpecies?id=" + speciesId + "&error=nameLength");
+            }
+
+            if (description.length() < 10 || description.length() > 255) {
+                return new ModelAndView("redirect:/EditSpecies?id=" + speciesId + "&error=descLength");
+            }
+
+            String namePattern = "^[a-zA-Z0-9ก-๙\\s\\-_()]+$";
+            if (!Pattern.matches(namePattern, speciesName)) {
+                return new ModelAndView("redirect:/EditSpecies?id=" + speciesId + "&error=invalidChar");
+            }
+
+            speciesName = HtmlUtils.htmlEscape(speciesName);
+            description = HtmlUtils.htmlEscape(description);
+
             SpeciesManager sm = new SpeciesManager();
             Species s = new Species(speciesId, speciesName);
             s.setDescription(description);
