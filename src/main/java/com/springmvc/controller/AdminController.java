@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import com.springmvc.model.OrderManager;
 import com.springmvc.model.Orders;
@@ -17,6 +18,7 @@ import com.springmvc.model.Species;
 import com.springmvc.model.SpeciesManager;
 import com.springmvc.model.UserManager;
 import com.springmvc.model.Member;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -118,11 +120,29 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/saveSpecies", method = RequestMethod.POST)
+   @RequestMapping(value = "/saveSpecies", method = RequestMethod.POST)
     public ModelAndView saveSpecies(@RequestParam("speciesName") String speciesName, HttpSession session) {
         if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
 
         try {
+
+            speciesName = speciesName.trim();
+
+            if (speciesName.isEmpty()) {
+                return new ModelAndView("redirect:/AddSpecies?error=empty");
+            }
+
+            if (speciesName.length() < 2 || speciesName.length() > 50) {
+                return new ModelAndView("redirect:/AddSpecies?error=length");
+            }
+
+            String pattern = "^[a-zA-Z0-9ก-๙\\s\\-_()]+$";
+            if (!Pattern.matches(pattern, speciesName)) {
+                return new ModelAndView("redirect:/AddSpecies?error=invalidChar");
+            }
+
+            speciesName = HtmlUtils.htmlEscape(speciesName);
+
             SpeciesManager sm = new SpeciesManager();
             
             String newId = "SP" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
