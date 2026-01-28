@@ -92,31 +92,45 @@
             </div>
 
             <form action="saveRegister" method="post" enctype="multipart/form-data" id="registerForm">
-                
+    
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="memberName"><i class="fas fa-user"></i> ชื่อผู้ใช้งาน</label>
-                        <input type="text" id="memberName" name="name" placeholder="ชื่อเล่น หรือ นามแฝง" required 
-                               value="<c:out value='${not empty name ? name : param.name}' />">                    
+                        <input type="text" id="memberName" name="name" 
+                            placeholder="ชื่อเล่น (ไทย/อังกฤษ/ตัวเลข)" 
+                            required 
+                            minlength="4" maxlength="50"
+                            pattern="^(?!\s*$)[a-zA-Z0-9ก-๙\s]+$"
+                            title="กรุณากรอกชื่อ 4-50 ตัวอักษร (ห้ามเป็นช่องว่างล้วน)"
+                            value="<c:out value='${not empty name ? name : param.name}' />">                    
                     </div>
-                    <div class="form-group">
+                   <div class="form-group">
                         <label for="phone"><i class="fas fa-phone"></i> เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phone" name="tel" placeholder="เบอร์โทรศัพท์" required maxlength="10" 
-                               value="<c:out value='${not empty tel ? tel : param.tel}' />"
-                               oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        <input type="tel" id="phone" name="tel" 
+                            placeholder="ตัวอย่าง 0812345678" 
+                            required 
+                            pattern="^0[689][0-9]{8}$"
+                            maxlength="10" 
+                            title="กรุณากรอกเบอร์มือถือที่ถูกต้อง (ขึ้นต้นด้วย 06, 08 หรือ 09 และครบ 10 หลัก)"
+                            value="<c:out value='${not empty tel ? tel : param.tel}' />"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> อีเมล</label>
-                    <input type="email" id="email" name="email" placeholder="example@email.com" required 
-                           value="<c:out value='${not empty email ? email : param.email}' />">
+                    <input type="email" id="email" name="email" 
+                        placeholder="example@email.com" 
+                        required 
+                        value="<c:out value='${not empty email ? email : param.email}' />">
                 </div>
                 
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> รหัสผ่าน</label>
                     <div class="password-container">
-                        <input type="password" id="password" name="password" placeholder="กำหนดรหัสผ่านของคุณ" required>
+                        <input type="password" id="password" name="password" 
+                            placeholder="กำหนดรหัสผ่าน (ขั้นต่ำ 8 ตัวอักษร)" 
+                            required minlength="8">
                         <i class="fas fa-eye toggle-icon" onclick="togglePassword('password', this)"></i>
                     </div>
                 </div>
@@ -124,7 +138,8 @@
                 <div class="form-group">
                     <label><i class="fas fa-lock"></i>ยืนยันรหัสผ่าน</label>
                     <div class="password-container">
-                        <input type="password" name="confirmPassword" id="confirmPassword" required placeholder="กรอกรหัสผ่านอีกครั้ง">
+                        <input type="password" name="confirmPassword" id="confirmPassword" 
+                            required placeholder="กรอกรหัสผ่านอีกครั้ง" minlength="8">
                         <i class="fas fa-eye toggle-icon" onclick="togglePassword('confirmPassword', this)"></i>
                     </div>
                 </div>
@@ -149,7 +164,8 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        var serverError = "${error}"; 
+        var serverError = '<c:out value="${error}" />'; 
+        var addResult = '<c:out value="${add_result}" />';
 
         if (serverError === 'email_duplicate') {
             Swal.fire({
@@ -167,6 +183,16 @@
                 confirmButtonColor: '#f9e547',
                 confirmButtonText: 'ลองใหม่',
                 color: '#333' 
+            });
+        }
+
+        else if (addResult !== "") {
+           Swal.fire({
+                icon: 'error',
+                title: 'ข้อมูลไม่ถูกต้อง',
+                text: addResult, // แสดงข้อความที่ส่งมาจาก Java Controller
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'แก้ไข'
             });
         }
 
