@@ -10,10 +10,11 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/review.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-      <jsp:include page="navbar.jsp" />
+    <jsp:include page="navbar.jsp" />
 
     <div class="container main-container">
         <div class="review-card">
@@ -36,7 +37,7 @@
                 </div>
             </div>
 
-            <form action="saveReview" method="post" class="review-form">
+            <form action="saveReview" method="post" class="review-form" id="reviewForm">
                 <input type="hidden" name="productId" value="${product.productId}">
 
                 <div class="rating-box">
@@ -52,7 +53,17 @@
 
                 <div class="comment-box">
                     <label>ความคิดเห็นเพิ่มเติม</label>
-                    <textarea name="comment" rows="5" placeholder="บอกเล่าประสบการณ์ของคุณเกี่ยวกับสินค้าตัวนี้... (เช่น สุขภาพปลา, การแพ็คของ, สีสัน)"></textarea>
+                    <textarea name="comment" id="comment" rows="5" 
+                              placeholder="บอกเล่าประสบการณ์ของคุณ... (ขั้นต่ำ 10 ตัวอักษร)"
+                              required
+                              minlength="10"
+                              maxlength="200"
+                              oninput="sanitizeComment(this); countChars(this);"></textarea>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <small style="color: gray;">* ห้ามใช้คำหยาบคาย</small>
+                        <small id="charCount" style="color: #666;">0 / 200</small>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-submit">ส่งรีวิว</button>
@@ -60,6 +71,63 @@
 
         </div>
     </div>
+
+    <script>
+
+        function sanitizeComment(input) {
+            input.value = input.value.replace(/[<>"']/g, '');
+        }
+
+        function countChars(input) {
+            var maxLength = 200;
+            var currentLength = input.value.length;
+            document.getElementById("charCount").innerText = currentLength + " / " + maxLength;
+            
+            if (currentLength >= maxLength) {
+                document.getElementById("charCount").style.color = "red";
+            } else {
+                document.getElementById("charCount").style.color = "#666";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+
+            if (error === 'profanity') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'พบคำไม่เหมาะสม',
+                    text: 'กรุณาใช้ถ้อยคำสุภาพในการรีวิวสินค้า',
+                    confirmButtonColor: '#f27474',
+                    confirmButtonText: 'แก้ไข'
+                });
+            } else if (error === 'length') { 
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ข้อความสั้น/ยาวเกินไป',
+                    text: 'กรุณาเขียนรีวิวระหว่าง 10 - 200 ตัวอักษร',
+                    confirmButtonColor: '#3182ce',
+                    confirmButtonText: 'ตกลง'
+                });
+            } else if (error === 'server') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถบันทึกรีวิวได้ กรุณาลองใหม่อีกครั้ง',
+                    confirmButtonColor: '#d33'
+                });
+            } else if (error === 'empty') {
+                 Swal.fire({
+                    icon: 'warning',
+                    title: 'ข้อมูลไม่ครบถ้วน',
+                    text: 'กรุณากรอกความคิดเห็น',
+                    confirmButtonColor: '#f9e547',
+                     color: '#333'
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
