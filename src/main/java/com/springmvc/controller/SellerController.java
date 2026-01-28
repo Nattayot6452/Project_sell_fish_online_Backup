@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +29,10 @@ import com.springmvc.model.ReviewManager;
 import com.springmvc.model.Seller;
 import com.springmvc.model.Species;
 import com.springmvc.model.SpeciesManager;
-import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.regex.Pattern;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -92,7 +92,7 @@ public class SellerController {
         return mav;
     }
 
-   @RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
+    @RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
     public ModelAndView saveProduct(
             @RequestParam("productName") String productName,
             @RequestParam("speciesId") String speciesId,
@@ -112,16 +112,18 @@ public class SellerController {
 
         if (session.getAttribute("seller") == null) { return new ModelAndView("redirect:/Login"); }
 
-        ModelAndView mav = new ModelAndView("redirect:/AddProduct");
-
         try {
-         
+
             productName = productName.trim();
             description = description.trim();
 
             String namePattern = "^[a-zA-Z0-9ก-๙\\s\\-_()]+$";
             if (productName.isEmpty() || !Pattern.matches(namePattern, productName)) {
                 return new ModelAndView("redirect:/AddProduct?error=invalidName");
+            }
+
+            if (description.length() < 20 || description.length() > 255) {
+                return new ModelAndView("redirect:/AddProduct?error=descLength");
             }
 
             if (price <= 0 || stock < 0) {
@@ -217,16 +219,23 @@ public class SellerController {
         }
     }
 
-    @RequestMapping(value = "/EditProduct", method = RequestMethod.GET)
-    public ModelAndView showEditProductPage(@RequestParam("id") String productId, HttpSession session) {
-        if (session.getAttribute("seller") == null) { return new ModelAndView("redirect:/Login"); }
+   @RequestMapping(value = "/EditProduct", method = RequestMethod.GET)
+    public ModelAndView editProduct(@RequestParam("id") String productId, HttpSession session) {
+
+        if (session.getAttribute("seller") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        ModelAndView mav = new ModelAndView("editProduct");
+
         ProductManager pm = new ProductManager();
         Product product = pm.getProduct(productId);
-        if (product == null) {
-            return new ModelAndView("redirect:/SellerCenter?error=notFound");
-        }
-        ModelAndView mav = new ModelAndView("editProduct");
         mav.addObject("product", product);
+
+        SpeciesManager sm = new SpeciesManager();
+        List<Species> speciesList = sm.getAllSpecies(); 
+        mav.addObject("speciesList", speciesList); 
+
         return mav;
     }
 
@@ -270,10 +279,8 @@ public class SellerController {
         List<Orders> orderList = null;
 
         if (admin != null) {
-
             orderList = om.getAllOrders(); 
         } else {
-
             orderList = om.getAllOrders(); 
         }
 
@@ -281,8 +288,8 @@ public class SellerController {
         return mav;
     }
 
-    @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
-    public String updateProduct(
+   @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
+    public ModelAndView updateProduct(
             @RequestParam("productId") String productId,
             @RequestParam("oldImage") String oldImage,
             @RequestParam("productName") String productName,
@@ -301,29 +308,53 @@ public class SellerController {
             HttpSession session) {
 
         if (session.getAttribute("seller") == null) {
-            return "redirect:/Login";
+            return new ModelAndView("redirect:/Login");
         }
 
-        Session hibernateSession = null;
         try {
+
+            productName = productName.trim();
+            description = description.trim();
+
+            String namePattern = "^[a-zA-Z0-9ก-๙\\s\\-_()]+$";
+            if (productName.isEmpty() || !Pattern.matches(namePattern, productName)) {
+                return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=invalidName");
+            }
+
+            if (price <= 0 || stock < 0) {
+                return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=invalidNumber");
+            }
+
+            if (description.length() < 20 || description.length() > 255) {
+                return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=descLength");
+            }
+
+            description = HtmlUtils.htmlEscape(description);
+            size = HtmlUtils.htmlEscape(size);
+            origin = HtmlUtils.htmlEscape(origin);
+            lifeSpan = HtmlUtils.htmlEscape(lifeSpan);
+            temperature = HtmlUtils.htmlEscape(temperature);
+            waterType = HtmlUtils.htmlEscape(waterType);
 
             String imagePathToSave = oldImage; 
 
             if (file != null && !file.isEmpty()) {
+
+                if (file.getSize() > 5 * 1024 * 1024) {
+                    return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=fileTooLarge");
+                }
+                
+                String contentType = file.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=invalidFileType");
+                }
 
                 String baseDir = "/app/images";
                 String subDir = "products";
                 File uploadPath = new File(baseDir + File.separator + subDir);
                 if (!uploadPath.exists()) uploadPath.mkdirs();
 
-                String originalName = file.getOriginalFilename();
-                String extension = "";
-                if (originalName != null && originalName.contains(".")) {
-                    extension = originalName.substring(originalName.lastIndexOf("."));
-                }
-
-                String newFileName = UUID.randomUUID().toString() + extension;
-                
+                String newFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
                 File fileSave = new File(uploadPath, newFileName);
                 file.transferTo(fileSave);
 
@@ -331,7 +362,7 @@ public class SellerController {
             }
 
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
-            hibernateSession = sessionFactory.openSession();
+            Session hibernateSession = sessionFactory.openSession();
             hibernateSession.beginTransaction();
 
             Product product = hibernateSession.get(Product.class, productId);
@@ -340,8 +371,8 @@ public class SellerController {
                 product.setPrice(price);
                 product.setStock(stock);
                 product.setDescription(description);
-                product.setProductImg(imagePathToSave); 
-
+                product.setProductImg(imagePathToSave);
+                
                 product.setSize(size);
                 product.setOrigin(origin);
                 product.setLifeSpan(lifeSpan);
@@ -351,20 +382,21 @@ public class SellerController {
                 product.setIsAggressive(isAggressive);
 
                 SpeciesManager sm = new SpeciesManager();
-                product.setSpecies(sm.getSpecies(speciesId));
+                product.setSpecies(sm.getSpecies(speciesId)); 
 
                 hibernateSession.update(product);
                 hibernateSession.getTransaction().commit();
+                hibernateSession.close();
+                
+                return new ModelAndView("redirect:/SellerCenter?success=updated");
+            } else {
+                hibernateSession.close();
+                return new ModelAndView("redirect:/SellerCenter?error=notFound");
             }
-
-            return "redirect:/SellerCenter?success=updated";
 
         } catch (Exception e) {
             e.printStackTrace();
-            if (hibernateSession != null) hibernateSession.getTransaction().rollback();
-            return "redirect:/EditProduct?id=" + productId + "&error=exception";
-        } finally {
-            if (hibernateSession != null) hibernateSession.close();
+            return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=exception");
         }
     }
 }
