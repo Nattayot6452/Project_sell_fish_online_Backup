@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>${not empty product ? product.productName : 'รายละเอียดสินค้า'} | Fish Online</title>
+    <title><c:out value="${not empty product ? product.productName : 'รายละเอียดสินค้า'}" /> | Fish Online</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/productDetail.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/sellerHomepage.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -163,7 +163,7 @@
                             </span>
                         </div>
 
-                        <p class="product-desc">${product.description}</p>
+                        <p class="product-desc"><c:out value="${product.description}" /></p>
 
                         <div class="specs-grid">
                             <div class="spec-item">
