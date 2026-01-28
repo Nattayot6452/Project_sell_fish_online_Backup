@@ -30,8 +30,8 @@
                         </c:otherwise>
                     </c:choose>
                     <div class="product-text">
-                        <h3>${product.productName}</h3>
-                        <p>${product.species.speciesName}</p>
+                        <h3><c:out value="${product.productName}" /></h3>
+                        <p><c:out value="${product.species.speciesName}" /></p>
                     </div>
                 </div>
             </div>

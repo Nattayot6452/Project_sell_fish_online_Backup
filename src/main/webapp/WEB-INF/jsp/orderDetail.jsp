@@ -182,7 +182,7 @@
                                                 alt="${detail.product.productName}">
                                         </c:otherwise>
                                     </c:choose>
-                                    <span>${detail.product.productName}</span>
+                                    <span><c:out value="${detail.product.productName}" /></span>
                                 </div>
                             </td>
                             <td class="text-right"><fmt:formatNumber value="${detail.price}" type="currency" currencySymbol="฿"/></td>

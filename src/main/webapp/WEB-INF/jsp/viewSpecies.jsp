@@ -86,7 +86,7 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td style="font-weight: bold;">${p.productName}</td>
+                                            <td style="font-weight: bold;"><c:out value="${p.productName}"/></td>
                                             <td><fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/></td>
                                             <td>
                                                 <span class="${p.stock > 0 ? 'text-green' : 'text-red'}" style="font-weight: bold;">

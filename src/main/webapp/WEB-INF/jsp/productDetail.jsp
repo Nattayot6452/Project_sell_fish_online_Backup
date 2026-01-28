@@ -153,8 +153,8 @@
                                 (เหลือ ${product.stock} ชิ้น)
                             </span>
                         </div>
-                        
-                        <h1 class="product-title">${product.productName}</h1>
+
+                        <h1 class="product-title"><c:out value="${product.productName}" /></h1>
                         <p class="product-category">รหัสสินค้า: ${product.productId} | หมวดหมู่: ${product.species.speciesName}</p>
                         
                         <div class="price-section">
@@ -268,7 +268,7 @@
                                             <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty review.member.memberImg ? review.member.memberImg : 'default.png'}" 
                                                  class="reviewer-img">
                                             <div>
-                                                <span class="reviewer-name">${review.member.memberName}</span>
+                                                <span class="reviewer-name"><c:out value="${review.member.memberName}" /></span>
                                                 <div class="review-meta">
                                                     <div class="mini-stars">
                                                         <c:forEach begin="1" end="5" var="i">

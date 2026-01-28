@@ -30,9 +30,8 @@
                     <h3>📦 ข้อมูลทั่วไป</h3>
                     <div class="form-group">
                         <label>ชื่อสินค้า <span class="required">*</span></label>
-                        <input type="text" name="productName" placeholder="เช่น ปลากัดจีน สีแดงสด" required>
-                    </div>
-                    
+                        <input type="text" name="productName" placeholder="เช่น ปลากัดจีน สีแดงสด" required value="<c:out value='${param.productName}' />">                   
+                        </div>
                     <div class="form-row">
                        <div class="form-group">
                             <label>หมวดหมู่ (Species) <span class="required">*</span></label>
@@ -59,7 +58,7 @@
 
                     <div class="form-group">
                         <label>รายละเอียดสินค้า</label>
-                        <textarea name="description" rows="4" placeholder="อธิบายจุดเด่น สีสัน หรือลักษณะพิเศษของปลาตัวนี้..."></textarea>
+                        <textarea name="description" rows="4" placeholder="อธิบายจุดเด่น สีสัน หรือลักษณะพิเศษของปลาตัวนี้..."><c:out value="${param.description}" /></textarea>
                     </div>
                 </div>
 
@@ -68,11 +67,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>ขนาด (Size)</label>
-                            <input type="text" name="size" placeholder="เช่น 3-4 cm">
+                            <input type="text" name="size" placeholder="เช่น 3-4 cm" value="<c:out value='${param.size}' />">
                         </div>
                         <div class="form-group">
                             <label>ถิ่นกำเนิด (Origin)</label>
-                            <input type="text" name="origin" placeholder="เช่น Thailand">
+                            <input type="text" name="origin" placeholder="เช่น Thailand" value="<c:out value='${param.origin}' />">
                         </div>
                         <div class="form-group">
                             <label>อายุขัยเฉลี่ย (ปี)</label>
@@ -83,12 +82,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>อุณหภูมิน้ำ</label>
-                            <input type="text" name="temperature" placeholder="เช่น 24-28°C" value="24-28°C">
-                        </div>
+                                <input type="text" name="temperature" placeholder="เช่น 24-28°C" value="<c:out value='${param.temperature}' default='24-28°C' />">                        </div>
                         <div class="form-group">
                             <label>ประเภทน้ำ</label>
-                            <input type="text" name="waterType" value="Freshwater">
-                        </div>
+                                <input type="text" name="waterType" value="<c:out value='${param.waterType}' default='Freshwater' />">                        
+                            </div>
                     </div>
 
                     <div class="form-row">

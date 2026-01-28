@@ -43,12 +43,12 @@
 
                         <div class="form-group">
                             <label>ชื่อสายพันธุ์ (Species Name)</label>
-                            <input type="text" name="speciesName" value="${species.speciesName}" required>
+                            <input type="text" name="speciesName" value="<c:out value='${species.speciesName}' />" required>
                         </div>
 
                         <div class="form-group">
                             <label>คำอธิบาย (Description)</label>
-                            <textarea name="description" rows="5" required>${species.description}</textarea>
+                            <textarea name="description" rows="5" required><c:out value="${species.description}" /></textarea>
                         </div>
 
                         <div style="display: flex; gap: 10px;">

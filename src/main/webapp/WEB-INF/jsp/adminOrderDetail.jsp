@@ -113,7 +113,7 @@
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <img src="${pageContext.request.contextPath}/${detail.product.productImg.startsWith('assets') ? '' : 'displayImage?name='}${detail.product.productImg}" 
                                                  style="width: 40px; height: 40px; border-radius: 5px; object-fit: cover;">
-                                            ${detail.product.productName}
+                                            <c:out value="${detail.product.productName}"/>
                                         </div>
                                     </td>
                                     <td><fmt:formatNumber value="${detail.price}" type="currency" currencySymbol="฿"/></td>

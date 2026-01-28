@@ -48,8 +48,8 @@
                                     </td>
                                     <td>
                                         <div class="customer-info">
-                                            <span class="name">${order.member.memberName}</span>
-                                            <span class="email">${order.member.email}</span>
+                                            <span class="name"><c:out value="${order.member.memberName}" /></span>
+                                            <span class="email"><c:out value="${order.member.email}" /></span>
                                         </div>
                                     </td>
                                     <td>

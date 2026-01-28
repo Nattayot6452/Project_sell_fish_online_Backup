@@ -38,7 +38,7 @@
                     <form action="saveSpecies" method="post">
                         <div class="form-group">
                             <label>ชื่อสายพันธุ์ (Species Name)</label>
-                            <input type="text" name="speciesName" placeholder="เช่น ปลากัดหม้อ, ปลากัดจีน, Betta Splendens" required>
+                            <input type="text" name="speciesName" placeholder="เช่น ปลากัดหม้อ, ปลากัดจีน, Betta Splendens" requiredvalue="<c:out value='${param.speciesName}' />">
                         </div>
                         <button type="submit" class="btn-submit">บันทึกข้อมูล</button>
                     </form>
@@ -57,7 +57,7 @@
                             <c:forEach items="${speciesList}" var="s">
                                 <tr>
                                     <td><span style="background: #eee; padding: 3px 8px; border-radius: 4px; font-family: monospace;">${s.speciesId}</span></td>
-                                    <td>${s.speciesName}</td>
+                                    <td><c:out value="${s.speciesName}"/></td>
                                 </tr>
                             </c:forEach>
                         </tbody>

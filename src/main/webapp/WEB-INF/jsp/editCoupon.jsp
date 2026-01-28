@@ -24,7 +24,7 @@
             
             <div class="form-group">
                 <label>รหัสคูปอง (Code)</label>
-                <input type="text" name="couponCode" value="${coupon.couponCode}" readonly 
+                <input type="text" name="couponCode" value="<c:out value='${coupon.couponCode}' />" readonly 
                        style="background-color: #e9ecef; cursor: not-allowed; font-weight: bold; color: #555;">
                 <small>รหัสคูปองไม่สามารถแก้ไขได้</small>
             </div>

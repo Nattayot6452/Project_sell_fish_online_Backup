@@ -45,8 +45,8 @@
                             <c:forEach items="${speciesList}" var="s">
                                 <tr>
                                     <td><span style="background: #edf2f7; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-weight: bold;">${s.speciesId}</span></td>
-                                    <td style="font-weight: bold; color: #2d3748;">${s.speciesName}</td>
-                                    <td style="color: #718096; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.description}</td>
+                                    <td style="font-weight: bold; color: #2d3748;"><c:out value="${s.speciesName}"/></td>
+                                    <td style="color: #718096; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><c:out value="${s.description}" /></td>
                                     <td>
                                         <a href="ViewSpecies?id=${s.speciesId}" class="btn-small" title="ดูรายละเอียดและสินค้า">
                                             <i class="fas fa-eye"></i> ดูข้อมูล

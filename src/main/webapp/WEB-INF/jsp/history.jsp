@@ -59,7 +59,7 @@
                                             </c:choose>
                                             <div class="product-text">
                                                 <a href="ProductDetail?pid=${detail.product.productId}" class="product-name">
-                                                    ${detail.product.productName}
+                                                    <c:out value="${detail.product.productName}" />
                                                 </a>
                                                 <span class="qty">x${detail.quantity}</span>
                                             </div>

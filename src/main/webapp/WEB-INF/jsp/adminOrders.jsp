@@ -66,7 +66,7 @@
                                                     <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty order.member.memberImg ? order.member.memberImg : 'default.png'}" 
                                                          style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"
                                                          onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
-                                                    ${order.member.memberName}
+                                                    <c:out value="${order.member.memberName}"/>
                                                 </div>
                                             </td>
                                             <td style="font-weight: bold; color: #00571d;">

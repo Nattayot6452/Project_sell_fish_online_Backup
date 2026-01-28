@@ -68,7 +68,7 @@
                                         <ul class="order-item-list">
                                             <c:forEach items="${order.orderDetails}" var="detail">
                                                 <li>
-                                                    <span class="p-name">${detail.product.productName}</span>
+                                                    <span class="p-name"><c:out value="${detail.product.productName}" /></span>
                                                     <span class="p-qty">x${detail.quantity}</span>
                                                 </li>
                                             </c:forEach>

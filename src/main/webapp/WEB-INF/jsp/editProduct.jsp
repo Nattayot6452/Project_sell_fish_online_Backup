@@ -20,7 +20,7 @@
         
         <div class="form-card">
             <div class="card-header" style="background-color: #ffc107;"> <h1 style="color: #333;"><i class="fas fa-pen"></i> แก้ไขสินค้า</h1>
-                <p style="color: #555;">แก้ไขข้อมูลรายละเอียดสินค้า: ${product.productName}</p>
+                <p style="color: #555;">แก้ไขข้อมูลรายละเอียดสินค้า: <c:out value="${product.productName}" /></p>
             </div>
 
             <form action="updateProduct" method="post" enctype="multipart/form-data" class="product-form">
@@ -33,7 +33,7 @@
                     <h3>📦 ข้อมูลทั่วไป</h3>
                     <div class="form-group">
                         <label>ชื่อสินค้า <span class="required">*</span></label>
-                        <input type="text" name="productName" value="${product.productName}" required>
+                        <input type="text" name="productName" value="<c:out value="${product.productName}" />" required>
                     </div>
                     
                     <div class="form-row">
@@ -73,7 +73,7 @@
 
                     <div class="form-group">
                         <label>รายละเอียดสินค้า</label>
-                        <textarea name="description" rows="4">${product.description}</textarea>
+                        <textarea name="description" rows="4"><c:out value="${product.description}" /></textarea>
                     </div>
                 </div>
 
@@ -82,11 +82,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>ขนาด (Size)</label>
-                            <input type="text" name="size" value="${product.size}">
+                            <input type="text" name="size" value="<c:out value="${product.size}" />">
                         </div>
                         <div class="form-group">
                             <label>ถิ่นกำเนิด (Origin)</label>
-                            <input type="text" name="origin" value="${product.origin}">
+                            <input type="text" name="origin" value="<c:out value="${product.origin}" />">
                         </div>
                         <div class="form-group">
                             <label>อายุขัยเฉลี่ย (ปี)</label>
@@ -97,11 +97,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>อุณหภูมิน้ำ</label>
-                            <input type="text" name="temperature" value="${product.temperature}">
+                            <input type="text" name="temperature" value="<c:out value="${product.temperature}" />">
                         </div>
                         <div class="form-group">
                             <label>ประเภทน้ำ</label>
-                            <input type="text" name="waterType" value="${product.waterType}">
+                            <input type="text" name="waterType" value="<c:out value="${product.waterType}" />">
                         </div>
                     </div>
 

@@ -73,7 +73,7 @@
                 
                 <div style="flex: 1; min-width: 200px; position: relative;">
                     <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;"></i>
-                    <input type="text" name="search" placeholder="ค้นหาชื่อสินค้า..." value="${paramSearch}" 
+                    <input type="text" name="search" placeholder="ค้นหาชื่อสินค้า..." value="<c:out value='${paramSearch}' />"
                            style="width: 100%; padding: 10px 10px 10px 40px; border: 1px solid #ddd; border-radius: 50px; outline: none; box-sizing: border-box;">
                 </div>
 
@@ -82,7 +82,7 @@
                             style="width: 100%; padding: 10px 20px; border: 1px solid #ddd; border-radius: 50px; outline: none; cursor: pointer; background: white;">
                         <option value="all">📁 หมวดหมู่ทั้งหมด</option>
                         <c:forEach items="${speciesList}" var="sp">
-                            <option value="<c:out value="${sp.speciesId}" />" ${paramCategory == sp.speciesId ? 'selected' : ''}>
+                            <option value="<c:out value="${sp.speciesId}" />"${paramCategory == sp.speciesId ? 'selected' : ''}>
                                 <c:out value="${sp.speciesName}" />
                             </option>
                         </c:forEach>
