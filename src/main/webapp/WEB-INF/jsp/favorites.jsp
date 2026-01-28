@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="product-info">
-                                <h3 class="product-name">${p.productName}</h3>
+                                <h3 class="product-name"><c:out value="${p.productName}" /></h3>
                                 <div class="price-row">
                                     <span class="price">
                                         <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/>
