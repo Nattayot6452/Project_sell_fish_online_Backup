@@ -116,6 +116,10 @@
                                     </c:otherwise>
                                 </c:choose>
 
+                                <c:if test="${p.newProduct}">
+                                    <div class="new-badge">NEW</div>
+                                </c:if>
+
                                 <div class="card-actions">
                                     <a href="ProductDetail?pid=${p.productId}" class="btn-circle" title="ดูรายละเอียด" style="background-color: #17a2b8; color: white;">
                                         <i class="fas fa-eye"></i>

@@ -75,6 +75,10 @@
                                <img src="${pageContext.request.contextPath}/displayImage?name=${p.productImg}" alt="${p.productName}">
                             </c:otherwise>
                         </c:choose>
+
+                        <c:if test="${p.newProduct}">
+                            <div class="new-badge">NEW</div>
+                        </c:if>
                         
                         <div class="card-actions">
                         <c:if test="${p.stock > 0}">

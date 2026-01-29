@@ -43,6 +43,10 @@
                                         <img src="${pageContext.request.contextPath}/displayImage?name=${p.productImg}" alt="${p.productName}">
                                     </c:otherwise>
                                 </c:choose>
+
+                                <c:if test="${p.newProduct}">
+                                    <div class="new-badge">NEW</div>
+                                </c:if>
                                 
                                 <a href="RemoveFavorite?favId=${fav.favoriteId}" class="btn-remove" 
                                    title="ลบออกจากรายการโปรด"
@@ -84,9 +88,11 @@
                         </div>
                         <h2>ยังไม่มีสินค้าในรายการโปรด</h2>
                         <p>กดหัวใจที่สินค้าเพื่อบันทึกไว้ดูภายหลังได้เลย</p>
+                        
                         <a href="AllProduct" class="btn-shop-now">
-                            <i class="fas fa-store"></i> เลือกชมสินค้า
+                            เลือกชมสินค้า
                         </a>
+                        
                     </div>
                 </c:otherwise>
             </c:choose>

@@ -193,3 +193,16 @@ body {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); 
     border-color: #00571d; 
 }
+
+.new-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
