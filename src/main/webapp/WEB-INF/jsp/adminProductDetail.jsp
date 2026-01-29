@@ -82,6 +82,14 @@
                         </div>
 
                         <div class="info-group">
+                            <span class="info-label">วันที่ลงสินค้า</span>
+                            <span class="info-value" style="color: #666; font-size: 15px;">
+                                <i class="far fa-calendar-alt"></i> 
+                                <fmt:formatDate value="${product.createDate}" pattern="d MMMM yyyy (HH:mm น.)" />
+                            </span>
+                        </div>
+
+                        <div class="info-group">
                             <span class="info-label">รายละเอียดสินค้า</span>
                             <div class="info-value">
                                 ${not empty product.description ? product.description : 'ไม่มีรายละเอียด'}
