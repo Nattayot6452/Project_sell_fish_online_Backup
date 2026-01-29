@@ -478,3 +478,16 @@ body {
     color: rgba(255,255,255,0.8);
     margin-top: 40px;
 }
+
+.new-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}

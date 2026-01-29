@@ -2,6 +2,7 @@ package com.springmvc.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "product")
@@ -60,6 +63,10 @@ public class Product {
     @Column(name = "care_level", length = 1, nullable = false)
     private String careLevel;
 
+	@Column(name = "create_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDate = new Date();
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FavoriteProduct> favorites = new ArrayList<>();
 
@@ -72,30 +79,32 @@ public class Product {
 
 	public Product() {
 		super();
+		this.createDate = new Date();
 	}
 
 	public Product(String productId, String productName, String description, Double price, Integer stock,
-			String productImg, String origin, String waterType, String temperature, String size, String lifeSpan,
-			String isAggressive, String careLevel, List<FavoriteProduct> favorites, List<Review> reviews,
-			Species species) {
-		super();
-		this.productId = productId;
-		this.productName = productName;
-		this.description = description;
-		this.price = price;
-		this.stock = stock;
-		this.productImg = productImg;
-		this.origin = origin;
-		this.waterType = waterType;
-		this.temperature = temperature;
-		this.size = size;
-		this.lifeSpan = lifeSpan;
-		this.isAggressive = isAggressive;
-		this.careLevel = careLevel;
-		this.favorites = favorites;
-		this.reviews = reviews;
-		this.species = species;
-	}
+            String productImg, String origin, String waterType, String temperature, String size, String lifeSpan,
+            String isAggressive, String careLevel, List<FavoriteProduct> favorites, List<Review> reviews,
+            Species species) {
+        super();
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.productImg = productImg;
+        this.origin = origin;
+        this.waterType = waterType;
+        this.temperature = temperature;
+        this.size = size;
+        this.lifeSpan = lifeSpan;
+        this.isAggressive = isAggressive;
+        this.careLevel = careLevel;
+        this.favorites = favorites;
+        this.reviews = reviews;
+        this.species = species;
+        this.createDate = new Date();
+    }
 
 	public String getProductId() {
 		return productId;
@@ -236,5 +245,21 @@ public class Product {
         image.setProduct(this);
     }
     
+	public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public boolean isNewProduct() {
+        if (this.createDate == null) return false;
+        
+        long diff = new Date().getTime() - this.createDate.getTime();
+        long days = diff / (24 * 60 * 60 * 1000); 
+        
+        return days <= 7;
+    }
 }
 

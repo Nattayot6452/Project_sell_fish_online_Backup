@@ -94,6 +94,10 @@
                                     </c:otherwise>
                                 </c:choose>
                                 
+                                <c:if test="${p.newProduct}">
+                                    <div class="new-badge">NEW</div>
+                                </c:if>
+
                                 <div class="card-actions">
                                     <c:if test="${p.stock > 0}">
                                         <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า"><i class="fas fa-cart-plus"></i></a>
