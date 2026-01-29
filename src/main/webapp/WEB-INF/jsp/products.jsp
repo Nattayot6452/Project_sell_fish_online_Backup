@@ -33,10 +33,10 @@
             <p>พบสินค้าทั้งหมด ${not empty Product ? Product.size() : 0} รายการ</p>
         </div>
 
-        <div class="product-grid">
+       <div class="product-grid">
             <c:choose>
                 <c:when test="${not empty Product}">
-                    <c:forEach items="${Product}" var="products">
+                    <c:forEach items="${Product}" var="p">
                         <div class="product-card">
                             <div class="product-img-box">
                                 
@@ -50,36 +50,33 @@
                                 </c:choose>
                                 
                                 <div class="card-actions">
-                                <c:if test="${products.stock > 0}">
-                                    <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
-                                        <i class="fas fa-cart-plus"></i>
+                                    <c:if test="${p.stock > 0}"> <a href="addToCart?productId=${p.productId}" class="action-btn" title="หยิบใส่ตะกร้า">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </a>
+                                    </c:if>
+
+                                    <a href="addToFavorites?productId=${p.productId}" class="action-btn" title="เพิ่มรายการโปรด">
+                                        <i class="fas fa-heart"></i>
                                     </a>
-                                </c:if>
+                                    <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
 
-                                <a href="addToFavorites?productId=${p.productId}" class="action-btn" title="เพิ่มรายการโปรด">
-                                    <i class="fas fa-heart"></i>
-                                </a>
-                                <a href="ProductDetail?pid=${p.productId}" class="action-btn" title="ดูรายละเอียด">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-
-                                <c:if test="${products.stock == 0}">
-                                    <div class="out-of-stock-badge">สินค้าหมด</div>
+                                <c:if test="${p.stock == 0}"> <div class="out-of-stock-badge">สินค้าหมด</div>
                                 </c:if>
                             </div>
 
                             <div class="product-info">
-                                <h3 class="product-name">${products.productName}</h3>
-                                <small style="color: #999; font-size: 12px; display: block; margin-bottom: 5px;">
-                                    ID: ${products.productId}
+                                <h3 class="product-name">${p.productName}</h3> <small style="color: #999; font-size: 12px; display: block; margin-bottom: 5px;">
+                                    ID: ${p.productId}
                                 </small>
                                 <div class="price-row">
                                     <span class="price">
-                                        <fmt:formatNumber value="${products.price}" type="currency" currencySymbol="฿"/>
+                                        <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/>
                                     </span>
-                                    <span class="stock-status ${products.stock > 0 ? 'in-stock' : 'out-stock'}">
-                                        ${products.stock > 0 ? 'มีสินค้า' : 'หมด'}
+                                    <span class="stock-status ${p.stock > 0 ? 'in-stock' : 'out-stock'}">
+                                        ${p.stock > 0 ? 'มีสินค้า' : 'หมด'}
                                     </span>
                                 </div>
                             </div>

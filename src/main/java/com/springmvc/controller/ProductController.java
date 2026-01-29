@@ -66,7 +66,7 @@ public class ProductController {
     public ModelAndView searchProducts(HttpServletRequest request) {
         String searchtext = request.getParameter("searchtext");
 
-        ModelAndView mav = new ModelAndView("allProduct");
+        ModelAndView mav = new ModelAndView("products"); 
 
         ProductManager pm = new ProductManager();
         SpeciesManager sm = new SpeciesManager();
@@ -82,7 +82,6 @@ public class ProductController {
         List<Species> speciesList = sm.getAllSpecies();
         mav.addObject("Product", products);
         mav.addObject("speciesList", speciesList);
-
         mav.addObject("productRatings", productRatings);
 
         return mav;
