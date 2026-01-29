@@ -125,6 +125,7 @@
 
                 <div class="form-section">
                     <h3>📷 รูปภาพสินค้า (อัปโหลดใหม่เพื่อเปลี่ยน)</h3>
+                    
                     <div class="image-upload-box">
                         <input type="file" name="productImage" id="productImage" accept="image/png, image/jpeg, image/jpg" onchange="validateAndPreview(event)">
                         
@@ -143,6 +144,39 @@
                         </c:choose>
                         
                         <p style="text-align: center; margin-top: 10px; color: #888; font-size: 13px;">* หากไม่ต้องการเปลี่ยนรูป ให้เว้นว่างไว้</p>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                        <label style="font-weight: bold; margin-bottom: 10px; display: block; color: #333;">
+                            <i class="fas fa-images"></i> รูปภาพประกอบเพิ่มเติม (Gallery)
+                        </label>
+                        
+                        <div class="image-upload-box" style="border-style: dashed; border-color: #cbd5e0; min-height: 120px;">
+                            <input type="file" name="extraImages" id="extraImages" accept="image/png, image/jpeg, image/jpg" multiple onchange="validateAndPreviewMultiple(event)">
+                            <div class="upload-placeholder" id="extraPlaceholder">
+                                <i class="fas fa-plus-square" style="font-size: 30px; color: #a0aec0;"></i>
+                                <p style="margin-top: 10px;">คลิกเพื่อเลือกหลายรูป (กด Ctrl ค้างไว้)</p>
+                                <span style="font-size: 12px; color: #999;">(รองรับไฟล์รูปภาพ Max 5MB/รูป)</span>
+                            </div>
+                        </div>
+                        
+                        <div id="galleryPreview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;"></div>
+                        
+                        <c:if test="${not empty product.galleryImages}">
+                            <div style="margin-top: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #edf2f7;">
+                                <small style="color: #555; font-weight: bold; display: block; margin-bottom: 10px;">
+                                    <i class="fas fa-check-circle" style="color: green;"></i> รูปภาพปัจจุบันที่มีอยู่:
+                                </small>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <c:forEach items="${product.galleryImages}" var="img">
+                                        <div style="position: relative;">
+                                            <img src="${pageContext.request.contextPath}/${img.imagePath.startsWith('assets') ? '' : 'displayImage?name='}${img.imagePath}" 
+                                                style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
 
@@ -247,6 +281,56 @@ function countDescChars(input) {
         }
     });
 
+</script>
+
+<script>
+        function validateAndPreviewMultiple(event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('galleryPreview');
+            previewContainer.innerHTML = ""; 
+            
+            if (!files) return;
+
+            let hasError = false;
+            const validFiles = new DataTransfer();
+            const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+            Array.from(files).forEach(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    hasError = true;
+                    return;
+                }
+                if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+                    hasError = true;
+                    return;
+                }
+
+                validFiles.items.add(file);
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = "80px";
+                    img.style.height = "80px";
+                    img.style.objectFit = "cover";
+                    img.style.borderRadius = "5px";
+                    img.style.border = "1px solid #ddd";
+                    previewContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+
+            if (hasError) {
+                Swal.fire('บางไฟล์ไม่ผ่านเกณฑ์', 'ระบบคัดกรองเฉพาะไฟล์รูปภาพขนาดไม่เกิน 5MB', 'warning');
+            }
+            
+            event.target.files = validFiles.files;
+
+            if (validFiles.files.length > 0) {
+                document.getElementById('extraPlaceholder').style.display = 'none';
+            }
+        }
 
 </script>
 

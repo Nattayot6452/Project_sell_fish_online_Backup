@@ -288,7 +288,7 @@ public class SellerController {
         return mav;
     }
 
-   @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
+  @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
     public ModelAndView updateProduct(
             @RequestParam("productId") String productId,
             @RequestParam("oldImage") String oldImage,
@@ -305,6 +305,7 @@ public class SellerController {
             @RequestParam("careLevel") String careLevel,
             @RequestParam("isAggressive") String isAggressive,
             @RequestParam(value = "productImage", required = false) MultipartFile file,
+            @RequestParam(value = "extraImages", required = false) MultipartFile[] extraImages,
             HttpSession session) {
 
         if (session.getAttribute("seller") == null) {
@@ -336,7 +337,12 @@ public class SellerController {
             temperature = HtmlUtils.htmlEscape(temperature);
             waterType = HtmlUtils.htmlEscape(waterType);
 
-            String imagePathToSave = oldImage; 
+            String baseDir = "/app/images";
+            String subDir = "products";
+            File uploadPath = new File(baseDir + File.separator + subDir);
+            if (!uploadPath.exists()) uploadPath.mkdirs();
+
+            String imagePathToSave = oldImage;
 
             if (file != null && !file.isEmpty()) {
 
@@ -348,11 +354,6 @@ public class SellerController {
                 if (contentType == null || !contentType.startsWith("image/")) {
                     return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=invalidFileType");
                 }
-
-                String baseDir = "/app/images";
-                String subDir = "products";
-                File uploadPath = new File(baseDir + File.separator + subDir);
-                if (!uploadPath.exists()) uploadPath.mkdirs();
 
                 String newFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
                 File fileSave = new File(uploadPath, newFileName);
@@ -383,6 +384,24 @@ public class SellerController {
 
                 SpeciesManager sm = new SpeciesManager();
                 product.setSpecies(sm.getSpecies(speciesId)); 
+
+                if (extraImages != null && extraImages.length > 0) {
+                    for (MultipartFile extraFile : extraImages) {
+                        if (!extraFile.isEmpty()) {
+
+                            if (extraFile.getSize() > 5 * 1024 * 1024 || !extraFile.getContentType().startsWith("image/")) {
+                                continue; 
+                            }
+                            
+                            String extraName = UUID.randomUUID().toString() + "_extra_" + extraFile.getOriginalFilename();
+                            File extraFileSave = new File(uploadPath, extraName);
+                            extraFile.transferTo(extraFileSave);
+                            
+                            ProductImage pImage = new ProductImage(subDir + "/" + extraName, product);
+                            product.addImage(pImage); 
+                        }
+                    }
+                }
 
                 hibernateSession.update(product);
                 hibernateSession.getTransaction().commit();
