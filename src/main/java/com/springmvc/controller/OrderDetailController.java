@@ -40,14 +40,12 @@ public class OrderDetailController {
             @RequestParam("status") String status,
             HttpSession session) {
         
-        // 1. ตรวจสอบสิทธิ์ (ต้องเป็น Seller หรือ Admin)
         if (session.getAttribute("seller") == null && session.getAttribute("admin") == null) {
             return new ModelAndView("redirect:/Login");
         }
 
         OrderManager om = new OrderManager();
         
-        // 2. Logic คืนสต็อกและคูปอง (กรณีไดยกเลิก)
         if ("Cancelled".equals(status) || "ยกเลิกคำสั่งซื้อ".equals(status) || "ชำระเงินไม่ผ่าน".equals(status)) {
             
             Orders order = om.getOrderWithDetails(orderId);
@@ -57,7 +55,6 @@ public class OrderDetailController {
                 ProductManager pm = new ProductManager();
                 List<OrderDetail> details = order.getOrderDetails(); 
                 
-                // คืนสต็อกสินค้า
                 if (details != null) {
                     for (OrderDetail detail : details) {
                         Product p = detail.getProduct();
@@ -72,7 +69,6 @@ public class OrderDetailController {
                     }
                 }
 
-                // คืนสิทธิ์คูปอง
                 if (order.getCouponCode() != null && !order.getCouponCode().isEmpty()) {
                     CouponManager cm = new CouponManager();
                     Coupon c = cm.getCouponByCode(order.getCouponCode());
@@ -88,16 +84,15 @@ public class OrderDetailController {
         om.updateOrderStatus(orderId, status);
 
         try {
-            // ดึงข้อมูลออเดอร์อีกครั้งเพื่อให้แน่ใจว่าได้ข้อมูลล่าสุดและ Member ID
+
             Orders orderForNoti = om.getOrderById(orderId); 
             
             if (orderForNoti != null && orderForNoti.getMember() != null) {
                 NotificationManager nm = new NotificationManager();
                 
                 String message = "🔔 คำสั่งซื้อ #" + orderId + " ของคุณเปลี่ยนสถานะเป็น: " + status;
-                String link = "OrderDetail?orderId=" + orderId; // ลิงก์ไปดูรายละเอียด
+                String link = "OrderDetail?orderId=" + orderId;
                 
-                // ส่งแจ้งเตือนหา Member (ใช้ ID แบบ String ตามที่คุณแก้ไปแล้ว)
                 nm.createNotification(orderForNoti.getMember().getMemberId(), "MEMBER", message, link);
                 
                 System.out.println(">>> Notification sent to Member: " + orderForNoti.getMember().getMemberId());

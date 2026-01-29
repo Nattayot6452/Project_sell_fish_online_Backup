@@ -33,7 +33,6 @@ public class ProductImage {
         this.product = product;
     }
 
-    // Getters & Setters
     public int getImageId() { return imageId; }
     public void setImageId(int imageId) { this.imageId = imageId; }
 

@@ -121,7 +121,6 @@ public class SpeciesManager {
         try {
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             session = sessionFactory.openSession();
-            // ใช้ session.get เพื่อดึงข้อมูล Species ตาม ID แบบธรรมดา
             species = session.get(Species.class, speciesId);
         } catch (Exception e) {
             e.printStackTrace();

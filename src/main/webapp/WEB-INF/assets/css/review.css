@@ -88,21 +88,20 @@ body {
 .rating-box { margin-bottom: 25px; }
 .rating-box label { display: block; font-weight: bold; margin-bottom: 10px; color: #333; }
 
-/* ✅✅✅ จุดที่แก้: ปิดปีกกา } ให้เรียบร้อย ✅✅✅ */
 .stars {
     display: inline-block;
-    direction: rtl; /* ทำให้เลือกดาวจากซ้ายไปขวาได้ถูกต้อง */
+    direction: rtl;
 }
 
 .stars input[type="radio"] { 
-    display: none; /* ซ่อนวงกลม Radio Button */
+    display: none;
 }
 
 .stars label {
     display: inline-block;
     width: 40px;
     font-size: 35px;
-    color: #ddd; /* สีดาวตอนยังไม่เลือก */
+    color: #ddd;
     cursor: pointer;
     transition: color 0.2s;
     margin: 0;
@@ -110,14 +109,13 @@ body {
 }
 
 .stars label:before { 
-    content: '★'; /* ใส่รูปดาว */
+    content: '★';
 }
 
-/* Logic เปลี่ยนสีดาวเมื่อเอาเมาส์ชี้ หรือเลือกแล้ว */
 .stars input:checked ~ label,
 .stars label:hover,
 .stars label:hover ~ label {
-    color: #ffc107; /* สีเหลืองทอง */
+    color: #ffc107;
 }
 
 /* --- Comment Box --- */

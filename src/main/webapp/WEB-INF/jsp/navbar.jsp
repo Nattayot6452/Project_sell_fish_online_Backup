@@ -120,7 +120,7 @@
     font-size: 18px;
     border: none;
     outline: none;
-    background-color: #00571d; /* สีเขียวธีมร้าน */
+    background-color: #00571d;
     color: white;
     cursor: pointer;
     padding: 15px;

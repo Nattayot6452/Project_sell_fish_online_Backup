@@ -29,18 +29,16 @@
         .btn-back-link { text-decoration: none; color: #666; font-size: 16px; display: flex; align-items: center; gap: 5px; font-weight: 500; }
         .btn-back-link:hover { color: #00571d; }
 
-        /* Styles ปุ่ม */
         .btn-ready { background-color: #ffc107; color: #333; }
         .btn-shipping { background-color: #17a2b8; color: white; }
         .btn-complete { background-color: #28a745; color: white; }
         .btn-cancel-order { background-color: #dc3545; color: white; }
-        .btn-approve-cancel { background-color: #dc3545; color: white; } /* อนุมัติยกเลิก (สีแดงเหมือนเดิม) */
-        .btn-reject-cancel { background-color: #6c757d; color: white; } /* ปฏิเสธ (สีเทา) */
+        .btn-approve-cancel { background-color: #dc3545; color: white; }
+        .btn-reject-cancel { background-color: #6c757d; color: white; }
         
         .btn-action { display: inline-block; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-right: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
         .btn-action:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        /* Status Badge พิเศษ */
         .status-badge.waiting-cancel { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
     </style>
 </head>

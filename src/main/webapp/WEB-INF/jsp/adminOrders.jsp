@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* สไตล์เพิ่มเติมสำหรับตาราง */
+
         .badge { padding: 5px 10px; border-radius: 50px; font-size: 12px; font-weight: bold; }
         .bg-pending { background: #ffeeba; color: #856404; }
         .bg-checking { background: #d1ecf1; color: #0c5460; }

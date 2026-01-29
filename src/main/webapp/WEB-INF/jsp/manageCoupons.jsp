@@ -27,7 +27,6 @@
         .btn-delete { background-color: #dc3545; color: white; }
         .btn-delete:hover { background-color: #c82333; transform: scale(1.1); }
 
-        /* Status Badges */
         .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; min-width: 80px; text-align: center; }
         .bg-active { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .bg-inactive { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }

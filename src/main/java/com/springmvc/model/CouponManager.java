@@ -66,7 +66,7 @@ public class CouponManager {
         Session session = null;
         try {
             session = HibernateConnection.doHibernateConnection().openSession();
-            // ค้นหาคูปองจาก Code (สมมติชื่อ field คือ couponCode)
+            
             Query<Coupon> query = session.createQuery("FROM Coupon WHERE couponCode = :code", Coupon.class);
             query.setParameter("code", code);
             return query.uniqueResult();

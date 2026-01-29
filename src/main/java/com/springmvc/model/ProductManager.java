@@ -255,13 +255,11 @@ public class ProductManager {
             StringBuilder hql = new StringBuilder("FROM Product p");
             boolean hasWhere = false;
 
-            // กรองหมวดหมู่
             if (category != null && !category.equals("all") && !category.isEmpty()) {
                 hql.append(" WHERE p.species.speciesName = :category");
                 hasWhere = true;
             }
 
-            // จัดเรียงตามเงื่อนไข
             if ("price_asc".equals(sortBy)) {
                 hql.append(" ORDER BY p.price ASC");
             } else if ("price_desc".equals(sortBy)) {
@@ -269,14 +267,13 @@ public class ProductManager {
             } else if ("name_asc".equals(sortBy)) {
                 hql.append(" ORDER BY p.productName ASC");
             } else if ("oldest".equals(sortBy)) {
-                hql.append(" ORDER BY p.productId ASC"); // เรียงตาม ID น้อยไปมาก (เก่าสุด)
+                hql.append(" ORDER BY p.productId ASC");
             } else if ("newest".equals(sortBy)) {
-                hql.append(" ORDER BY p.productId DESC"); // เรียงตาม ID มากไปน้อย (ใหม่สุด)
+                hql.append(" ORDER BY p.productId DESC");
             } else if ("best_selling".equals(sortBy)) {
-                // ✅ สูตรลับ: เรียงตามผลรวมจำนวนที่ขายได้ (Subquery)
                 hql.append(" ORDER BY (SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.product = p) DESC");
             } else {
-                hql.append(" ORDER BY p.productId DESC"); // ค่าเริ่มต้น (สินค้าใหม่สุด)
+                hql.append(" ORDER BY p.productId DESC");
             }
 
             Query<Product> query = session.createQuery(hql.toString(), Product.class);

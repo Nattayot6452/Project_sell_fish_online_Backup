@@ -142,7 +142,7 @@ body {
     padding: 40px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
-    margin-top: 40px; /* เว้นระยะจากกล่องสินค้าด้านบน */
+    margin-top: 40px;
 }
 
 .reviews-header {

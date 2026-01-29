@@ -17,7 +17,7 @@ body {
 .sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #1a202c; /* Dark Theme for Admin */
+    background: #1a202c;
     color: #fff;
     min-height: 100vh;
     transition: all 0.3s;
@@ -48,7 +48,7 @@ body {
 /* --- Content --- */
 .content {
     width: 100%;
-    margin-left: 250px; /* Space for Sidebar */
+    margin-left: 250px;
 }
 
 .top-navbar {

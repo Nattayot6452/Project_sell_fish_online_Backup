@@ -92,7 +92,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--i
     --warning-color: #ffc107;
     --info-color: #17a2b8;
     --success-color: #28a745;
-    --purple-color: #6f42c1; /* ✅ เพิ่มสีม่วงสำหรับคูปอง */
+    --purple-color: #6f42c1;
 }
 
 body {
@@ -178,7 +178,7 @@ body {
     background: white; width: 220px; padding: 30px 20px; border-radius: 15px;
     text-align: center; text-decoration: none; color: var(--text-dark);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s;
-    border-bottom: 4px solid transparent; /* ใช้ Border Bottom เหมือนกันทุกอัน */
+    border-bottom: 4px solid transparent;
 }
 .action-card:hover { transform: translateY(-10px); }
 
@@ -186,7 +186,7 @@ body {
 .action-card.add { border-bottom-color: var(--info-color); }
 .action-card.orders { border-bottom-color: var(--warning-color); }
 .action-card.slips { border-bottom-color: var(--success-color); }
-.action-card.coupons { border-bottom-color: var(--purple-color); } /* ✅ เพิ่มสีม่วง */
+.action-card.coupons { border-bottom-color: var(--purple-color); }
 
 .action-icon {
     font-size: 40px; margin-bottom: 15px; display: block;
@@ -196,7 +196,7 @@ body {
 .action-card.add .action-icon { color: var(--info-color); }
 .action-card.orders .action-icon { color: var(--warning-color); }
 .action-card.slips .action-icon { color: var(--success-color); }
-.action-card.coupons .action-icon { color: var(--purple-color); } /* ✅ เพิ่มสีม่วง */
+.action-card.coupons .action-icon { color: var(--purple-color); }
 
 .action-title { font-size: 18px; font-weight: bold; display: block; }
 .action-desc { font-size: 13px; color: #888; margin-top: 5px; display: block; }

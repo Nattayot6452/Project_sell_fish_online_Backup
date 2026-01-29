@@ -40,9 +40,8 @@ public class Coupon {
     private int usageCount;
 
     @Column(name = "status")
-    private String status; // 'ACTIVE', 'EXPIRED'
+    private String status;
 
-    // Constructors
     public Coupon() {}
 
     public Coupon(String couponCode, String discountType, double discountValue, double minOrderAmount, 
@@ -54,11 +53,10 @@ public class Coupon {
         this.startDate = startDate;
         this.expireDate = expireDate;
         this.usageLimit = usageLimit;
-        this.usageCount = 0; // เริ่มต้นเป็น 0
+        this.usageCount = 0; 
         this.status = status;
     }
 
-    // Getters and Setters
     public String getCouponCode() { return couponCode; }
     public void setCouponCode(String couponCode) { this.couponCode = couponCode; }
 

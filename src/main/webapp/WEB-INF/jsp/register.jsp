@@ -190,7 +190,7 @@
            Swal.fire({
                 icon: 'error',
                 title: 'ข้อมูลไม่ถูกต้อง',
-                text: addResult, // แสดงข้อความที่ส่งมาจาก Java Controller
+                text: addResult,
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'แก้ไข'
             });

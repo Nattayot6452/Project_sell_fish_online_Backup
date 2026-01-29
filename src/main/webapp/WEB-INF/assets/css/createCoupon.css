@@ -3,7 +3,7 @@
 body {
     margin: 0;
     font-family: 'Sarabun', sans-serif;
-    background-color: #f4f6f9; /* สีพื้นหลังเทาอ่อน สบายตา */
+    background-color: #f4f6f9;
 }
 
 /* กล่องฟอร์มหลัก */
@@ -12,8 +12,8 @@ body {
     margin: 50px auto;
     background: #ffffff;
     padding: 40px;
-    border-radius: 12px; /* มุมมน */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* เงานุ่มๆ */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 h2 {
@@ -46,7 +46,7 @@ h2 {
     border-radius: 8px;
     font-size: 16px;
     font-family: 'Sarabun', sans-serif;
-    box-sizing: border-box; /* สำคัญ: ไม่ให้ input ล้นกรอบ */
+    box-sizing: border-box;
     transition: all 0.2s ease-in-out;
     background-color: #fff;
 }
@@ -54,9 +54,9 @@ h2 {
 /* ตอนคลิกที่ช่อง (Focus) */
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #6f42c1; /* สีม่วงธีมคูปอง */
+    border-color: #6f42c1;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15); /* เงาสีม่วงจางๆ */
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
 }
 
 /* คำอธิบายตัวเล็กๆ ใต้ช่อง */

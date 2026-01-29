@@ -16,7 +16,7 @@
 }
 
 .seller-table th {
-    background-color: #007bff; /* เปลี่ยนสีหัวตารางให้เป็นธีม Seller (สีน้ำเงิน) */
+    background-color: #007bff;
     color: white;
     font-weight: 600;
 }
@@ -62,12 +62,12 @@
     border-radius: 4px;
     height: 8px;
     margin-bottom: 5px;
-    overflow: hidden; /* สำคัญ */
+    overflow: hidden;
 }
 
 .progress-bar-fill {
     background: #17a2b8;
     height: 100%;
     border-radius: 4px;
-    /* เราจะไม่ใส่ width ที่นี่ แต่จะไปใส่ใน JSP */
+    
 }

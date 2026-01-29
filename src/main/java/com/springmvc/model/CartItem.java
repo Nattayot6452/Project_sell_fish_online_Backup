@@ -17,7 +17,6 @@ public class CartItem {
         }
     }
 
-    // --- Getters ---
     public Product getProduct() {
         return product;
     }

@@ -176,7 +176,7 @@ body {
     border-radius: 15px;
     transition: all 0.2s;
     text-align: left;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03); /* เงาบางๆ ให้ดูลอย */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
 
 .info-item:hover {

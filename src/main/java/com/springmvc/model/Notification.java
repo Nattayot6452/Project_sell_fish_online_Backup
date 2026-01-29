@@ -10,7 +10,6 @@ public class Notification {
     private boolean isRead;
     private Timestamp createdAt;
 
-    // Getter & Setter
     public int getNotificationId() { return notificationId; }
     public void setNotificationId(int notificationId) { this.notificationId = notificationId; }
     
