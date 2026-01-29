@@ -3,11 +3,14 @@ package com.springmvc.controller;
 import com.springmvc.model.*; 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+// import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -16,6 +19,7 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpHeaders;
 
 @Controller
 public class CheckoutController { 
@@ -208,55 +212,63 @@ public class CheckoutController {
         return new ModelAndView("redirect:/uploadSlip?orderId=" + newOrderId); 
     }
     
-    @RequestMapping(value = "/checkCoupon", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    @ResponseBody 
-    public String checkCoupon(@RequestParam("code") String code, HttpSession session) {
-        
+    @RequestMapping(value = "/checkCoupon", method = RequestMethod.POST)
+    public ResponseEntity<String> checkCoupon(
+            @RequestParam("code") String code, 
+            @RequestParam("totalAmount") double totalAmount) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain; charset=UTF-8");
+
+        String responseMessage = "";
+
         if (code == null || code.trim().isEmpty()) {
-            return "กรุณากรอกรหัสคูปอง";
+            responseMessage = "INVALID:กรุณากรอกรหัสคูปอง";
+            return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
         }
 
         CouponManager cm = new CouponManager();
-        Coupon coupon = cm.getCouponByCode(code);
-        
-        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-        double totalCartPrice = 0.0;
-        ProductManager pm = new ProductManager();
-        if (cart != null) {
-            for (Map.Entry<String, Integer> entry : cart.entrySet()) {
-                Product p = pm.getProduct(entry.getKey());
-                if (p != null) totalCartPrice += (p.getPrice() * entry.getValue());
-            }
-        }
+        Coupon coupon = cm.getCouponByCode(code.toUpperCase());
 
         if (coupon != null) {
-            java.util.Date now = new java.util.Date();
-            
-            if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
-                 return "คูปองนี้หมดอายุแล้ว";
-            }
-            else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
-                 return "คูปองนี้ถูกใช้ครบสิทธิ์แล้ว";
-            }
-            else if (totalCartPrice < coupon.getMinOrderAmount()) {
-                 return "ต้องซื้อขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท ถึงจะใช้โค้ดนี้ได้";
+
+            if (!"ACTIVE".equals(coupon.getStatus())) {
+                 responseMessage = "INVALID:คูปองนี้ถูกยกเลิกแล้ว";
             }
             else {
+                java.util.Date now = new java.util.Date();
 
-                double discount = 0.0;
-                 if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
-                     discount = totalCartPrice * (coupon.getDiscountValue() / 100.0);
-                 } else {
-                     discount = coupon.getDiscountValue();
-                 }
-                 
-                 if (discount > totalCartPrice) discount = totalCartPrice;
-                 
-                 return "VALID|" + discount + "|" + (totalCartPrice - discount);
+                if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
+                     responseMessage = "INVALID:คูปองนี้หมดอายุแล้ว";
+                }
+
+                else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+                     responseMessage = "INVALID:คูปองนี้ถูกใช้ครบสิทธิ์แล้ว";
+                }
+
+                else if (totalAmount < coupon.getMinOrderAmount()) {
+                     responseMessage = "INVALID:ต้องซื้อขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท ถึงจะใช้โค้ดนี้ได้";
+                }
+                else {
+
+                    double discount = 0.0;
+                     if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
+                         discount = totalAmount * (coupon.getDiscountValue() / 100.0);
+                     } else {
+                         discount = coupon.getDiscountValue();
+                     }
+                     
+                     if (discount > totalAmount) discount = totalAmount;
+                     double finalPrice = totalAmount - discount;
+                     
+                     responseMessage = "VALID|" + discount + "|" + finalPrice;
+                }
             }
         } else {
-            return "ไม่พบรหัสคูปองนี้ในระบบ";
+            responseMessage = "INVALID:ไม่พบรหัสคูปองนี้ในระบบ";
         }
+
+        return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/uploadSlip", method = RequestMethod.GET)

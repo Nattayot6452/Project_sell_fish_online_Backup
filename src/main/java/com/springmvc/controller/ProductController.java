@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import com.springmvc.model.HibernateConnection;
 import com.springmvc.model.Product;
@@ -64,7 +65,10 @@ public class ProductController {
 	 
     @RequestMapping(value="/SearchProducts", method=RequestMethod.GET) 
     public ModelAndView searchProducts(HttpServletRequest request) {
-        String searchtext = request.getParameter("searchtext");
+        
+        String rawSearchText = request.getParameter("searchtext");
+        
+        String searchtext = (rawSearchText != null) ? HtmlUtils.htmlEscape(rawSearchText) : "";
 
         ModelAndView mav = new ModelAndView("products"); 
 
@@ -80,9 +84,12 @@ public class ProductController {
         }
 
         List<Species> speciesList = sm.getAllSpecies();
+        
         mav.addObject("Product", products);
         mav.addObject("speciesList", speciesList);
         mav.addObject("productRatings", productRatings);
+        
+        mav.addObject("searchQuery", searchtext); 
 
         return mav;
     }

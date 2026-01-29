@@ -117,6 +117,7 @@
                 else if (error === 'descLength') text = "คำอธิบายต้องยาว 10-255 ตัวอักษร";
                 else if (error === 'invalidChar') text = "ชื่อสายพันธุ์มีอักขระที่ไม่ได้รับอนุญาต";
                 else if (error === 'failed') text = "ไม่สามารถอัปเดตข้อมูลลงฐานข้อมูลได้";
+                else if (error === 'duplicate') text = "ชื่อสายพันธุ์นี้มีอยู่ในระบบแล้ว (ซ้ำ)"; 
 
                 Swal.fire({
                     icon: 'error',

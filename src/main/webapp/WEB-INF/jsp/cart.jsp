@@ -172,45 +172,52 @@
 
         let currentTotal = parseFloat("${totalCartPrice != null ? totalCartPrice : 0}");
 
-        function checkCoupon() {
-            let code = document.getElementById("couponCode").value;
-            let msg = document.getElementById("couponMsg");
+       function checkCoupon() {
+        let code = document.getElementById("couponCode").value;
+        let msg = document.getElementById("couponMsg");
 
-            if (code.trim() === "") {
-                msg.innerHTML = "<span style='color:red;'>กรุณากรอกรหัสคูปอง</span>";
-                return;
-            }
+        let currentTotal = parseFloat("${totalCartPrice != null ? totalCartPrice : 0}");
 
-            $.ajax({
-                type: "GET",
-                url: "checkCoupon",
-                data: { code: code },
-                success: function(response) {
-
-                    if (!response.startsWith("VALID")) {
-                        msg.innerHTML = "<span style='color:red;'>" + response + "</span>";
-                        resetCoupon();
-                    } else {
-
-                        let parts = response.split("|");
-                        let discount = parseFloat(parts[1]);
-                        let finalPrice = parseFloat(parts[2]);
-
-                        msg.innerHTML = "<span style='color:green;'>ใช้คูปองสำเร็จ! ลด " + discount.toLocaleString() + " บาท</span>";
-                        
-                        document.querySelector(".discount-row").style.display = "flex";
-                        document.getElementById("discount-display").innerText = "-฿" + discount.toLocaleString();
-                        document.getElementById("total-display").innerText = "฿" + finalPrice.toLocaleString();
-                        
-                        document.getElementById("appliedCouponCode").value = code;
-                        document.getElementById("discountAmount").value = discount;
-                    }
-                },
-                error: function() {
-                    msg.innerHTML = "<span style='color:red;'>เกิดข้อผิดพลาดในการเชื่อมต่อ Server</span>";
-                }
-            });
+        if (code.trim() === "") {
+            msg.innerHTML = "<span style='color:red;'>กรุณากรอกรหัสคูปอง</span>";
+            return;
         }
+
+        $.ajax({
+            type: "POST",
+            url: "checkCoupon",
+            data: { 
+                code: code,
+                totalAmount: currentTotal
+            },
+            success: function(response) {
+
+                if (!response.startsWith("VALID")) {
+
+                    let errorText = response.replace("INVALID:", "");
+                    msg.innerHTML = "<span style='color:red;'>" + errorText + "</span>";
+                    resetCoupon();
+                } else {
+
+                    let parts = response.split("|");
+                    let discount = parseFloat(parts[1]);
+                    let finalPrice = parseFloat(parts[2]);
+
+                    msg.innerHTML = "<span style='color:green;'>ใช้คูปองสำเร็จ! ลด " + discount.toLocaleString() + " บาท</span>";
+                    
+                    document.querySelector(".discount-row").style.display = "flex";
+                    document.getElementById("discount-display").innerText = "-฿" + discount.toLocaleString();
+                    document.getElementById("total-display").innerText = "฿" + finalPrice.toLocaleString();
+                    
+                    document.getElementById("appliedCouponCode").value = code;
+                    document.getElementById("discountAmount").value = discount;
+                }
+            },
+            error: function() {
+                msg.innerHTML = "<span style='color:red;'>เกิดข้อผิดพลาดในการเชื่อมต่อ Server</span>";
+            }
+        });
+    }
 
         function resetCoupon() {
             document.querySelector(".discount-row").style.display = "none";

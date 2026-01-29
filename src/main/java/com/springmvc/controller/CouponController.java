@@ -109,54 +109,6 @@ public class CouponController {
         }
     }
 
-    @RequestMapping(value = "/checkCoupon", method = RequestMethod.POST)
-    @org.springframework.web.bind.annotation.ResponseBody
-    public String checkCoupon(
-            @RequestParam("code") String code, 
-            @RequestParam("totalAmount") double totalAmount) {
-        
-        CouponManager cm = new CouponManager();
-        Coupon c = cm.getCouponByCode(code.toUpperCase());
-
-        if (c == null) {
-            return "INVALID:ไม่พบรหัสคูปองนี้";
-        }
-
-        if (!"ACTIVE".equals(c.getStatus())) {
-            return "INVALID:คูปองนี้ถูกยกเลิกแล้ว";
-        }
-
-        Date now = new Date();
-        if (now.before(c.getStartDate())) {
-            return "INVALID:คูปองยังไม่ถึงเวลาเริ่มใช้";
-        }
-        if (now.after(c.getExpireDate())) {
-            return "INVALID:คูปองหมดอายุแล้ว";
-        }
-
-        if (c.getUsageCount() >= c.getUsageLimit()) {
-            return "INVALID:สิทธิ์คูปองเต็มแล้ว";
-        }
-
-        if (totalAmount < c.getMinOrderAmount()) {
-            return "INVALID:ยอดซื้อต้องครบ " + c.getMinOrderAmount() + " บาท ถึงจะใช้ได้";
-        }
-
-        double discount = 0;
-        if ("FIXED".equals(c.getDiscountType())) {
-            discount = c.getDiscountValue();
-        } else {
-
-            discount = totalAmount * (c.getDiscountValue() / 100);
-        }
-
-        if (discount > totalAmount) {
-            discount = totalAmount;
-        }
-
-        return String.valueOf(discount);
-    }
-
     @RequestMapping(value = "/DeleteCoupon", method = RequestMethod.GET)
 public ModelAndView deleteCoupon(@RequestParam("code") String code, HttpSession session) {
     if (session.getAttribute("seller") == null) {

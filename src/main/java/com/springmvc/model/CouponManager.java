@@ -87,7 +87,7 @@ public class CouponManager {
             session = sessionFactory.openSession();
             tx = session.beginTransaction();
             
-            session.update(coupon);
+            session.merge(coupon);
             
             tx.commit();
             result = true;

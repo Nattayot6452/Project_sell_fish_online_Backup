@@ -144,6 +144,16 @@ public class AdminController {
             speciesName = HtmlUtils.htmlEscape(speciesName);
 
             SpeciesManager sm = new SpeciesManager();
+
+            List<Species> existingList = sm.getAllSpecies();
+
+            for (Species s : existingList) {
+
+                if (s.getSpeciesName().equalsIgnoreCase(speciesName)) {
+
+                    return new ModelAndView("redirect:/AddSpecies?error=duplicate");
+                }
+            }
             
             String newId = "SP" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
             
@@ -233,6 +243,18 @@ public class AdminController {
             description = HtmlUtils.htmlEscape(description);
 
             SpeciesManager sm = new SpeciesManager();
+
+            List<Species> existingList = sm.getAllSpecies();
+            for (Species s : existingList) {
+
+                if (s.getSpeciesName().equalsIgnoreCase(speciesName)) {
+
+                    if (!s.getSpeciesId().equals(speciesId)) {
+                        return new ModelAndView("redirect:/EditSpecies?id=" + speciesId + "&error=duplicate");
+                    }
+                }
+            }
+
             Species s = new Species(speciesId, speciesName);
             s.setDescription(description);
             

@@ -24,7 +24,9 @@
         <div class="page-header">
             <c:choose>
                 <c:when test="${not empty param.searchtext}">
-                    <h1><i class="fas fa-search"></i> ผลการค้นหา: <span>"${param.searchtext}"</span></h1>
+                    <h1><i class="fas fa-search"></i> ผลการค้นหา: 
+                        <span>"<c:out value="${param.searchtext}" />"</span>
+                    </h1>
                 </c:when>
                 <c:otherwise>
                     <h1><i class="fas fa-th-large"></i> รายการสินค้าทั้งหมด</h1>
