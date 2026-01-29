@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.regex.Pattern;
 
 import com.springmvc.model.Coupon;
 import com.springmvc.model.CouponManager;
@@ -58,6 +59,31 @@ public class CouponController {
 
         try {
 
+            code = code.trim().toUpperCase();
+
+            if (code.isEmpty() || code.contains(" ")) {
+                return new ModelAndView("redirect:/CreateCoupon?error=invalidCode");
+            }
+
+            if (code.length() < 3 || code.length() > 20) {
+                return new ModelAndView("redirect:/CreateCoupon?error=codeLength");
+            }
+
+            if (!Pattern.matches("^[A-Z0-9]+$", code)) {
+                return new ModelAndView("redirect:/CreateCoupon?error=invalidChar");
+            }
+
+            if (value <= 0) {
+                return new ModelAndView("redirect:/CreateCoupon?error=invalidValue");
+            }
+            if ("PERCENT".equals(type) && value > 100) {
+                return new ModelAndView("redirect:/CreateCoupon?error=invalidPercent");
+            }
+
+            if (minOrder < 0 || limit <= 0) {
+                return new ModelAndView("redirect:/CreateCoupon?error=invalidNumber");
+            }
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date start = sdf.parse(startDateStr);
             Date expire = sdf.parse(expireDateStr);
@@ -66,7 +92,7 @@ public class CouponController {
                 return new ModelAndView("redirect:/CreateCoupon?error=date_invalid");
             }
 
-            Coupon c = new Coupon(code.toUpperCase(), type, value, minOrder, start, expire, limit, "ACTIVE");
+            Coupon c = new Coupon(code, type, value, minOrder, start, expire, limit, "ACTIVE");
             
             CouponManager cm = new CouponManager();
             boolean success = cm.saveCoupon(c);
