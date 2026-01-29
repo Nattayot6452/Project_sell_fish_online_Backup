@@ -12,10 +12,12 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/checkout.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-         <jsp:include page="navbar.jsp" />
+    <jsp:include page="navbar.jsp" />
 
     <div class="container main-container">
         
@@ -24,7 +26,7 @@
             <p>เลือกช่องทางการชำระเงินและสแกน QR Code</p>
         </div>
 
-        <form action="createOrder" method="post" class="checkout-wrapper" id="checkoutForm" onsubmit="return validatePayment()">
+        <form action="createOrder" method="post" class="checkout-wrapper" id="checkoutForm" onsubmit="return validatePayment(event)">
             
             <div class="payment-section">
                 <h2><i class="fas fa-wallet"></i> เลือกธนาคารที่ต้องการโอน</h2>
@@ -135,7 +137,7 @@
             if(radio) radio.closest('.payment-card').classList.add('selected');
         }
 
-        function validatePayment() {
+        function validatePayment(event) {
             const paymentMethods = document.getElementsByName('paymentMethod');
             let isSelected = false;
 
@@ -147,7 +149,16 @@
             }
 
             if (!isSelected) {
-                alert("กรุณาเลือกธนาคารที่ต้องการชำระเงินก่อนดำเนินการต่อ");
+
+                if(event) event.preventDefault(); 
+
+                Swal.fire({
+                    title: 'ลืมอะไรไปหรือเปล่า?',
+                    text: 'กรุณาเลือกธนาคารที่ต้องการชำระเงินก่อนดำเนินการต่อ',
+                    icon: 'warning',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#00571d'
+                });
                 return false; 
             }
             return true;
