@@ -61,7 +61,7 @@
                 <span>Fish Online</span>
             </a>
             
-            <form action="SearchProducts" method="POST" class="search-wrapper">
+            <form action="SearchProducts" method="get" class="search-wrapper">
                 <input type="text" name="searchtext" placeholder="ค้นหาปลาที่คุณชอบ...">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>

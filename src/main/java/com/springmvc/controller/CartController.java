@@ -20,12 +20,16 @@ import java.util.Map;
 @Controller
 public class CartController {
 
-    @RequestMapping(value = "/addToCart", method = RequestMethod.GET)
+    @RequestMapping(value = "/addToCart", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView addToCart(
             @RequestParam("productId") String productId,
             @RequestParam(value = "quantity", defaultValue = "1") int quantity, 
             HttpSession session,
             HttpServletRequest request) { 
+        
+        if (session.getAttribute("user") == null) { 
+            return new ModelAndView("redirect:/Login");
+        }
         
         ProductManager pm = new ProductManager();
         Product product = pm.getProduct(productId);
@@ -57,6 +61,11 @@ public class CartController {
 
     @RequestMapping(value = "/Cart", method = RequestMethod.GET)
     public ModelAndView showCart(HttpSession session) {
+
+        if (session.getAttribute("user") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
         ModelAndView mav = new ModelAndView("cart");
         Map<String, Integer> cartSessionData = (Map<String, Integer>) session.getAttribute("cart");
         List<CartItem> cartItems = new ArrayList<>();
@@ -89,10 +98,15 @@ public class CartController {
 
     @RequestMapping(value = "/updateFullCart", method = RequestMethod.POST)
     public ModelAndView updateFullCart(HttpServletRequest request, HttpSession session) {
+
+        if (session.getAttribute("user") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
         Map<String, Integer> updatedCart = new HashMap<>();
         Map<String, String[]> parameterMap = request.getParameterMap();
         
-        ProductManager pm = new ProductManager(); // ต้องใช้เช็คสต็อกตอนอัปเดตด้วย
+        ProductManager pm = new ProductManager(); 
 
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             String paramName = entry.getKey();
@@ -103,13 +117,11 @@ public class CartController {
                     String productId = paramName.substring("quantity_".length());
                     int newQuantity = Integer.parseInt(paramValues[0]);
                     
-                    // เช็คสต็อกอีกรอบกันเหนียว
                     Product p = pm.getProduct(productId);
                     if (p != null && newQuantity > 0) {
                         if (newQuantity <= p.getStock()) {
                              updatedCart.put(productId, newQuantity); 
                         } else {
-                             // ถ้าขอเกิน ให้ใส่เท่าที่มี
                              updatedCart.put(productId, p.getStock()); 
                         }
                     }

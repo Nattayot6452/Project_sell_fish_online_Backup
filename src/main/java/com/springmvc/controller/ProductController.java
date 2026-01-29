@@ -62,7 +62,7 @@ public class ProductController {
         return mav;
     }
 	 
-    @RequestMapping(value="/SearchProducts", method=RequestMethod.POST) 
+    @RequestMapping(value="/SearchProducts", method=RequestMethod.GET) 
     public ModelAndView searchProducts(HttpServletRequest request) {
         String searchtext = request.getParameter("searchtext");
 
