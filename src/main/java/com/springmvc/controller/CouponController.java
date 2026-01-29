@@ -198,6 +198,18 @@ public ModelAndView deleteCoupon(@RequestParam("code") String code, HttpSession 
         }
 
         try {
+
+            if (value <= 0) {
+                return new ModelAndView("redirect:/EditCoupon?code=" + code + "&error=invalidValue");
+            }
+            if ("PERCENT".equals(type) && value > 100) {
+                return new ModelAndView("redirect:/EditCoupon?code=" + code + "&error=invalidPercent");
+            }
+
+            if (minOrder < 0 || limit <= 0) {
+                return new ModelAndView("redirect:/EditCoupon?code=" + code + "&error=invalidNumber");
+            }
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date start = sdf.parse(startDateStr);
             Date expire = sdf.parse(expireDateStr);
@@ -208,6 +220,10 @@ public ModelAndView deleteCoupon(@RequestParam("code") String code, HttpSession 
 
             CouponManager cm = new CouponManager();
             Coupon c = cm.getCouponByCode(code);
+            
+            if (c == null) {
+                return new ModelAndView("redirect:/ManageCoupons?error=notFound");
+            }
             
             c.setDiscountType(type);
             c.setDiscountValue(value);
