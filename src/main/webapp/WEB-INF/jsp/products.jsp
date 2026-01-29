@@ -84,9 +84,33 @@
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <div class="empty-state">
-                        <i class="fas fa-box-open"></i>
-                        <p>ไม่พบสินค้าที่คุณค้นหา ลองใช้คำค้นอื่นดูนะ</p>
+                    <style>
+                        body {
+                            height: 100vh;      
+                            overflow: hidden;  
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .main-container {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        }
+                        .site-footer {
+                            margin-top: auto;
+                            width: 100%;
+                        }
+                        .page-header {
+                            margin-top: 0;
+                            margin-bottom: 20px;
+                            text-align: center;
+                        }
+                    </style>
+
+                    <div class="empty-state" style="text-align: center;">
+                        <i class="fas fa-box-open" style="font-size: 100px; margin-bottom: 20px; color: #ccc;"></i>
+                        <p style="font-size: 18px; color: #666; margin-bottom: 20px;">ไม่พบสินค้าที่คุณค้นหา ลองใช้คำค้นอื่นดูนะ</p>
                         <a href="AllProduct" class="btn-back">ดูสินค้าทั้งหมด</a>
                     </div>
                 </c:otherwise>
