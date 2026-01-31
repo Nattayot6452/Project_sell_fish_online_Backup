@@ -144,10 +144,16 @@
                     </div>
                 </div>
 
-                <div class="form-group file-group">
+               <div class="form-group file-group">
                     <label for="profileImg"><i class="fas fa-camera"></i> รูปโปรไฟล์</label>
+                    
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img id="imagePreview" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
+                             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd; display: none;">
+                    </div>
+
                     <div class="file-input-wrapper">
-                        <input type="file" id="profileImg" name="profileImg" accept="image/*" required>
+                        <input type="file" id="profileImg" name="profileImg" accept="image/*" required onchange="previewProfileImage(this)">
                         <span class="file-hint">รองรับไฟล์ JPG, PNG</span>
                     </div>
                 </div>
@@ -230,5 +236,23 @@
     }
     </script>
 
+    <script>
+    function previewProfileImage(input) {
+        var preview = document.getElementById('imagePreview');
+        
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+    </script>
 </body>
 </html>
