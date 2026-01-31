@@ -418,4 +418,20 @@ public class SellerController {
             return new ModelAndView("redirect:/EditProduct?id=" + productId + "&error=exception");
         }
     }
+
+    @RequestMapping(value = "/ListProduct", method = RequestMethod.GET)
+    public ModelAndView showListProductPage(HttpSession session) {
+
+        if (session.getAttribute("seller") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        ProductManager pm = new ProductManager();
+
+        List<Product> products = pm.getListProducts();
+
+        ModelAndView mav = new ModelAndView("listProduct");
+        mav.addObject("products", products);
+        return mav;
+    }
 }

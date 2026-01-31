@@ -72,7 +72,7 @@
                     <i class="fas fa-boxes"></i> จัดการสินค้า <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
                 </a>
                 <div class="dropdown-content">
-                    <a href="SellerCenter"><i class="fas fa-list"></i> รายการสินค้าทั้งหมด</a>
+                    <a href="ListProduct"><i class="fas fa-list"></i> รายการสินค้าทั้งหมด</a>
                     <a href="AddProduct"><i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่</a>
                 </div>
             </div>
