@@ -25,11 +25,11 @@ body {
 }
 
 .sidebar-header {
-    padding: 20px;
-    background: #2d3748;
+    padding: 15px;
+    background: #9c9c9c;
     text-align: center;
 }
-.sidebar-header img { width: 50px; margin-bottom: 10px; }
+.sidebar-header img { width: 120px; margin-bottom: 10px; }
 .sidebar-header h3 { margin: 0; font-size: 18px; color: #fff; }
 
 .sidebar ul.components { padding: 20px 0; list-style: none; margin: 0; }

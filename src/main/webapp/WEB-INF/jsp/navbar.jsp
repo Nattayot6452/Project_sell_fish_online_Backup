@@ -52,8 +52,8 @@
 <nav class="navbar">
     <div class="nav-container">
         <a href="Home" class="brand-logo">
-            <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-            <span>Fish Online</span>
+            <img src="${pageContext.request.contextPath}/assets/images/icon/icon_fishshop.png" alt="Logo">
+            <!-- <span>Fish Online</span> -->
         </a>
         
         <form action="SearchProducts" method="get" class="search-wrapper">

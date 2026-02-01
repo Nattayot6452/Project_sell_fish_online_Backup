@@ -57,8 +57,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="Home" class="brand-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-                <span>Fish Online</span>
+                <img src="${pageContext.request.contextPath}/assets/images/icon/icon_fishshop.png" alt="Logo">
+                <!-- <span>Fish Online</span> -->
             </a>
             
             <form action="SearchProducts" method="get" class="search-wrapper">
@@ -103,7 +103,7 @@
     <div class="main-container">
         <div class="login-card">
             <div class="login-header">
-                <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
+                <img src="${pageContext.request.contextPath}/assets/images/icon/icon_fishshop.png" alt="Logo">
                 <h2 id="welcome-text">ยินดีต้อนรับสมาชิก</h2>
                 <p>กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
             </div>

@@ -5,8 +5,8 @@
 
 <nav class="sidebar">
     <div class="sidebar-header">
-        <img src="${pageContext.request.contextPath}/assets/images/icon/fishTesting.png" alt="Logo">
-        <h3>Admin Panel</h3>
+        <img src="${pageContext.request.contextPath}/assets/images/icon/icon_fishshop.png" alt="Logo">
+        <!-- <h3>Admin Panel</h3> -->
     </div>
     
     <ul class="list-unstyled components">
