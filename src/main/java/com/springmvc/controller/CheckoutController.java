@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-import java.sql.Date;
+// import java.sql.Date;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 // import org.springframework.http.HttpHeaders;
-import java.sql.Timestamp;
+// import java.sql.Timestamp;
 
 @Controller
 public class CheckoutController { 
@@ -157,7 +157,10 @@ public class CheckoutController {
         Orders newOrder = new Orders();
         newOrder.setOrdersId(newOrderId);
         newOrder.setMember(user);
-        newOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
+
+        java.time.ZonedDateTime nowThai = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Bangkok"));
+        newOrder.setOrderDate(java.sql.Timestamp.valueOf(nowThai.toLocalDateTime()));
+        
         newOrder.setStatus("รอดำเนินการชำระเงิน");
         newOrder.setTotalAmount(finalTotal);
         newOrder.setDiscountAmount(discountAmount);
@@ -289,7 +292,10 @@ public class CheckoutController {
 
         Payment payment = new Payment();
         payment.setSlipId(UUID.randomUUID().toString());
-        payment.setUploadDate(new Date(System.currentTimeMillis()));
+        
+        java.time.ZonedDateTime nowThai = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Bangkok"));
+        payment.setUploadDate(java.sql.Timestamp.valueOf(nowThai.toLocalDateTime()));
+        
         payment.setFilePath(savedFileName);
         payment.setTotal(order.getTotalAmount());
         payment.setOrders(order);

@@ -1,7 +1,6 @@
 package com.springmvc.model;
 
-import java.sql.Date;
-
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +17,7 @@ public class Payment {
     private String slipId;
 
     @Column(name = "upload_date", nullable = false)
-    private Date uploadDate;
+    private Timestamp uploadDate;
 
     @Column(name = "file_path", length = 255, nullable = false)
     private String filePath;
@@ -34,7 +33,7 @@ public class Payment {
 		super();
 	}
 
-	public Payment(String slipId, Date uploadDate, String filePath, Double total, Orders orders) {
+	public Payment(String slipId, Timestamp uploadDate, String filePath, Double total, Orders orders) {
 		super();
 		this.slipId = slipId;
 		this.uploadDate = uploadDate;
@@ -51,11 +50,11 @@ public class Payment {
 		this.slipId = slipId;
 	}
 
-	public Date getUploadDate() {
+	public Timestamp getUploadDate() {
 		return uploadDate;
 	}
 
-	public void setUploadDate(Date uploadDate) {
+	public void setUploadDate(Timestamp uploadDate) {
 		this.uploadDate = uploadDate;
 	}
 

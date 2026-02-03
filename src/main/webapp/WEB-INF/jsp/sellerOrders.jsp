@@ -53,7 +53,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" timeZone="Asia/Bangkok"/>
+                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
                                     </td>
                                     <td class="amount">
                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/>

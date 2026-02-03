@@ -75,36 +75,62 @@
                     <div class="text">สั่งซื้อสำเร็จ</div>
                     <div class="date"><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></div>
                 </div>
+
                 <div class="step ${order.status != 'Pending Payment' && order.status != 'รอดำเนินการชำระเงิน' ? 'active' : ''}">
                     <div class="icon"><i class="fas fa-file-invoice-dollar"></i></div>
                     <div class="text">แจ้งชำระเงิน</div>
+                    <c:if test="${not empty order.payment}">
+                        <div class="date"><fmt:formatDate value="${order.payment.uploadDate}" pattern="dd/MM/yyyy HH:mm"/></div>
+                    </c:if>
                 </div>
-                <div class="step ${order.status == 'กำลังจัดเตรียม' || order.status == 'สินค้าพร้อมรับ' || order.status == 'Completed' ? 'active' : ''}">
+
+                <div class="step ${order.status == 'กำลังจัดเตรียม' || order.status == 'สินค้าพร้อมรับ' || order.status == 'Completed' || order.status == 'สำเร็จ' ? 'active' : ''}">
                     <div class="icon"><i class="fas fa-box"></i></div>
                     <div class="text">กำลังจัดเตรียม</div>
+                    <div class="date">
+                        <c:if test="${not empty order.preparingDate}">
+                            <fmt:formatDate value="${order.preparingDate}" pattern="dd/MM/yyyy HH:mm"/>
+                        </c:if>
+                    </div>
                 </div>
-                <div class="step ${order.status == 'สินค้าพร้อมรับ' || order.status == 'Completed' ? 'active' : ''}">
+
+                <div class="step ${order.status == 'สินค้าพร้อมรับ' || order.status == 'รอรับสินค้า' || order.status == 'Completed' || order.status == 'สำเร็จ' ? 'active' : ''}">
                     <div class="icon"><i class="fas fa-store"></i></div>
                     <div class="text">สินค้าพร้อมรับ</div>
+                    <div class="date">
+                        <c:if test="${not empty order.readyDate}">
+                            <fmt:formatDate value="${order.readyDate}" pattern="dd/MM/yyyy HH:mm"/>
+                        </c:if>
+                    </div>
                 </div>
-                <div class="step ${order.status == 'Completed' ? 'active' : ''}">
+
+                <div class="step ${order.status == 'Completed' || order.status == 'สำเร็จ' ? 'active' : ''}">
                     <div class="icon"><i class="fas fa-check-circle"></i></div>
                     <div class="text">รับสินค้าแล้ว</div>
+                    <div class="date">
+                        <c:if test="${not empty order.completedDate}">
+                            <fmt:formatDate value="${order.completedDate}" pattern="dd/MM/yyyy HH:mm"/>
+                        </c:if>
+                    </div>
                 </div>
             </div>
             
             <div class="current-status-box">
                 สถานะปัจจุบัน: 
+                <c:set var="displayStatus" value="${order.status}" />
+                <c:if test="${order.status == 'Completed'}"><c:set var="displayStatus" value="สำเร็จ" /></c:if>
+                <c:if test="${order.status == 'Cancelled'}"><c:set var="displayStatus" value="ยกเลิก" /></c:if>
+
                 <span class="status-badge 
                     ${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน' ? 'status-pending' : ''}
                     ${order.status == 'กำลังตรวจสอบ' ? 'status-checking' : ''}
-                    ${order.status == 'กำลังจัดเตรียม' ? 'status-preparing' : ''}
-                    ${order.status == 'สินค้าพร้อมรับ' ? 'status-shipping' : ''}
-                    ${order.status == 'Completed' ? 'status-completed' : ''}
-                    ${order.status == 'Cancelled' ? 'status-cancelled' : ''}
+                    ${order.status == 'Preparing' || order.status == 'กำลังจัดเตรียม' ? 'status-checking' : ''}
+                    ${order.status == 'สินค้าพร้อมรับ' || order.status == 'รอรับสินค้า' ? 'status-shipping' : ''}
+                    ${order.status == 'Completed' || order.status == 'สำเร็จ' ? 'status-completed' : ''}
+                    ${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกออเดอร์' ? 'status-cancelled' : ''}
                     ${order.status == 'รออนุมัติยกเลิก' ? 'waiting-cancel' : ''}
                 ">
-                    ${order.status}
+                    ${displayStatus}
                 </span>
             </div>
         </div>
@@ -136,7 +162,7 @@
                         <div class="slip-preview">
                             <p>หลักฐานการโอน:</p>
                             <a href="${pageContext.request.contextPath}/displayImage?name=slips/${order.payment.filePath}" target="_blank">
-                            <img src="${pageContext.request.contextPath}/displayImage?name=slips/${order.payment.filePath}" alt="Slip"></a>
+                                <img src="${pageContext.request.contextPath}/displayImage?name=slips/${order.payment.filePath}" alt="Slip">
                             </a>
                         </div>
                     </c:when>
@@ -217,7 +243,7 @@
             <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
             <div style="margin-top: 20px; text-align: right;">
 
-                <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
+                <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
                     <a href="requestCancellation?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
                        onclick="confirmAction(event, this.href, 'ขอยกเลิกคำสั่งซื้อ?', 'ร้านค้าจะต้องอนุมัติก่อน คำสั่งซื้อจึงจะยกเลิกสมบูรณ์')">
                        <i class="fas fa-times-circle"></i> ขอยกเลิกคำสั่งซื้อ
@@ -251,7 +277,7 @@
                         </a>
                     </c:if>
 
-                    <c:if test="${order.status == 'สินค้าพร้อมรับ'}">
+                    <c:if test="${order.status == 'สินค้าพร้อมรับ' || order.status == 'รอรับสินค้า'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Completed" 
                            class="btn-action btn-complete" onclick="confirmAction(event, this.href, 'ปิดจ๊อบออเดอร์นี้?', 'ยืนยันว่าลูกค้าได้รับสินค้าเรียบร้อยแล้ว')">
                             <i class="fas fa-hand-holding"></i> ลูกค้ารับสินค้าแล้ว
@@ -269,7 +295,7 @@
                         </a>
                     </c:if>
 
-                    <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'รออนุมัติยกเลิก'}">
+                    <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
                            class="btn-action btn-cancel-order" onclick="confirmAction(event, this.href, 'ยกเลิกออเดอร์นี้?', 'ออเดอร์จะถูกยกเลิกทันทีและไม่สามารถกู้คืนได้!')">
                             <i class="fas fa-times"></i> ยกเลิกออเดอร์ (Force Cancel)

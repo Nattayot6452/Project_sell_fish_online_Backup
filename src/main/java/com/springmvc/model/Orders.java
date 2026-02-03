@@ -38,6 +38,15 @@ public class Orders {
     @Column(name = "coupon_code")
     private String couponCode;
 
+	@Column(name = "preparing_date")
+	private Timestamp preparingDate;
+
+	@Column(name = "ready_date")
+    private Timestamp readyDate;
+
+	@Column(name = "completed_date")
+    private Timestamp completedDate;
+
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
@@ -136,4 +145,27 @@ public class Orders {
         this.couponCode = couponCode;
     }
 
+	public Timestamp getPreparingDate() { 
+		return preparingDate; 
+	}
+
+    public void setPreparingDate(Timestamp preparingDate) { 
+		this.preparingDate = preparingDate; 
+	}
+
+    public Timestamp getReadyDate() { 
+		return readyDate; 
+	}
+	
+    public void setReadyDate(Timestamp readyDate) { 
+		this.readyDate = readyDate; 
+	}
+
+    public Timestamp getCompletedDate() { 
+		return completedDate; 
+	}
+
+    public void setCompletedDate(Timestamp completedDate) { 
+		this.completedDate = completedDate;
+	}
 }

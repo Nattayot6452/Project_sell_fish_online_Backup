@@ -61,7 +61,7 @@
                                     <td>
                                         <div class="date-box">
                                             <i class="far fa-calendar-alt"></i> 
-                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" timeZone="Asia/Bangkok"/>
+                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
                                         </div>
                                     </td>
                                     <td class="product-list-col">

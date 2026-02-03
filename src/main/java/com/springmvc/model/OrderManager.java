@@ -165,4 +165,26 @@ public class OrderManager {
         }
         return order;
     }
+
+    public boolean updateOrder(Orders order) {
+        boolean success = false;
+        Transaction tx = null;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+            
+            session.update(order);
+            
+            tx.commit();
+            success = true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return success;
+    }
 }

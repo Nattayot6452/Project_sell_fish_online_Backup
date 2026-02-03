@@ -34,7 +34,7 @@ public class OrderDetailController {
         return mav;
     }
     
-   @RequestMapping(value = "/updateOrderStatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateOrderStatus", method = RequestMethod.GET)
     public ModelAndView updateOrderStatus(
             @RequestParam("orderId") String orderId,
             @RequestParam("status") String status,
@@ -45,60 +45,76 @@ public class OrderDetailController {
         }
 
         OrderManager om = new OrderManager();
+
+        Orders order = om.getOrderWithDetails(orderId);
         
-        if ("Cancelled".equals(status) || "ยกเลิกคำสั่งซื้อ".equals(status) || "ชำระเงินไม่ผ่าน".equals(status)) {
+        if (order != null) {
             
-            Orders order = om.getOrderWithDetails(orderId);
-            
-            if (order != null && !"Cancelled".equals(order.getStatus()) && !"ยกเลิกคำสั่งซื้อ".equals(order.getStatus())) {
+            if ("Cancelled".equals(status) || "ยกเลิกคำสั่งซื้อ".equals(status) || "ชำระเงินไม่ผ่าน".equals(status)) {
                 
-                ProductManager pm = new ProductManager();
-                List<OrderDetail> details = order.getOrderDetails(); 
-                
-                if (details != null) {
-                    for (OrderDetail detail : details) {
-                        Product p = detail.getProduct();
-                        if (p != null) {
-                            int currentStock = p.getStock();
-                            int returnQty = detail.getQuantity();
-                            p.setStock(currentStock + returnQty);
-                            
-                            pm.updateProduct(p); 
-                            System.out.println(">>> Restored Stock for " + p.getProductName() + ": " + p.getStock());
+                if (!"Cancelled".equals(order.getStatus()) && !"ยกเลิกคำสั่งซื้อ".equals(order.getStatus())) {
+                    
+                    ProductManager pm = new ProductManager();
+                    List<OrderDetail> details = order.getOrderDetails(); 
+                    
+                    if (details != null) {
+                        for (OrderDetail detail : details) {
+                            Product p = detail.getProduct();
+                            if (p != null) {
+                                int currentStock = p.getStock();
+                                int returnQty = detail.getQuantity();
+                                p.setStock(currentStock + returnQty);
+                                
+                                pm.updateProduct(p); 
+                                System.out.println(">>> Restored Stock for " + p.getProductName() + ": " + p.getStock());
+                            }
+                        }
+                    }
+
+                    if (order.getCouponCode() != null && !order.getCouponCode().isEmpty()) {
+                        CouponManager cm = new CouponManager();
+                        Coupon c = cm.getCouponByCode(order.getCouponCode());
+                        if (c != null) {
+                            c.setUsageCount(c.getUsageCount() - 1);
+                            cm.updateCoupon(c);
+                            System.out.println(">>> Restored Coupon Usage: " + c.getCouponCode());
                         }
                     }
                 }
+            }
 
-                if (order.getCouponCode() != null && !order.getCouponCode().isEmpty()) {
-                    CouponManager cm = new CouponManager();
-                    Coupon c = cm.getCouponByCode(order.getCouponCode());
-                    if (c != null) {
-                        c.setUsageCount(c.getUsageCount() - 1);
-                        cm.updateCoupon(c);
-                        System.out.println(">>> Restored Coupon Usage: " + c.getCouponCode());
-                    }
+            try {
+
+                java.time.ZonedDateTime nowThai = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Bangkok"));
+                java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(nowThai.toLocalDateTime());
+
+                if ("กำลังจัดเตรียม".equals(status)) {
+                    order.setPreparingDate(timestamp);
+                } else if ("สินค้าพร้อมรับ".equals(status)) {
+                    order.setReadyDate(timestamp);
+                } else if ("Completed".equals(status) || "สำเร็จ".equals(status)) {
+                    order.setCompletedDate(timestamp);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
 
-        om.updateOrderStatus(orderId, status);
-
-        try {
-
-            Orders orderForNoti = om.getOrderById(orderId); 
+            order.setStatus(status);
             
-            if (orderForNoti != null && orderForNoti.getMember() != null) {
-                NotificationManager nm = new NotificationManager();
-                
-                String message = "🔔 คำสั่งซื้อ #" + orderId + " ของคุณเปลี่ยนสถานะเป็น: " + status;
-                String link = "OrderDetail?orderId=" + orderId;
-                
-                nm.createNotification(orderForNoti.getMember().getMemberId(), "MEMBER", message, link);
-                
-                System.out.println(">>> Notification sent to Member: " + orderForNoti.getMember().getMemberId());
+            om.updateOrder(order); 
+
+            try {
+                if (order.getMember() != null) {
+                    NotificationManager nm = new NotificationManager();
+                    String message = "🔔 คำสั่งซื้อ #" + orderId + " ของคุณเปลี่ยนสถานะเป็น: " + status;
+                    String link = "OrderDetail?orderId=" + orderId;
+                    
+                    nm.createNotification(order.getMember().getMemberId(), "MEMBER", message, link);
+                    System.out.println(">>> Notification sent to Member: " + order.getMember().getMemberId());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return new ModelAndView("redirect:/OrderDetail?orderId=" + orderId);
