@@ -281,7 +281,48 @@ public class SellerController {
         if (admin != null) {
             orderList = om.getAllOrders(); 
         } else {
+
             orderList = om.getAllOrders(); 
+        }
+
+        if (orderList != null) {
+            java.util.Collections.sort(orderList, new java.util.Comparator<Orders>() {
+                @Override
+                public int compare(Orders o1, Orders o2) {
+
+                    int s1 = getStatusScore(o1.getStatus());
+                    int s2 = getStatusScore(o2.getStatus());
+
+                    if (s1 != s2) {
+                        return Integer.compare(s1, s2);
+                    } else {
+
+                        if (o1.getOrderDate() == null || o2.getOrderDate() == null) return 0;
+                        return o2.getOrderDate().compareTo(o1.getOrderDate());
+                    }
+                }
+
+                private int getStatusScore(String status) {
+                    if (status == null) return 99;
+                    
+                    if (status.contains("รอดำเนินการ") || status.contains("รอดำเนินการ") || 
+                        status.contains("กำลังตรวจสอบ") || status.contains("กำลังจัดเตรียม")) {
+                        return 1;
+                    }
+                    
+                    if (status.contains("รอรับสินค้า") || status.contains("พร้อมรับสินค้า") || 
+                        status.contains("พร้อมสำหรับการรับของ")) {
+                        return 2;
+                    }
+
+                    if (status.contains("สำเร็จ") || status.contains("สำเร็จ") || 
+                        status.contains("ยกเลิก") || status.contains("ยกเลิก")) {
+                        return 3;
+                    }
+
+                    return 99;
+                }
+            });
         }
 
         mav.addObject("orderList", orderList);

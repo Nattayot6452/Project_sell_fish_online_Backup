@@ -52,7 +52,7 @@
                                 <th>ดำเนินการ</th>
                             </tr>
                         </thead>
-                        <tbody>
+                       <tbody>
                             <c:forEach items="${orderList}" var="order">
                                 <tr>
                                     <td class="order-id">
@@ -61,7 +61,7 @@
                                     <td>
                                         <div class="date-box">
                                             <i class="far fa-calendar-alt"></i> 
-                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" timeZone="Asia/Bangkok"/>
                                         </div>
                                     </td>
                                     <td class="product-list-col">
@@ -78,23 +78,52 @@
                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿" maxFractionDigits="2"/>
                                     </td>
                                     <td>
-                                        <%-- Logic เลือกสีป้ายสถานะ --%>
-                                        <span class="status-badge 
-                                            ${order.status == 'รอดำเนินการชำระเงิน' ? 'status-pending' : ''}
-                                            ${order.status == 'กำลังตรวจสอบ' ? 'status-checking' : ''}
-                                            ${order.status == 'ยืนยันการชำระเงิน' ? 'status-completed' : ''}
-                                            ${order.status == 'ยกเลิกการสั่งซื้อ' ? 'status-cancelled' : ''}
-                                        ">
-                                            ${order.status}
+                                        <c:set var="statusLabel" value="${order.status}" />
+                                        <c:set var="statusClass" value="" />
+
+                                        <c:choose>
+                                            <c:when test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
+                                                <c:set var="statusLabel" value="รอดำเนินการชำระเงิน" />
+                                                <c:set var="statusClass" value="status-pending" />
+                                            </c:when>
+                                            
+                                            <c:when test="${order.status == 'Checking' || order.status == 'กำลังตรวจสอบ' || order.status == 'กำลังจัดเตรียม'}">
+                                                <c:if test="${order.status == 'กำลังจัดเตรียม'}">
+                                                    <c:set var="statusLabel" value="กำลังจัดเตรียม" />
+                                                </c:if>
+                                                <c:if test="${order.status != 'กำลังจัดเตรียม'}">
+                                                    <c:set var="statusLabel" value="กำลังตรวจสอบ" />
+                                                </c:if>
+                                                <c:set var="statusClass" value="status-checking" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Ready for Pickup' || order.status == 'รอรับสินค้า' || order.status == 'Shipping'}">
+                                                <c:set var="statusLabel" value="รอรับสินค้า" />
+                                                <c:set var="statusClass" value="status-checking" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Completed' || order.status == 'สำเร็จ' || order.status == 'รับสินค้าแล้ว'}">
+                                                <c:set var="statusLabel" value="สำเร็จ" />
+                                                <c:set var="statusClass" value="status-completed" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกออเดอร์'}">
+                                                <c:set var="statusLabel" value="ยกเลิก" />
+                                                <c:set var="statusClass" value="status-cancelled" />
+                                            </c:when>
+                                        </c:choose>
+
+                                        <span class="status-badge ${statusClass}">
+                                            ${statusLabel}
                                         </span>
                                     </td>
                                     <td>
-                                        <c:if test="${order.status == 'Pending Payment'}">
+                                        <c:if test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
                                             <a href="uploadSlip?orderId=${order.ordersId}" class="btn-action btn-pay">
                                                 <i class="fas fa-file-invoice-dollar"></i> แจ้งโอนเงิน
                                             </a>
                                         </c:if>
-                                        <c:if test="${order.status != 'Pending Payment'}">
+                                        <c:if test="${order.status != 'Pending Payment' && order.status != 'รอดำเนินการชำระเงิน'}">
                                            <a href="OrderDetail?orderId=${order.ordersId}" class="btn-action btn-view">
                                                 <i class="fas fa-eye"></i> ดูรายละเอียด
                                             </a>

@@ -4,8 +4,8 @@ import com.springmvc.model.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +19,8 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.HttpHeaders;
+// import org.springframework.http.HttpHeaders;
+import java.sql.Timestamp;
 
 @Controller
 public class CheckoutController { 
@@ -156,7 +157,7 @@ public class CheckoutController {
         Orders newOrder = new Orders();
         newOrder.setOrdersId(newOrderId);
         newOrder.setMember(user);
-        newOrder.setOrderDate(new Date(System.currentTimeMillis()));
+        newOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
         newOrder.setStatus("รอดำเนินการชำระเงิน");
         newOrder.setTotalAmount(finalTotal);
         newOrder.setDiscountAmount(discountAmount);
@@ -212,65 +213,6 @@ public class CheckoutController {
         return new ModelAndView("redirect:/uploadSlip?orderId=" + newOrderId); 
     }
     
-    @RequestMapping(value = "/checkCoupon", method = RequestMethod.POST)
-    public ResponseEntity<String> checkCoupon(
-            @RequestParam("code") String code, 
-            @RequestParam("totalAmount") double totalAmount) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "text/plain; charset=UTF-8");
-
-        String responseMessage = "";
-
-        if (code == null || code.trim().isEmpty()) {
-            responseMessage = "INVALID:กรุณากรอกรหัสคูปอง";
-            return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
-        }
-
-        CouponManager cm = new CouponManager();
-        Coupon coupon = cm.getCouponByCode(code.toUpperCase());
-
-        if (coupon != null) {
-
-            if (!"ACTIVE".equals(coupon.getStatus())) {
-                 responseMessage = "INVALID:คูปองนี้ถูกยกเลิกแล้ว";
-            }
-            else {
-                java.util.Date now = new java.util.Date();
-
-                if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
-                     responseMessage = "INVALID:คูปองนี้หมดอายุแล้ว";
-                }
-
-                else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
-                     responseMessage = "INVALID:คูปองนี้ถูกใช้ครบสิทธิ์แล้ว";
-                }
-
-                else if (totalAmount < coupon.getMinOrderAmount()) {
-                     responseMessage = "INVALID:ต้องซื้อขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท ถึงจะใช้โค้ดนี้ได้";
-                }
-                else {
-
-                    double discount = 0.0;
-                     if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
-                         discount = totalAmount * (coupon.getDiscountValue() / 100.0);
-                     } else {
-                         discount = coupon.getDiscountValue();
-                     }
-                     
-                     if (discount > totalAmount) discount = totalAmount;
-                     double finalPrice = totalAmount - discount;
-                     
-                     responseMessage = "VALID|" + discount + "|" + finalPrice;
-                }
-            }
-        } else {
-            responseMessage = "INVALID:ไม่พบรหัสคูปองนี้ในระบบ";
-        }
-
-        return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/uploadSlip", method = RequestMethod.GET)
     public ModelAndView showUploadSlipPage(
             @RequestParam("orderId") String orderId,
@@ -369,7 +311,7 @@ public class CheckoutController {
         }
     }
 
-    @RequestMapping(value = "/Orders", method = RequestMethod.GET)
+   @RequestMapping(value = "/Orders", method = RequestMethod.GET)
     public ModelAndView showOrdersPage(HttpSession session, HttpServletRequest request) { 
         
         Member user = (Member) session.getAttribute("user");
@@ -379,6 +321,46 @@ public class CheckoutController {
         
         OrderManager om = new OrderManager();
         List<Orders> orderList = om.getOrdersByMemberId(user.getMemberId());
+        
+        if (orderList != null) {
+            java.util.Collections.sort(orderList, new java.util.Comparator<Orders>() {
+                @Override
+                public int compare(Orders o1, Orders o2) {
+
+                    int s1 = getStatusScore(o1.getStatus());
+                    int s2 = getStatusScore(o2.getStatus());
+
+                    if (s1 != s2) {
+                        return Integer.compare(s1, s2);
+                    } else {
+
+                        if (o1.getOrderDate() == null || o2.getOrderDate() == null) return 0;
+                        return o2.getOrderDate().compareTo(o1.getOrderDate());
+                    }
+                }
+
+                 private int getStatusScore(String status) {
+                    if (status == null) return 99;
+                    
+                    if (status.contains("รอดำเนินการ") || status.contains("รอดำเนินการ") || 
+                        status.contains("กำลังตรวจสอบ") || status.contains("กำลังจัดเตรียม")) {
+                        return 1;
+                    }
+                    
+                    if (status.contains("รอรับสินค้า") || status.contains("พร้อมรับสินค้า") || 
+                        status.contains("พร้อมสำหรับการรับของ")) {
+                        return 2;
+                    }
+
+                    if (status.contains("สำเร็จ") || status.contains("สำเร็จ") || 
+                        status.contains("ยกเลิก") || status.contains("ยกเลิก")) {
+                        return 3;
+                    }
+
+                    return 99;
+                }
+            });
+        }
         
         ModelAndView mav = new ModelAndView("orders");
         mav.addObject("orderList", orderList); 
@@ -405,9 +387,11 @@ public class CheckoutController {
         if (allOrders != null) {
             for (Orders order : allOrders) {
                 String status = order.getStatus();
-                if ("Completed".equalsIgnoreCase(status) || "Cancelled".equalsIgnoreCase(status)) {
+                if ("Completed".equalsIgnoreCase(status) || "Cancelled".equalsIgnoreCase(status) ||
+                    "สำเร็จ".equals(status) || "ยกเลิก".equals(status) || 
+                    "รับสินค้าแล้ว".equals(status) || "ยกเลิกออเดอร์".equals(status)) {
                     historyList.add(order);
-                }
+}
             }
         }
         ModelAndView mav = new ModelAndView("history");

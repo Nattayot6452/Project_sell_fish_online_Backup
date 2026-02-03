@@ -1,6 +1,5 @@
 package com.springmvc.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "orders")
@@ -24,7 +24,7 @@ public class Orders {
     private String ordersId;
 
     @Column(name = "orderdate", nullable = false)
-    private Date orderDate;
+    private Timestamp orderDate;
 
     @Column(name = "status", length = 50, nullable = false)
     private String status;
@@ -52,7 +52,7 @@ public class Orders {
 		super();
 	}
 
-	public Orders(String ordersId, Date orderDate, String status, Double totalAmount, List<OrderDetail> orderDetails,
+	public Orders(String ordersId, Timestamp orderDate, String status, Double totalAmount, List<OrderDetail> orderDetails,
 			Payment payment, Member member) {
 		super();
 		this.ordersId = ordersId;
@@ -72,11 +72,11 @@ public class Orders {
 		this.ordersId = ordersId;
 	}
 
-	public Date getOrderDate() {
+	public Timestamp getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(Timestamp orderDate) {
 		this.orderDate = orderDate;
 	}
 

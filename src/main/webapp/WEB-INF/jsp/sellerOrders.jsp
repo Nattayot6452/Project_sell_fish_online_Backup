@@ -53,20 +53,49 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" timeZone="Asia/Bangkok"/>
                                     </td>
                                     <td class="amount">
                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/>
                                     </td>
                                     <td>
-                                        <%-- Status Badge Logic --%>
-                                        <span class="status-badge 
-                                            ${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน' ? 'pending' : ''}
-                                            ${order.status == 'กำลังตรวจสอบ' ? 'checking' : ''}
-                                            ${order.status == 'ยืนยันสลิป' ? 'shipping' : ''}
-                                            ${order.status == 'รับสินค้าแล้ว' ? 'completed' : ''}
-                                            ${order.status == 'ยกเลิกออเดอร์' ? 'cancelled' : ''}">
-                                            ${order.status}
+                                        <c:set var="statusLabel" value="${order.status}" />
+                                        <c:set var="statusClass" value="" />
+
+                                        <c:choose>
+                                            <c:when test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
+                                                <c:set var="statusLabel" value="รอดำเนินการชำระเงิน" />
+                                                <c:set var="statusClass" value="pending" />
+                                            </c:when>
+                                            
+                                            <c:when test="${order.status == 'Checking' || order.status == 'กำลังตรวจสอบ' || order.status == 'กำลังจัดเตรียม'}">
+                                                <c:if test="${order.status == 'กำลังจัดเตรียม'}">
+                                                    <c:set var="statusLabel" value="กำลังจัดเตรียม" />
+                                                </c:if>
+                                                <c:if test="${order.status != 'กำลังจัดเตรียม'}">
+                                                    <c:set var="statusLabel" value="กำลังตรวจสอบ" />
+                                                </c:if>
+                                                <c:set var="statusClass" value="checking" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Ready for Pickup' || order.status == 'รอรับสินค้า' || order.status == 'Shipping' || order.status == 'ยืนยันสลิป'}">
+                                                <c:set var="statusLabel" value="รอรับสินค้า" />
+                                                <c:set var="statusClass" value="shipping" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Completed' || order.status == 'สำเร็จ' || order.status == 'รับสินค้าแล้ว'}">
+                                                <c:set var="statusLabel" value="สำเร็จ" />
+                                                <c:set var="statusClass" value="completed" />
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกออเดอร์'}">
+                                                <c:set var="statusLabel" value="ยกเลิก" />
+                                                <c:set var="statusClass" value="cancelled" />
+                                            </c:when>
+                                        </c:choose>
+
+                                        <span class="status-badge ${statusClass}">
+                                            ${statusLabel}
                                         </span>
                                     </td>
                                     <td>

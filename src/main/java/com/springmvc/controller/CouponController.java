@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -109,8 +112,68 @@ public class CouponController {
         }
     }
 
+    @RequestMapping(value = "/checkCoupon", method = RequestMethod.POST)
+    public ResponseEntity<String> checkCoupon(
+            @RequestParam("code") String code, 
+            @RequestParam("totalAmount") double totalAmount) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain; charset=UTF-8");
+
+        String responseMessage = "";
+
+        if (code == null || code.trim().isEmpty()) {
+            responseMessage = "INVALID:กรุณากรอกรหัสคูปอง";
+            return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
+        }
+
+        CouponManager cm = new CouponManager();
+        Coupon coupon = cm.getCouponByCode(code.toUpperCase());
+
+        if (coupon != null) {
+
+            if (!"ACTIVE".equals(coupon.getStatus())) {
+                 responseMessage = "INVALID:คูปองนี้ถูกยกเลิกแล้ว";
+            }
+            else {
+                java.util.Date now = new java.util.Date();
+
+                if (coupon.getExpireDate() != null && coupon.getExpireDate().before(now)) {
+                     responseMessage = "INVALID:คูปองนี้หมดอายุแล้ว";
+                }
+
+                else if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+                     responseMessage = "INVALID:คูปองนี้ถูกใช้ครบสิทธิ์แล้ว";
+                }
+
+                else if (totalAmount < coupon.getMinOrderAmount()) {
+                     responseMessage = "INVALID:ต้องซื้อขั้นต่ำ " + coupon.getMinOrderAmount() + " บาท ถึงจะใช้โค้ดนี้ได้";
+                }
+                else {
+
+                    double discount = 0.0;
+                     if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType()) || "Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
+                         discount = totalAmount * (coupon.getDiscountValue() / 100.0);
+                     } else {
+                         discount = coupon.getDiscountValue();
+                     }
+                     
+                     if (discount > totalAmount) discount = totalAmount;
+                     double finalPrice = totalAmount - discount;
+                     
+                     responseMessage = "VALID|" + discount + "|" + finalPrice;
+                }
+            }
+        } else {
+            responseMessage = "INVALID:ไม่พบรหัสคูปองนี้ในระบบ";
+        }
+
+        return new ResponseEntity<>(responseMessage, headers, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/DeleteCoupon", method = RequestMethod.GET)
-public ModelAndView deleteCoupon(@RequestParam("code") String code, HttpSession session) {
+    public ModelAndView deleteCoupon(@RequestParam("code") String code, HttpSession session) {
     if (session.getAttribute("seller") == null) {
         return new ModelAndView("redirect:/Login");
     }
