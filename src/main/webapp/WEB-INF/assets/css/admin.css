@@ -133,3 +133,20 @@ body {
     text-decoration: none; transition: 0.2s;
 }
 .btn-small:hover { background: #cbd5e0; }
+
+        .row-banned {
+            background-color: #f8f9fa !important;
+            opacity: 0.6;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        .user-avatar.banned {
+            filter: grayscale(100%);
+        }

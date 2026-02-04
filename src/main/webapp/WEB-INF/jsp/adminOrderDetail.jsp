@@ -28,10 +28,6 @@
         .status-badge.completed { background: #28a745; }
         .status-badge.cancelled { background: #dc3545; }
 
-        .btn-action-group { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-        .btn-admin { padding: 10px 20px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; border: none; cursor: pointer; }
-        .btn-cancel { background: #dc3545; } .btn-cancel:hover { background: #c82333; }
-        .btn-confirm { background: #28a745; } .btn-confirm:hover { background: #218838; }
         .btn-back { color: #555; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
@@ -123,7 +119,6 @@
                             </c:forEach>
                         </tbody>
                         <tfoot>
-
                             <c:if test="${order.discountAmount > 0}">
                                 <tr>
                                     <td colspan="3" style="text-align: right; color: #28a745; font-weight: bold; padding: 10px; border-top: 1px solid #eee;">
@@ -147,50 +142,9 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="detail-card">
-                    <div class="detail-header"><i class="fas fa-cogs"></i> จัดการคำสั่งซื้อ (Admin Override)</div>
-                    <div class="btn-action-group">
-                        <c:if test="${order.status != 'Cancelled' && order.status != 'Completed'}">
-                            <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
-                               class="btn-admin btn-cancel" onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', '⚠️ คำเตือน: คุณต้องการยกเลิกออเดอร์นี้ทันทีหรือไม่?')">
-                                <i class="fas fa-ban"></i> ยกเลิกออเดอร์ (Force Cancel)
-                            </a>
-                            
-                            <a href="updateOrderStatus?orderId=${order.ordersId}&status=Completed" 
-                               class="btn-admin btn-confirm" onclick="confirmAction(event, this.href, 'ออเดอร์เสร็จสมบูรณ์?', 'ยืนยันว่าออเดอร์นี้ดำเนินการเรียบร้อยและลูกค้าได้รับสินค้าแล้ว')">
-                                <i class="fas fa-check-circle"></i> ปรับสถานะเป็นสำเร็จ (Force Complete)
-                            </a>
-                        </c:if>
-                        <c:if test="${order.status == 'Cancelled' || order.status == 'Completed'}">
-                            <span style="color: #666;">ออเดอร์นี้สิ้นสุดกระบวนการแล้ว</span>
-                        </c:if>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function confirmAction(event, url, title, text) {
-        event.preventDefault();
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ใช่, ยืนยัน',
-            cancelButtonText: 'ยกเลิก'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = url;
-            }
-        });
-    }
-</script>
 
 </body>
 </html>
