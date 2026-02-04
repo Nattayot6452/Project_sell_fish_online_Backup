@@ -13,10 +13,41 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/orders.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .action-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .btn-detail {
+            background-color: #6c757d;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-detail:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-pay {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-pay:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <jsp:include page="loading.jsp" />
-
     <jsp:include page="navbar.jsp" />
 
     <div class="container main-container">
@@ -28,106 +59,55 @@
 
         <div class="alert-container">
             <c:if test="${not empty successMessage}">
-                <div class="alert alert-success"><i class="fas fa-check-circle"></i> ${successMessage}</div>
+                <div class="alert alert-success" style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 10px;">
+                    <i class="fas fa-check-circle"></i> ${successMessage}
+                </div>
             </c:if>
             <c:if test="${not empty errorMessage}">
-                <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${errorMessage}</div>
-            </c:if>
-            <c:if test="${param.upload == 'success'}">
-                <div class="alert alert-success"><i class="fas fa-check-circle"></i> แจ้งโอนเงินเรียบร้อยแล้ว! เจ้าหน้าที่จะตรวจสอบสลิปของท่านโดยเร็วที่สุด</div>
+                <div class="alert alert-error" style="padding: 10px; background: #f8d7da; color: #721c24; border-radius: 5px; margin-bottom: 10px;">
+                    <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+                </div>
             </c:if>
         </div>
 
         <c:choose>
-            <c:when test="${not empty orderList}">
+            <c:when test="${not empty userOrders}">
                 <div class="orders-table-wrapper">
                     <table class="orders-table">
                         <thead>
                             <tr>
-                                <th>หมายเลขคำสั่งซื้อ</th>
+                                <th>รหัสคำสั่งซื้อ</th>
                                 <th>วันที่สั่งซื้อ</th>
-                                <th>รายการสินค้า</th>
                                 <th>ยอดรวม</th>
                                 <th>สถานะ</th>
                                 <th>ดำเนินการ</th>
                             </tr>
                         </thead>
-                       <tbody>
-                            <c:forEach items="${orderList}" var="order">
+                        <tbody>
+                            <c:forEach var="order" items="${userOrders}">
                                 <tr>
-                                    <td class="order-id">
-                                        <span class="id-badge">#${order.ordersId}</span>
-                                    </td>
+                                    <td>#${order.ordersId}</td>
+                                    <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                    <td><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/></td>
                                     <td>
-                                        <div class="date-box">
-                                            <i class="far fa-calendar-alt"></i> 
-                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
-                                        </div>
-                                    </td>
-                                    <td class="product-list-col">
-                                        <ul class="order-item-list">
-                                            <c:forEach items="${order.orderDetails}" var="detail">
-                                                <li>
-                                                    <span class="p-name"><c:out value="${detail.product.productName}" /></span>
-                                                    <span class="p-qty">x${detail.quantity}</span>
-                                                </li>
-                                            </c:forEach>
-                                        </ul>
-                                    </td>
-                                    <td class="total-price">
-                                        <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿" maxFractionDigits="2"/>
-                                    </td>
-                                    <td>
-                                        <c:set var="statusLabel" value="${order.status}" />
-                                        <c:set var="statusClass" value="" />
-
-                                        <c:choose>
-                                            <c:when test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
-                                                <c:set var="statusLabel" value="รอดำเนินการชำระเงิน" />
-                                                <c:set var="statusClass" value="status-pending" />
-                                            </c:when>
-                                            
-                                            <c:when test="${order.status == 'Checking' || order.status == 'กำลังตรวจสอบ' || order.status == 'กำลังจัดเตรียม'}">
-                                                <c:if test="${order.status == 'กำลังจัดเตรียม'}">
-                                                    <c:set var="statusLabel" value="กำลังจัดเตรียม" />
-                                                </c:if>
-                                                <c:if test="${order.status != 'กำลังจัดเตรียม'}">
-                                                    <c:set var="statusLabel" value="กำลังตรวจสอบ" />
-                                                </c:if>
-                                                <c:set var="statusClass" value="status-checking" />
-                                            </c:when>
-
-                                            <c:when test="${order.status == 'Ready for Pickup' || order.status == 'รอรับสินค้า' || order.status == 'Shipping'}">
-                                                <c:set var="statusLabel" value="รอรับสินค้า" />
-                                                <c:set var="statusClass" value="status-checking" />
-                                            </c:when>
-
-                                            <c:when test="${order.status == 'Completed' || order.status == 'สำเร็จ' || order.status == 'รับสินค้าแล้ว'}">
-                                                <c:set var="statusLabel" value="สำเร็จ" />
-                                                <c:set var="statusClass" value="status-completed" />
-                                            </c:when>
-
-                                            <c:when test="${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกออเดอร์'}">
-                                                <c:set var="statusLabel" value="ยกเลิก" />
-                                                <c:set var="statusClass" value="status-cancelled" />
-                                            </c:when>
-                                        </c:choose>
-
-                                        <span class="status-badge ${statusClass}">
-                                            ${statusLabel}
+                                        <span class="status-badge">
+                                            ${order.status}
                                         </span>
                                     </td>
                                     <td>
-                                        <c:if test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
-                                            <a href="uploadSlip?orderId=${order.ordersId}" class="btn-action btn-pay">
-                                                <i class="fas fa-file-invoice-dollar"></i> แจ้งโอนเงิน
+                                        <div class="action-group">
+                                            
+                                            <a href="OrderDetail?orderId=${order.ordersId}" class="btn-detail" title="ดูรายละเอียด">
+                                                <i class="fas fa-eye"></i> รายละเอียด
                                             </a>
-                                        </c:if>
-                                        <c:if test="${order.status != 'Pending Payment' && order.status != 'รอดำเนินการชำระเงิน'}">
-                                           <a href="OrderDetail?orderId=${order.ordersId}" class="btn-action btn-view">
-                                                <i class="fas fa-eye"></i> ดูรายละเอียด
-                                            </a>
-                                        </c:if>
+
+                                            <c:if test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
+                                                <a href="uploadSlip?orderId=${order.ordersId}" class="btn-pay" title="แจ้งโอนเงิน">
+                                                    <i class="fas fa-file-invoice-dollar"></i> แจ้งโอน
+                                                </a>
+                                            </c:if>
+
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -136,11 +116,9 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <div class="empty-state">
-                    <i class="fas fa-receipt"></i>
+                <div class="empty-state" style="text-align: center; padding: 50px;">
                     <h2>คุณยังไม่มีคำสั่งซื้อ</h2>
-                    <p>เลือกซื้อปลาสวยงามที่คุณชื่นชอบได้เลย</p>
-                    <a href="AllProduct" class="btn-shop-now">ไปเลือกซื้อสินค้า</a>
+                    <a href="AllProduct" style="text-decoration: underline;">ไปเลือกซื้อสินค้า</a>
                 </div>
             </c:otherwise>
         </c:choose>

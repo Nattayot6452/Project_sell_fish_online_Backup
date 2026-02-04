@@ -1,12 +1,17 @@
 package com.springmvc.controller;
 
 import com.springmvc.model.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -132,4 +137,65 @@ public class OrderDetailController {
 
         return new ModelAndView("redirect:/OrderDetail?orderId=" + orderId);
     }
+
+    @RequestMapping(value = "/Orders", method = RequestMethod.GET)
+    public ModelAndView showUserOrders(HttpSession session, HttpServletRequest request) {
+        
+        Member user = (Member) session.getAttribute("user");
+        if (user == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        OrderManager om = new OrderManager();
+        List<Orders> orderList = om.getOrdersByMemberId(user.getMemberId());
+
+        if (orderList != null && !orderList.isEmpty()) {
+            java.util.Collections.sort(orderList, new java.util.Comparator<Orders>() {
+                @Override
+                public int compare(Orders o1, Orders o2) {
+                    int s1 = getStatusScore(o1.getStatus());
+                    int s2 = getStatusScore(o2.getStatus());
+
+                    if (s1 != s2) {
+                        return Integer.compare(s1, s2);
+                    } else {
+                        if (o1.getOrderDate() == null || o2.getOrderDate() == null) return 0;
+                        return o2.getOrderDate().compareTo(o1.getOrderDate());
+                    }
+                }
+
+                private int getStatusScore(String status) {
+                    if (status == null) return 99;
+                    
+                    if (status.contains("Pending") || status.contains("รอดำเนินการชำระเงิน") || status.contains("รอชำระเงิน")) return 1;
+                    
+                    if (status.contains("Checking") || status.contains("Shipping") || 
+                        status.contains("ตรวจสอบ") || status.contains("จัดเตรียม") || 
+                        status.contains("รอรับสินค้า")) return 2;
+
+                    if (status.contains("Completed") || status.contains("Cancelled") || 
+                        status.contains("สำเร็จ") || status.contains("ยกเลิก")) return 3;
+
+                    return 99;
+                }
+            });
+        }
+
+        ModelAndView mav = new ModelAndView("orders");
+
+        mav.addObject("userOrders", orderList); 
+        
+        if(request.getParameter("msg") != null) {
+             mav.addObject("successMessage", request.getParameter("msg"));
+        }
+        if(request.getParameter("error") != null) {
+             mav.addObject("errorMessage", "เกิดข้อผิดพลาด");
+        }
+        if("success".equals(request.getParameter("upload"))) {
+             mav.addObject("successMessage", "อัปโหลดสลิปสำเร็จแล้ว! กำลังรอตรวจสอบ");
+        }
+
+        return mav;
+    }
+
 }
