@@ -46,7 +46,7 @@ public class LoginController {
         return mav;
     }
     
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(HttpServletRequest request, HttpSession session) {
         
         String email = request.getParameter("email");
@@ -84,6 +84,13 @@ public class LoginController {
             Member user = rm.getRegisterByEmailAndPassword(email, hashedPassword);
 
             if (user != null) {
+
+                if ("Banned".equalsIgnoreCase(user.getStatus())) {
+                    mav.addObject("error", "⛔ บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อ Admin");
+                    mav.addObject("email", email);
+                    return mav;
+                }
+
                 session.setAttribute("user", user);
                 return new ModelAndView("redirect:/Main?msg=login_success"); 
             }

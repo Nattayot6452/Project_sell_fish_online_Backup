@@ -99,10 +99,10 @@ public class AdminController {
         if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
         
         UserManager um = new UserManager();
-        boolean success = um.deleteMember(memberId);
+        boolean success = um.toggleMemberStatus(memberId);
         
         if (success) {
-            return new ModelAndView("redirect:/ManageUsers?msg=banned");
+            return new ModelAndView("redirect:/ManageUsers?msg=status_changed");
         } else {
             return new ModelAndView("redirect:/ManageUsers?error=failed");
         }

@@ -48,24 +48,40 @@
                         </thead>
                         <tbody>
                             <c:forEach items="${allMembers}" var="m">
-                                <tr>
+                                <tr class="${m.status == 'Banned' ? 'row-banned' : ''}">
                                     <td>#${m.memberId}</td>
                                     <td>
                                         <img src="${pageContext.request.contextPath}/displayImage?name=user/${not empty m.memberImg ? m.memberImg : 'default.png'}" 
-                                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;" 
+                                             class="user-avatar ${m.status == 'Banned' ? 'banned' : ''}"
                                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                                     </td>
-                                    <td style="font-weight: bold;"><c:out value="${m.memberName}" /></td>
+                                    <td style="font-weight: bold;">
+                                        <c:out value="${m.memberName}" />
+                                        <c:if test="${m.status == 'Banned'}">
+                                            <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px;">BANNED</span>
+                                        </c:if>
+                                    </td>
                                     <td><c:out value="${m.email}" /></td>
                                     <td><c:out value="${m.phone}" /></td>
                                     <td>
                                         <a href="UserDetail?id=${m.memberId}" class="btn-small" title="ดูรายละเอียด">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="BanUser?id=${m.memberId}" class="btn-small" style="background: #fed7d7; color: #c53030;" 
-                                           onclick="confirmAction(event, this.href, 'ยืนยันการลบ/แบนสมาชิก?', 'สมาชิกคนนี้จะไม่สามารถใช้งานได้อีก')">
-                                            <i class="fas fa-ban"></i>
-                                        </a>
+                                        
+                                        <c:choose>
+                                            <c:when test="${m.status == 'Banned'}">
+                                                <a href="BanUser?id=${m.memberId}" class="btn-small" style="background: #28a745; color: white;" 
+                                                   onclick="confirmAction(event, this.href, 'ยืนยันการปลดแบน?', 'สมาชิกจะกลับมาใช้งานได้ปกติ')">
+                                                    <i class="fas fa-unlock"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="BanUser?id=${m.memberId}" class="btn-small" style="background: #dc3545; color: white;" 
+                                                   onclick="confirmAction(event, this.href, 'ยืนยันการระงับผู้ใช้?', 'สมาชิกคนนี้จะไม่สามารถเข้าสู่ระบบได้')">
+                                                    <i class="fas fa-ban"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -118,6 +134,17 @@
             }
         });
     }
+</script>
+
+<script>
+    if (msg === 'status_changed') {
+            Swal.fire({
+                icon: 'success',
+                title: 'อัปเดตสถานะเรียบร้อย!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
 </script>
 
 </body>

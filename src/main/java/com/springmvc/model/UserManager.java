@@ -59,7 +59,7 @@ public class UserManager {
         return member;
     }
     
-    public boolean deleteMember(String memberId) {
+    public boolean toggleMemberStatus(String memberId) {
         boolean result = false;
         Transaction tx = null;
         Session session = null;
@@ -70,7 +70,13 @@ public class UserManager {
             
             Member m = session.get(Member.class, memberId);
             if(m != null) {
-                session.delete(m);
+                if ("Banned".equalsIgnoreCase(m.getStatus())) {
+                    m.setStatus("Active");
+                } else {
+                    m.setStatus("Banned");
+                }
+                
+                session.update(m);
                 tx.commit();
                 result = true;
             }

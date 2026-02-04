@@ -34,6 +34,9 @@ public class Member {
     @Column(name = "memberimg", length = 255, nullable = false)
     private String memberImg;
 
+	@Column(name = "status", length = 20)
+    private String status = "Active";
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Orders> orders = new ArrayList<>();
 
@@ -128,8 +131,12 @@ public class Member {
 		this.reviews = reviews;
 	}
 
+	public String getStatus() {
+        return status;
+    }
 
-	
-	
+    public void setStatus(String status) {
+        this.status = status;
+    }
 	
 }
