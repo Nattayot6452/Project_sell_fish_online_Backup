@@ -32,7 +32,10 @@
         .btn-ready { background-color: #ffc107; color: #333; }
         .btn-shipping { background-color: #17a2b8; color: white; }
         .btn-complete { background-color: #28a745; color: white; }
+        
         .btn-cancel-order { background-color: #dc3545; color: white; }
+        .btn-cancel-order:hover { background-color: #c82333; }
+
         .btn-approve-cancel { background-color: #dc3545; color: white; }
         .btn-reject-cancel { background-color: #6c757d; color: white; }
         
@@ -240,15 +243,15 @@
             </table>
         </div>
 
-            <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
+        <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
             <div style="margin-top: 20px; text-align: right;">
 
-                <!-- <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
-                    <a href="requestCancellation?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
-                       onclick="confirmAction(event, this.href, 'ขอยกเลิกคำสั่งซื้อ?', 'ร้านค้าจะต้องอนุมัติก่อน คำสั่งซื้อจึงจะยกเลิกสมบูรณ์')">
-                       <i class="fas fa-times-circle"></i> ขอยกเลิกคำสั่งซื้อ
+                <c:if test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
+                    <a href="cancelOrder?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
+                       onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', 'คุณต้องการส่งคำขอยกเลิกคำสั่งซื้อนี้ใช่หรือไม่? (ต้องรอร้านค้าอนุมัติ)')">
+                       <i class="fas fa-times-circle"></i> ยกเลิกคำสั่งซื้อ
                     </a>
-                </c:if> -->
+                </c:if>
                 
                 <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                     <span style="color: #c62828; font-weight: bold;">
@@ -286,16 +289,16 @@
                     
                     <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
-                           class="btn-action btn-approve-cancel" onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', 'อนุมัติให้ลูกค้ายกเลิกคำสั่งซื้อนี้ ใช่หรือไม่?')">
+                           class="btn-action btn-approve-cancel" onclick="confirmAction(event, this.href, 'ยืนยันการยกเลิก?', 'อนุมัติให้ลูกค้ายกเลิกคำสั่งซื้อนี้ ใช่หรือไม่? (สต็อกจะถูกคืน)')">
                             <i class="fas fa-check-circle"></i> อนุมัติการยกเลิก
                         </a>
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=กำลังจัดเตรียม" 
-                           class="btn-action btn-reject-cancel" onclick="confirmAction(event, this.href, 'ปฏิเสธการยกเลิก?', 'สถานะจะกลับไปเป็นกำลังจัดเตรียมสินค้า')">
+                           class="btn-action btn-reject-cancel" onclick="confirmAction(event, this.href, 'ปฏิเสธการยกเลิก?', 'สถานะจะกลับไปเป็นกำลังจัดเตรียมสินค้า (ลูกค้าต้องซื้อต่อ)')">
                             <i class="fas fa-undo"></i> ปฏิเสธ (จัดเตรียมต่อ)
                         </a>
                     </c:if>
 
-                    <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
+                    <c:if test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
                         <a href="updateOrderStatus?orderId=${order.ordersId}&status=Cancelled" 
                            class="btn-action btn-cancel-order" onclick="confirmAction(event, this.href, 'ยกเลิกออเดอร์นี้?', 'ออเดอร์จะถูกยกเลิกทันทีและไม่สามารถกู้คืนได้!')">
                             <i class="fas fa-times"></i> ยกเลิกออเดอร์ (Force Cancel)
@@ -330,10 +333,6 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-
-                if (title.includes('ยกเลิก') || title.includes('ปฏิเสธ')) {
-
-                }
                 window.location.href = url; 
             }
         });
@@ -349,6 +348,14 @@
                 title: 'อัปเดตสถานะเรียบร้อย',
                 showConfirmButton: false,
                 timer: 1500
+            });
+        }
+        if (msg === 'request_sent') {
+            Swal.fire({
+                icon: 'info',
+                title: 'ส่งคำขอแล้ว',
+                text: 'กรุณารอร้านค้าตรวจสอบและอนุมัติการยกเลิก',
+                confirmButtonColor: '#17a2b8'
             });
         }
     });

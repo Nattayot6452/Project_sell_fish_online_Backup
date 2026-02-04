@@ -29,9 +29,7 @@
             text-decoration: none;
             font-size: 14px;
         }
-        .btn-detail:hover {
-            background-color: #5a6268;
-        }
+        .btn-detail:hover { background-color: #5a6268; }
 
         .btn-pay {
             background-color: #28a745;
@@ -41,9 +39,27 @@
             text-decoration: none;
             font-size: 14px;
         }
-        .btn-pay:hover {
-            background-color: #218838;
+        .btn-pay:hover { background-color: #218838; }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
+        .status-pending { background-color: #ffc107; color: #333; }
+        .status-checking { background-color: #17a2b8; }
+        .status-ready { background-color: #fd7e14; }
+        .status-completed { background-color: #28a745; }
+        .status-cancelled { background-color: #dc3545; }
+        .status-waiting-cancel { background-color: #e83e8c; }
+        
     </style>
 </head>
 <body>
@@ -90,8 +106,50 @@
                                     <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
                                     <td><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/></td>
                                     <td>
-                                        <span class="status-badge">
-                                            ${order.status}
+                                        <%-- ✅ ส่วนแปลงสถานะเป็นภาษาไทยและใส่สี --%>
+                                        <c:set var="statusClass" value="status-checking" />
+                                        <c:set var="statusText" value="${order.status}" />
+
+                                        <c:choose>
+                                            <%-- 1. รอชำระเงิน --%>
+                                            <c:when test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
+                                                <c:set var="statusClass" value="status-pending" />
+                                                <c:set var="statusText" value="รอชำระเงิน" />
+                                            </c:when>
+
+                                            <%-- 2. กำลังตรวจสอบ / จัดเตรียม --%>
+                                            <c:when test="${order.status == 'Checking' || order.status == 'กำลังตรวจสอบ' || order.status == 'กำลังจัดเตรียม'}">
+                                                <c:set var="statusClass" value="status-checking" />
+                                                <c:set var="statusText" value="กำลังดำเนินการ" />
+                                            </c:when>
+
+                                            <%-- 3. พร้อมรับสินค้า (ให้เด่น) --%>
+                                            <c:when test="${order.status == 'Ready for Pickup' || order.status == 'สินค้าพร้อมรับ' || order.status == 'รอรับสินค้า'}">
+                                                <c:set var="statusClass" value="status-ready" />
+                                                <c:set var="statusText" value="สินค้าพร้อมรับ" />
+                                            </c:when>
+
+                                            <%-- 4. สำเร็จ --%>
+                                            <c:when test="${order.status == 'Completed' || order.status == 'สำเร็จ' || order.status == 'รับสินค้าแล้ว'}">
+                                                <c:set var="statusClass" value="status-completed" />
+                                                <c:set var="statusText" value="สำเร็จ" />
+                                            </c:when>
+
+                                            <%-- 5. ยกเลิก --%>
+                                            <c:when test="${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกคำสั่งซื้อ'}">
+                                                <c:set var="statusClass" value="status-cancelled" />
+                                                <c:set var="statusText" value="ยกเลิก" />
+                                            </c:when>
+
+                                            <%-- 6. รออนุมัติยกเลิก --%>
+                                            <c:when test="${order.status == 'รออนุมัติยกเลิก'}">
+                                                <c:set var="statusClass" value="status-waiting-cancel" />
+                                                <c:set var="statusText" value="รออนุมัติยกเลิก" />
+                                            </c:when>
+                                        </c:choose>
+
+                                        <span class="status-badge ${statusClass}">
+                                            ${statusText}
                                         </span>
                                     </td>
                                     <td>
