@@ -71,7 +71,7 @@
                                             </span>
 
                                             <c:if test="${order.status == 'Completed'}">
-                                                <a href="WriteReview?productId=${detail.product.productId}" class="btn-review">
+                                                <a href="WriteReview?productId=${detail.product.productId}&orderId=${order.ordersId}" class="btn-review">
                                                     <i class="fas fa-star"></i> เขียนรีวิว
                                                 </a>
                                             </c:if>

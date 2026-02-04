@@ -106,42 +106,35 @@
                                     <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
                                     <td><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="฿"/></td>
                                     <td>
-                                        <%-- ✅ ส่วนแปลงสถานะเป็นภาษาไทยและใส่สี --%>
                                         <c:set var="statusClass" value="status-checking" />
                                         <c:set var="statusText" value="${order.status}" />
 
                                         <c:choose>
-                                            <%-- 1. รอชำระเงิน --%>
                                             <c:when test="${order.status == 'Pending Payment' || order.status == 'รอดำเนินการชำระเงิน'}">
                                                 <c:set var="statusClass" value="status-pending" />
                                                 <c:set var="statusText" value="รอชำระเงิน" />
                                             </c:when>
 
-                                            <%-- 2. กำลังตรวจสอบ / จัดเตรียม --%>
                                             <c:when test="${order.status == 'Checking' || order.status == 'กำลังตรวจสอบ' || order.status == 'กำลังจัดเตรียม'}">
                                                 <c:set var="statusClass" value="status-checking" />
                                                 <c:set var="statusText" value="กำลังดำเนินการ" />
                                             </c:when>
 
-                                            <%-- 3. พร้อมรับสินค้า (ให้เด่น) --%>
                                             <c:when test="${order.status == 'Ready for Pickup' || order.status == 'สินค้าพร้อมรับ' || order.status == 'รอรับสินค้า'}">
                                                 <c:set var="statusClass" value="status-ready" />
                                                 <c:set var="statusText" value="สินค้าพร้อมรับ" />
                                             </c:when>
 
-                                            <%-- 4. สำเร็จ --%>
                                             <c:when test="${order.status == 'Completed' || order.status == 'สำเร็จ' || order.status == 'รับสินค้าแล้ว'}">
                                                 <c:set var="statusClass" value="status-completed" />
                                                 <c:set var="statusText" value="สำเร็จ" />
                                             </c:when>
 
-                                            <%-- 5. ยกเลิก --%>
                                             <c:when test="${order.status == 'Cancelled' || order.status == 'ยกเลิก' || order.status == 'ยกเลิกคำสั่งซื้อ'}">
                                                 <c:set var="statusClass" value="status-cancelled" />
                                                 <c:set var="statusText" value="ยกเลิก" />
                                             </c:when>
 
-                                            <%-- 6. รออนุมัติยกเลิก --%>
                                             <c:when test="${order.status == 'รออนุมัติยกเลิก'}">
                                                 <c:set var="statusClass" value="status-waiting-cancel" />
                                                 <c:set var="statusText" value="รออนุมัติยกเลิก" />
@@ -176,7 +169,9 @@
             <c:otherwise>
                 <div class="empty-state" style="text-align: center; padding: 50px;">
                     <h2>คุณยังไม่มีคำสั่งซื้อ</h2>
-                    <a href="AllProduct" style="text-decoration: underline;">ไปเลือกซื้อสินค้า</a>
+                    <a href="AllProduct" class="btn-shop-now">
+                        <i class="fas fa-shopping-cart"></i> ไปเลือกซื้อสินค้า
+                    </a>
                 </div>
             </c:otherwise>
         </c:choose>

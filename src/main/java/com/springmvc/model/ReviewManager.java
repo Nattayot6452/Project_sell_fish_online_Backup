@@ -32,6 +32,32 @@ public class ReviewManager {
         return result;
     }
 
+    public boolean isReviewExist(String memberId, String productId, String orderId) {
+        boolean exist = false;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+
+            String hql = "SELECT count(r) FROM Review r WHERE r.member.memberId = :mid AND r.product.productId = :pid AND r.orderId = :oid";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("mid", memberId);
+            query.setParameter("pid", productId);
+            query.setParameter("oid", orderId);
+
+            Long count = query.uniqueResult();
+            if (count != null && count > 0) {
+                exist = true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return exist;
+    }
+
     public List<Review> getReviewsByProductId(String productId, String sortType) {
         List<Review> list = new ArrayList<>();
         Session session = null;

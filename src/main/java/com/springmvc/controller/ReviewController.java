@@ -18,7 +18,6 @@ import com.springmvc.model.ProductManager;
 import com.springmvc.model.Review;
 import com.springmvc.model.ReviewManager;
 
-
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -33,9 +32,19 @@ public class ReviewController {
     private static final int MAX_LENGTH = 200;
 
     @RequestMapping(value = "/WriteReview", method = RequestMethod.GET)
-    public ModelAndView showReviewPage(@RequestParam("productId") String productId, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+    public ModelAndView showReviewPage(
+            @RequestParam("productId") String productId, 
+            @RequestParam("orderId") String orderId,
+            HttpSession session) {
+        
+        Member user = (Member) session.getAttribute("user");
+        if (user == null) {
             return new ModelAndView("redirect:/Login");
+        }
+
+        ReviewManager rm = new ReviewManager();
+        if (rm.isReviewExist(user.getMemberId(), productId, orderId)) {
+            return new ModelAndView("redirect:/History?error=alreadyReviewed");
         }
 
         ProductManager pm = new ProductManager();
@@ -43,12 +52,14 @@ public class ReviewController {
 
         ModelAndView mav = new ModelAndView("review");
         mav.addObject("product", product);
+        mav.addObject("orderId", orderId);
         return mav;
     }
 
     @RequestMapping(value = "/saveReview", method = RequestMethod.POST)
     public ModelAndView saveReview(
             @RequestParam("productId") String productId,
+            @RequestParam("orderId") String orderId,
             @RequestParam("rating") int rating,
             @RequestParam("comment") String comment,
             HttpSession session) {
@@ -60,22 +71,27 @@ public class ReviewController {
 
         try {
 
+            ReviewManager rm = new ReviewManager();
+            if (rm.isReviewExist(user.getMemberId(), productId, orderId)) {
+                return new ModelAndView("redirect:/History?error=alreadyReviewed");
+            }
+
             comment = comment.trim();
 
             if (comment.length() < MIN_LENGTH || comment.length() > MAX_LENGTH) {
-                return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&error=length");
+                return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&orderId=" + orderId + "&error=length");
             }
 
             String safeComment = HtmlUtils.htmlEscape(comment);
 
             for (String badWord : BAD_WORDS) {
                 if (safeComment.contains(badWord)) {
-                    return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&error=profanity");
+                    return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&orderId=" + orderId + "&error=profanity");
                 }
             }
 
             if (safeComment.isEmpty()) {
-                 return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&error=empty");
+                 return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&orderId=" + orderId + "&error=empty");
             }
 
             Review review = new Review();
@@ -84,19 +100,20 @@ public class ReviewController {
             review.setComment(safeComment);
             review.setReviewDate(new Date());
             review.setMember(user);
+            
+            review.setOrderId(orderId); 
 
             ProductManager pm = new ProductManager();
             Product product = pm.getProduct(productId);
             review.setProduct(product);
 
-            ReviewManager rm = new ReviewManager();
             rm.insertReview(review);
 
             return new ModelAndView("redirect:/History?msg=reviewSuccess");
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&error=server");
+            return new ModelAndView("redirect:/WriteReview?productId=" + productId + "&orderId=" + orderId + "&error=server");
         }
     }
 }

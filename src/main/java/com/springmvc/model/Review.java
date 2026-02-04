@@ -27,6 +27,9 @@ public class Review {
     @Column(name = "review_date", nullable = false)
     private Date reviewDate;
 
+	@Column(name = "order_id", length = 50)
+    private String orderId;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -97,6 +100,13 @@ public class Review {
 		this.product = product;
 	}
 	
+	public String getOrderId() { 
+		return orderId; 
+	}
+
+    public void setOrderId(String orderId) { 
+		this.orderId = orderId; 
+	}
 	
 }
 

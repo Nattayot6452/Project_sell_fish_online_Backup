@@ -39,6 +39,8 @@
 
             <form action="saveReview" method="post" class="review-form" id="reviewForm">
                 <input type="hidden" name="productId" value="${product.productId}">
+                
+                <input type="hidden" name="orderId" value="${orderId}">
 
                 <div class="rating-box">
                     <label>ให้คะแนนสินค้า</label>

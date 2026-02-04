@@ -149,3 +149,24 @@ body {
 
 /* Footer */
 .site-footer { text-align: center; padding: 20px; background: var(--primary-color); color: rgba(255,255,255,0.8); margin-top: 40px; }
+
+.btn-shop-now {
+    display: inline-block;
+    margin-top: 15px;       
+    padding: 12px 30px;    
+    background-color: #00571d;
+    color: white;
+    border-radius: 50px;    
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0, 87, 29, 0.2); 
+    transition: all 0.3s ease;
+}
+
+.btn-shop-now:hover {
+    background-color: #004414; 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0, 87, 29, 0.3);
+    color: white;
+}
