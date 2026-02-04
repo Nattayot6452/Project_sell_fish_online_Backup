@@ -23,24 +23,23 @@
                 <p>กรอกข้อมูลรายละเอียดสินค้าของคุณให้ครบถ้วน</p>
             </div>
 
-            <form action="saveProduct" method="post" enctype="multipart/form-data" class="product-form" id="addProductForm">
+            <form action="saveProduct" method="post" enctype="multipart/form-data" class="product-form" id="addProductForm" novalidate>
                 
                 <div class="form-section">
                     <h3>📦 ข้อมูลทั่วไป</h3>
                     <div class="form-group">
                         <label>ชื่อสินค้า <span class="required">*</span></label>
-                        <input type="text" name="productName" 
-                               placeholder="เช่น ปลากัดจีน สีแดงสด (ห้ามใช้อักขระพิเศษ)" 
+                        <input type="text" name="productName" id="productName"
+                               placeholder="เช่น ปลากัดจีน สีแดงสด (ต้องยาว 4 ตัวอักษรขึ้นไป)" 
                                required 
                                minlength="4" maxlength="100"
-                               pattern="^[a-zA-Z0-9ก-๙\s\-_()]+$"
-                               title="กรุณากรอกเฉพาะภาษาไทย อังกฤษ ตัวเลข และ - _ ( )"
-                               oninput="sanitizeName(this)">                   
+                               oninput="sanitizeName(this)">
+                        <small style="color: #888; font-size: 12px;">* ความยาว 4-100 ตัวอักษร ห้ามใช้อักขระพิเศษ</small>
                     </div>
                     
                     <div class="form-group">
                         <label>หมวดหมู่ (Species) <span class="required">*</span></label>
-                        <select name="speciesId" required>
+                        <select name="speciesId" id="speciesId" required>
                             <option value="" disabled selected>-- เลือกสายพันธุ์ --</option>
                             <c:forEach items="${speciesList}" var="spec">
                                 <option value="${spec.speciesId}">${spec.speciesName}</option>
@@ -52,14 +51,14 @@
                         <div class="form-group">
                             <label>ราคา <span class="required">*</span></label>
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="number" name="price" min="1" step="0.01" placeholder="0.00" required style="flex: 1;">
+                                <input type="number" name="price" id="price" min="1" step="0.01" placeholder="0.00" required style="flex: 1;">
                                 <span style="color: #555; font-weight: bold; min-width: 30px;">บาท</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>จำนวนสต็อก <span class="required">*</span></label>
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="number" name="stock" min="1" placeholder="จำนวน" required style="flex: 1;">
+                                <input type="number" name="stock" id="stock" min="1" placeholder="จำนวน" required style="flex: 1;">
                                 <span style="color: #555; font-weight: bold; min-width: 30px;">ตัว</span>
                             </div>
                         </div>
@@ -67,8 +66,8 @@
 
                     <div class="form-group">
                         <label>รายละเอียดสินค้า <span class="required">*</span></label> 
-                        <textarea name="description" rows="4" 
-                                placeholder="อธิบายจุดเด่น... (ห้ามใช้ HTML Tags)"
+                        <textarea name="description" id="description" rows="4" 
+                                placeholder="อธิบายจุดเด่น... (ห้ามเว้นว่าง)"
                                 required 
                                 oninput="sanitizeDescription(this)"></textarea>
                     </div>
@@ -82,7 +81,7 @@
                             <label>ขนาด (Size)</label>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <input type="text" name="size" placeholder="เช่น 3-4" oninput="sanitizeGeneral(this)" style="flex: 1;">
-                                <span style="color: #555; font-weight: bold;">เซนติเมตร</span>
+                                <span style="color: #555; font-weight: bold;">ซม.</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -103,7 +102,7 @@
                             <label>อุณหภูมิน้ำ</label>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <input type="text" name="temperature" placeholder="เช่น 24-28" oninput="sanitizeGeneral(this)" style="flex: 1;">
-                                <span style="color: #555; font-weight: bold;">องศาเซลเซียส</span>
+                                <span style="color: #555; font-weight: bold;">°C</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -171,19 +170,15 @@
     </div>
 
     <script>
-
         function sanitizeName(input) {
-
             input.value = input.value.replace(/[^a-zA-Z0-9ก-๙\s\-_()]/g, '');
         }
 
         function sanitizeDescription(input) {
-
             input.value = input.value.replace(/<[^>]*>?/gm, '');
         }
 
         function sanitizeGeneral(input) {
-
             input.value = input.value.replace(/[<>"']/g, '');
         }
 
@@ -263,25 +258,127 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('addProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const productName = document.getElementById('productName').value.trim();
+            if (!productName) {
+                showWarning('ลืมกรอกชื่อสินค้า!', 'กรุณากรอกชื่อสินค้าให้ครบถ้วน');
+                return;
+            }
+            if (productName.length < 4) {
+                showWarning('ชื่อสินค้าสั้นเกินไป', 'ชื่อสินค้าต้องมีความยาวอย่างน้อย 4 ตัวอักษร');
+                return;
+            }
+
+            const species = document.getElementById('speciesId').value;
+            if (!species) {
+                showWarning('ลืมเลือกหมวดหมู่!', 'กรุณาระบุสายพันธุ์ของปลา');
+                return;
+            }
+
+            const price = parseFloat(document.getElementById('price').value);
+            if (isNaN(price)) {
+                showWarning('ราคาไม่ถูกต้อง', 'กรุณากรอกราคาเป็นตัวเลข');
+                return;
+            }
+            if (price <= 0) {
+                showWarning('ราคาห้ามเป็น 0 หรือติดลบ', 'กรุณาระบุราคาขายที่ถูกต้อง');
+                return;
+            }
+
+            const stock = document.getElementById('stock').value;
+            if (stock === "" || isNaN(stock)) {
+                showWarning('กรุณากรอกจำนวนสต็อก', 'สต็อกสินค้าห้ามเว้นว่าง');
+                return;
+            }
+            if (parseInt(stock) <= 0) {
+                showWarning('สต็อกสินค้าไม่ถูกต้อง', 'จำนวนสต็อกต้องมีอย่างน้อย 1 ตัว');
+                return;
+            }
+
+            const description = document.getElementById('description').value.trim();
+            if (!description) {
+                showWarning('ลืมใส่รายละเอียด!', 'กรุณาอธิบายจุดเด่นของสินค้า');
+                return;
+            }
+
+            const imageInput = document.getElementById('productImage');
+            if (imageInput.files.length === 0) {
+                showWarning('ไม่มีรูปภาพสินค้า', 'กรุณาอัปโหลดรูปภาพหลักอย่างน้อย 1 รูป');
+                return;
+            }
+
+            Swal.fire({
+                title: 'ยืนยันการบันทึก?',
+                text: "ตรวจสอบข้อมูลให้ถูกต้องก่อนกดบันทึก",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#00571d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, บันทึกเลย',
+                cancelButtonText: 'กลับไปแก้ไข'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+
+        function showWarning(title, text) {
+            Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: text,
+                confirmButtonColor: '#ffc107',
+                confirmButtonText: 'ตกลง, ฉันจะแก้ไข'
+            });
+        }
+
+       document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const error = urlParams.get('error');
 
             if (error) {
                 let title = "บันทึกไม่สำเร็จ";
-                let text = "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+                let text = "เกิดข้อผิดพลาดไม่ทราบสาเหตุ";
+                let icon = "error";
 
-                if (error === 'invalidName') text = "ชื่อสินค้ามีอักขระที่ไม่ได้รับอนุญาต";
-                else if (error === 'invalidNumber') text = "ราคาหรือจำนวนสต็อกไม่ถูกต้อง";
-                else if (error === 'fileTooLarge') text = "รูปภาพมีขนาดใหญ่เกิน 5MB";
-                else if (error === 'invalidFileType') text = "ประเภทไฟล์รูปภาพไม่ถูกต้อง";
-                else if (error === 'missingImage') text = "กรุณาอัปโหลดรูปภาพหลัก";
+                if (error === 'invalidName') {
+                    text = "ชื่อสินค้าผิดรูปแบบ! (ห้ามใช้อักขระพิเศษบางตัว)";
+                    icon = "warning";
+                } 
+                else if (error === 'descLength') {
+                    text = "รายละเอียดสินค้าต้องมีความยาวระหว่าง 20 - 255 ตัวอักษร";
+                    icon = "warning";
+                }
+                else if (error === 'invalidNumber') {
+                    text = "ราคา หรือ สต็อกสินค้า ไม่ถูกต้อง (ห้ามติดลบ)";
+                    icon = "warning";
+                }
+                else if (error === 'fileTooLarge') {
+                    text = "ไฟล์รูปภาพมีขนาดใหญ่เกิน 5MB";
+                }
+                else if (error === 'invalidFileType') {
+                    text = "อัปโหลดได้เฉพาะไฟล์รูปภาพ (JPG, PNG) เท่านั้น";
+                    icon = "warning";
+                }
+                else if (error === 'missingImage') {
+                    text = "คุณลืมอัปโหลดรูปภาพหลักของสินค้า";
+                    icon = "warning";
+                }
+                else if (error === 'exception') {
+
+                    title = "เกิดข้อผิดพลาดของระบบ";
+                    text = "ไม่สามารถบันทึกไฟล์หรือฐานข้อมูลได้ (กรุณาเช็ค Log ฝั่ง Server)";
+                }
 
                 Swal.fire({
-                    icon: 'error',
+                    icon: icon,
                     title: title,
                     text: text,
-                    confirmButtonText: 'แก้ไข'
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'กลับไปแก้ไข'
                 });
             }
         });

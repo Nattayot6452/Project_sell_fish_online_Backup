@@ -283,6 +283,26 @@
         }
     });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+
+            if (success === 'added') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เพิ่มสินค้าสำเร็จ! 🎉',
+                    text: 'สินค้าของคุณพร้อมวางจำหน่ายแล้ว',
+                    confirmButtonColor: '#00571d',
+                    confirmButtonText: 'ยอดเยี่ยม!',
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
