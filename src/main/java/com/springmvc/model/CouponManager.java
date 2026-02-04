@@ -1,5 +1,6 @@
 package com.springmvc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -119,4 +120,21 @@ public class CouponManager {
         if (session != null) session.close();
     }
 }
+
+    public List<Coupon> getActiveCoupons() {
+        List<Coupon> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            list = session.createQuery("FROM Coupon WHERE status = 'Active'", Coupon.class).list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return list;
+    }
 }

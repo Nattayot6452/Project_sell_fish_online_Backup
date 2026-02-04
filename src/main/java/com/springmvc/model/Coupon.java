@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "coupon")
@@ -20,10 +21,10 @@ public class Coupon {
     private String discountType;
 
     @Column(name = "discount_value", nullable = false)
-    private double discountValue;
+    private Double discountValue;
 
     @Column(name = "min_order_amount")
-    private double minOrderAmount;
+    private Double minOrderAmount;
 
     @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
@@ -83,4 +84,56 @@ public class Coupon {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    @Transient
+    public String getDisplayDiscount() {
+        if ("percent".equalsIgnoreCase(discountType)) {
+            return String.valueOf(discountValue.intValue()) + "%";
+        } else {
+            return String.valueOf(discountValue.intValue()) + "฿";
+        }
+    }
+
+    @Transient
+    public String getDisplayTitle() {
+        if ("percent".equalsIgnoreCase(discountType)) {
+            return "ลดคุ้มๆ " + discountValue.intValue() + "%";
+        } else {
+            return "ส่วนลด " + discountValue.intValue() + " บาท";
+        }
+    }
+
+    @Transient
+    public String getDisplayDesc() {
+        if (minOrderAmount != null && minOrderAmount > 0) {
+            return "เมื่อช้อปครบ " + minOrderAmount.intValue() + " บาท";
+        } else {
+            return "ไม่มีขั้นต่ำ ช้อปได้เลย!";
+        }
+    }
+    
+    @Transient
+    public String getDisplayType() {
+        if ("percent".equalsIgnoreCase(discountType) && discountValue >= 50) return "hot";
+        if (minOrderAmount == null || minOrderAmount == 0) return "new";
+        return "normal";
+    }
+
+    @Transient
+    public boolean isExpired() {
+        if (expireDate == null) return false;
+        return new Date().after(expireDate);
+    }
+
+    @Transient
+    public boolean isSoldOut() {
+        if (usageLimit <= 0) return false;
+        return usageCount >= usageLimit;
+    }
+
+    @Transient
+    public int getRemainingCount() {
+        if (usageLimit <= 0) return 9999;
+        return usageLimit - usageCount;
+    }
 }

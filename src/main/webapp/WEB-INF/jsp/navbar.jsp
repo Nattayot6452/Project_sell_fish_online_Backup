@@ -4,6 +4,48 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <style>
+    .nav-promo {
+        color: #ff4757 !important;
+        font-weight: bold;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .nav-promo i {
+        margin-right: 5px;
+        animation: fire-flicker 1.5s infinite alternate;
+    }
+
+    .nav-promo:hover {
+        color: #e84118 !important;
+        text-shadow: 0 0 8px rgba(255, 71, 87, 0.4);
+        transform: scale(1.05);
+    }
+
+    .promo-badge {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        background: linear-gradient(45deg, #ff0000, #ff6b6b);
+        color: white;
+        font-size: 8px;
+        padding: 2px 5px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(255,0,0,0.3);
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes fire-flicker {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-3px);}
+        60% {transform: translateY(-1.5px);}
+    }
 
     .cart-link {
         position: relative !important;
@@ -26,18 +68,14 @@
         position: absolute;
         top: 2px;     
         right: 0px;  
-        
         width: 18px !important;
         height: 18px !important;
-        
         background-color: #dc3545;
         color: white;
         border-radius: 50%; 
-        
         display: flex;
         justify-content: center;
         align-items: center;
-        
         font-size: 10px;
         font-weight: bold;
         border: 2px solid #fff; 
@@ -45,6 +83,118 @@
         z-index: 10;
     }
 
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .dropbtn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 20px;
+        transition: background 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .dropbtn:hover {
+        background-color: #f0f0f0;
+    }
+
+    .nav-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #eee;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        
+        left: 50%;
+        transform: translate(-50%, -10px);
+        
+        background-color: #fff;
+        min-width: 180px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+        z-index: 1001;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        top: 100%;
+        margin-top: 10px; 
+        overflow: visible; 
+
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .dropdown-content::after {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        margin-left: -6px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #fff transparent;
+    }
+
+    .dropdown-content::before {
+        content: "";
+        position: absolute;
+        top: -15px; 
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: transparent;
+        display: block;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+        opacity: 1;
+        
+        transform: translate(-50%, 0); 
+    }
+
+    .dropdown-content a:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
+    .dropdown-content a:last-child { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+
+    .dropdown-content a {
+        color: #333;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+        transition: background 0.2s;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f8f9fa;
+        color: #00571d;
+    }
+
+    .dropdown-content a i {
+        width: 20px;
+        text-align: center;
+        margin-right: 8px;
+    }
+
+    .menu-logout {
+        color: #dc3545 !important;
+    }
+    .menu-logout:hover {
+        background-color: #fff5f5 !important;
+        color: #c0392b !important;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -53,7 +203,6 @@
     <div class="nav-container">
         <a href="Home" class="brand-logo">
             <img src="${pageContext.request.contextPath}/assets/images/icon/icon_fishshop.png" alt="Logo">
-            <!-- <span>Fish Online</span> -->
         </a>
         
         <form action="SearchProducts" method="get" class="search-wrapper">
@@ -65,13 +214,18 @@
             <a href="Home"><i class="fas fa-home"></i> หน้าแรก</a>
             <a href="AllProduct"><i class="fas fa-fish"></i> สินค้าทั้งหมด</a>
             
+            <a href="Promotions" class="nav-promo">
+                <i class="fas fa-fire-alt"></i> โปรโมชั่น
+                <span class="promo-badge">HOT</span>
+            </a>
+            
             <c:if test="${empty user}">
                     <a href="Login" class="btn-login"><i class="fas fa-user"></i> เข้าสู่ระบบ</a>
             </c:if>
             
             <c:if test="${not empty user}">
-
-            <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
+                
+                <a href="Cart" class="cart-link" title="ตะกร้าสินค้า">
                     <i class="fas fa-shopping-cart"></i>
                     <c:if test="${not empty sessionScope.cart && sessionScope.cart.size() > 0}">
                          <span class="badge">${sessionScope.cart.size()}</span>
@@ -93,9 +247,12 @@
 
                  <div class="dropdown">
                         <a href="Profile" class="dropbtn user-profile">
-                            <img src="${pageContext.request.contextPath}/displayImage?name=user/${sessionScope.user.memberImg}" class="nav-avatar">
-                            สวัสดี, ${sessionScope.user.memberName}
-                            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                            <img src="${pageContext.request.contextPath}/displayImage?name=user/${sessionScope.user.memberImg}" class="nav-avatar" 
+                                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                            <span style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${sessionScope.user.memberName}
+                            </span>
+                            <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i>
                         </a>
                         <div class="dropdown-content">
                             <a href="editProfile"><i class="fas fa-user-edit"></i> แก้ไขโปรไฟล์</a>
@@ -132,13 +289,11 @@
 </button>
 
 <script>
-
     let mybutton = document.getElementById("myBtn");
 
     window.onscroll = function() {scrollFunction()};
 
     function scrollFunction() {
-
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
             mybutton.style.display = "block";
         } else {
