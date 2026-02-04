@@ -11,6 +11,26 @@
     
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/listProduct.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        .status-inactive {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+    </style>
 </head>
 <body>
 
@@ -30,27 +50,26 @@
                 <c:when test="${empty products}">
                     <div class="empty-state">
                         <i class="fas fa-box-open"></i>
-                        <p>คุณยังไม่มีสินค้าในร้านค้า</p>
-                        <a href="AddProduct">เริ่มลงขายสินค้าชิ้นแรก</a>
+                        <h3>ยังไม่มีสินค้าในร้าน</h3>
+                        <p>เริ่มลงขายสินค้าชิ้นแรกของคุณเลย!</p>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <table class="product-table">
                         <thead>
                             <tr>
-                                <th style="width: 50px;">#</th>
-                                <th style="width: 100px;">รูปภาพ</th>
+                                <th>รูปภาพ</th>
                                 <th>ชื่อสินค้า</th>
                                 <th>หมวดหมู่</th>
                                 <th>ราคา</th>
                                 <th>สต็อก</th>
-                                <th style="width: 200px;">จัดการ</th>
+                                <th>สถานะ</th>
+                                <th>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${products}" var="p" varStatus="loop">
+                            <c:forEach items="${products}" var="p">
                                 <tr>
-                                    <td>${loop.index + 1}</td>
                                     <td>
                                         <div class="img-wrapper">
                                             <c:choose>
@@ -63,15 +82,15 @@
                                             </c:choose>
                                         </div>
                                     </td>
-                                    <td class="product-name">${p.productName}</td>
-                                    <td><span class="badge-species">${p.species.speciesName}</span></td>
-                                    <td class="price">฿<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></td>
+                                    <td>
+                                        <div class="product-name">${p.productName}</div>
+                                        <small style="color: #888;">ID: ${p.productId}</small>
+                                    </td>
+                                    <td><span class="category-badge">${p.species.speciesName}</span></td>
+                                    <td><fmt:formatNumber value="${p.price}" type="currency" currencySymbol="฿"/></td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${p.stock == 0}">
-                                                <span class="status-out">สินค้าหมด</span>
-                                            </c:when>
-                                            <c:when test="${p.stock < 5}">
+                                            <c:when test="${p.stock <= 5}">
                                                 <span class="status-low">เหลือ ${p.stock}</span>
                                             </c:when>
                                             <c:otherwise>
@@ -79,6 +98,22 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${p.productStatus == 'Inactive'}">
+                                                <span class="status-badge status-inactive">
+                                                    <i class="fas fa-pause-circle"></i> พักการขาย
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="status-badge status-active">
+                                                    <i class="fas fa-check-circle"></i> เปิดขายปกติ
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
                                     <td>
                                         <div class="action-buttons">
                                             <a href="EditProduct?id=${p.productId}" class="btn-action btn-edit" title="แก้ไข">
