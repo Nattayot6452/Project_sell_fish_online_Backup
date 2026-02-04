@@ -38,29 +38,35 @@
                                oninput="sanitizeName(this)">                   
                     </div>
                     
+                    <div class="form-group">
+                        <label>หมวดหมู่ (Species) <span class="required">*</span></label>
+                        <select name="speciesId" required>
+                            <option value="" disabled selected>-- เลือกสายพันธุ์ --</option>
+                            <c:forEach items="${speciesList}" var="spec">
+                                <option value="${spec.speciesId}">${spec.speciesName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
                     <div class="form-row">
-                       <div class="form-group">
-                            <label>หมวดหมู่ (Species) <span class="required">*</span></label>
-                            <select name="speciesId" required>
-                                <option value="" disabled selected>-- เลือกสายพันธุ์ --</option>
-                                <c:forEach items="${speciesList}" var="spec">
-                                    <option value="${spec.speciesId}">${spec.speciesName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
                         <div class="form-group">
-                            <label>ราคา (บาท) <span class="required">*</span></label>
-                            <input type="number" name="price" min="1" step="0.01" placeholder="0.00" required>
+                            <label>ราคา <span class="required">*</span></label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="price" min="1" step="0.01" placeholder="0.00" required style="flex: 1;">
+                                <span style="color: #555; font-weight: bold; min-width: 30px;">บาท</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>จำนวนสต็อก <span class="required">*</span></label>
-                            <input type="number" name="stock" min="1" placeholder="จำนวนตัว" required>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="stock" min="1" placeholder="จำนวน" required style="flex: 1;">
+                                <span style="color: #555; font-weight: bold; min-width: 30px;">ตัว</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>รายละเอียดสินค้า <span class="required">*</span></label> 
-                        
                         <textarea name="description" rows="4" 
                                 placeholder="อธิบายจุดเด่น... (ห้ามใช้ HTML Tags)"
                                 required 
@@ -70,30 +76,43 @@
 
                 <div class="form-section">
                     <h3>🧬 ข้อมูลจำเพาะ (Specifics)</h3>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label>ขนาด (Size)</label>
-                            <input type="text" name="size" placeholder="เช่น 3-4 cm" oninput="sanitizeGeneral(this)">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" name="size" placeholder="เช่น 3-4" oninput="sanitizeGeneral(this)" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">เซนติเมตร</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>ถิ่นกำเนิด (Origin)</label>
                             <input type="text" name="origin" placeholder="เช่น Thailand" oninput="sanitizeGeneral(this)">
                         </div>
                         <div class="form-group">
-                            <label>อายุขัยเฉลี่ย (ปี)</label>
-                            <input type="number" name="lifeSpan" min="0" max="100" placeholder="เช่น 2">
+                            <label>อายุขัยเฉลี่ย</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="lifeSpan" min="0" max="100" placeholder="เช่น 2" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">ปี</span>
+                            </div>
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label>อุณหภูมิน้ำ</label>
-                                <input type="text" name="temperature" placeholder="เช่น 24-28°C" oninput="sanitizeGeneral(this)">                        </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" name="temperature" placeholder="เช่น 24-28" oninput="sanitizeGeneral(this)" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">องศาเซลเซียส</span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>ประเภทน้ำ</label>
-                                <input type="text" name="waterType" placeholder="Freshwater" oninput="sanitizeGeneral(this)">                        
-                            </div>
+                            <input type="text" name="waterType" placeholder="Freshwater" oninput="sanitizeGeneral(this)">                        
+                        </div>
                     </div>
-                     <div class="form-row">
+
+                    <div class="form-row">
                         <div class="form-group">
                             <label>ระดับการดูแล</label>
                             <select name="careLevel">

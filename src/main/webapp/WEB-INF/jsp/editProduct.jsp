@@ -12,6 +12,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+<style>
+    .status-active {
+        background-color: #e8f5e9 !important;
+        color: #2e7d32 !important;
+        font-weight: bold !important;
+        border: 1px solid #c8e6c9;
+    }
+
+    .status-inactive {
+        background-color: #ffebee !important;
+        color: #c62828 !important;
+        font-weight: bold !important;
+        border: 1px solid #ffcdd2;
+    }
+</style>
+
 <body>
     <jsp:include page="loading.jsp" />
     <jsp:include page="sellerNavbar.jsp" />
@@ -41,35 +57,51 @@
                                oninput="sanitizeName(this)">
                     </div>
                     
+                    <div class="form-group">
+                        <label>หมวดหมู่ (Species) <span class="required">*</span></label>
+                        <select name="speciesId" required>
+                            <option value="" disabled>-- เลือกสายพันธุ์ --</option>
+                            <c:forEach items="${speciesList}" var="spec">
+                                <option value="${spec.speciesId}" ${product.species.speciesId == spec.speciesId ? 'selected' : ''}>${spec.speciesName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
-                            <label>หมวดหมู่ (Species) <span class="required">*</span></label>
-                            <select name="speciesId" required>
-                                <option value="" disabled>-- เลือกสายพันธุ์ --</option>
-                                <c:forEach items="${speciesList}" var="spec">
-                                     <option value="${spec.speciesId}" ${product.species.speciesId == spec.speciesId ? 'selected' : ''}>${spec.speciesName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>ราคา (บาท) <span class="required">*</span></label>
-                            <input type="number" name="price" min="1" step="0.01" value="${product.price}" required>
+                            <label>ราคา <span class="required">*</span></label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="price" min="1" step="0.01" value="${product.price}" required style="flex: 1;">
+                                <span style="color: #555; font-weight: bold; min-width: 30px;">บาท</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>จำนวนสต็อก <span class="required">*</span></label>
-                            <input type="number" name="stock" min="0" value="${product.stock}" required>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="stock" min="0" value="${product.stock}" required style="flex: 1;">
+                                <span style="color: #555; font-weight: bold; min-width: 30px;">ตัว</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                <label>รายละเอียดสินค้า <span class="required">*</span></label>
+                        <label>สถานะสินค้า (Status)</label>
+                        <select name="productStatus" 
+                                class="form-control ${product.productStatus == 'Inactive' ? 'status-inactive' : 'status-active'}"
+                                onchange="this.className = (this.value == 'Inactive' ? 'status-inactive' : 'status-active')">
+                            <option value="Active" ${product.productStatus == 'Active' ? 'selected' : ''}>🟢 เปิดขายปกติ (Active)</option>
+                            <option value="Inactive" ${product.productStatus == 'Inactive' ? 'selected' : ''}>🔴 พักการขาย (Inactive)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>รายละเอียดสินค้า <span class="required">*</span></label>
                         <textarea name="description" rows="4" 
                                 placeholder="อธิบายจุดเด่น... (ขั้นต่ำ 20 ตัวอักษร)"
                                 required
                                 minlength="20"
                                 maxlength="255"
                                 oninput="sanitizeDescription(this); countDescChars(this)"><c:out value="${product.description}" /></textarea>
-                        
                         <div style="text-align: right; margin-top: 5px;">
                             <small id="descCharCount" style="color: #666; font-size: 12px;">0 / 255</small>
                         </div>
@@ -78,25 +110,35 @@
 
                 <div class="form-section">
                     <h3>🧬 ข้อมูลจำเพาะ (Specifics)</h3>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label>ขนาด (Size)</label>
-                            <input type="text" name="size" value="<c:out value="${product.size}" />" oninput="sanitizeGeneral(this)">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" name="size" value="<c:out value="${product.size}" />" oninput="sanitizeGeneral(this)" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">เซนติเมตร</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>ถิ่นกำเนิด (Origin)</label>
                             <input type="text" name="origin" value="<c:out value="${product.origin}" />" oninput="sanitizeGeneral(this)">
                         </div>
                         <div class="form-group">
-                            <label>อายุขัยเฉลี่ย (ปี)</label>
-                            <input type="number" name="lifeSpan" value="${product.lifeSpan}">
+                            <label>อายุขัยเฉลี่ย</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" name="lifeSpan" value="${product.lifeSpan}" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">ปี</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>อุณหภูมิน้ำ</label>
-                            <input type="text" name="temperature" value="<c:out value="${product.temperature}" />" oninput="sanitizeGeneral(this)">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="text" name="temperature" value="<c:out value="${product.temperature}" />" oninput="sanitizeGeneral(this)" style="flex: 1;">
+                                <span style="color: #555; font-weight: bold;">องศาเซลเซียส</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>ประเภทน้ำ</label>

@@ -353,6 +353,9 @@ public class SellerController {
             @RequestParam("waterType") String waterType,
             @RequestParam("careLevel") String careLevel,
             @RequestParam("isAggressive") String isAggressive,
+            
+            @RequestParam("productStatus") String productStatus,
+            
             @RequestParam(value = "productImage", required = false) MultipartFile file,
             @RequestParam(value = "extraImages", required = false) MultipartFile[] extraImages,
             HttpSession session) {
@@ -430,6 +433,8 @@ public class SellerController {
                 product.setWaterType(waterType);
                 product.setCareLevel(careLevel);
                 product.setIsAggressive(isAggressive);
+                
+                product.setProductStatus(productStatus);
 
                 SpeciesManager sm = new SpeciesManager();
                 product.setSpecies(sm.getSpecies(speciesId)); 
