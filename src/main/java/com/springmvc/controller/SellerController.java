@@ -161,6 +161,8 @@ public class SellerController {
             product.setDescription(description);
             product.setProductImg(subDir + "/" + mainImageName);
             
+            product.setProductStatus("Active"); 
+            
             product.setSize(HtmlUtils.htmlEscape(size));
             product.setOrigin(HtmlUtils.htmlEscape(origin));
             product.setLifeSpan(HtmlUtils.htmlEscape(lifeSpan));
