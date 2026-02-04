@@ -10,14 +10,35 @@ import org.hibernate.Transaction;
 
 public class ProductManager {
 
-	public List<Product> getListProducts() {
+    public List<Product> getListProducts() {
+        List<Product> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            String hql = "FROM Product p ORDER BY p.productId DESC";
+            
+            list = session.createQuery(hql, Product.class).list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return list;
+    }
+	
+    public List<Product> getSearchProductsBySpecies(String searchtext) {
         List<Product> list = new ArrayList<>();
         try {
             SessionFactory sessionfactory = HibernateConnection.doHibernateConnection();
             Session session = sessionfactory.openSession();
             session.beginTransaction();
-
-            list = session.createQuery("FROM Product ORDER BY productId", Product.class).list();
+            
+            Query<Product> query = session.createQuery("FROM Product WHERE species.speciesName like :searchText AND productStatus = 'Active'", Product.class);
+            query.setParameter("searchText", "%" + searchtext + "%");
+            list = query.list();
 
             session.close();
         } catch (Exception e) {
@@ -26,49 +47,31 @@ public class ProductManager {
         return list;
     }
 	
-	public List<Product> getSearchProductsBySpecies(String searchtext) {
-		List<Product> list = new ArrayList<>();
-		try {
-			SessionFactory sessionfactory = HibernateConnection.doHibernateConnection();
-			Session session = sessionfactory.openSession();
-			session.beginTransaction();
+    public Product getProduct(String productId) {
+        Product product = null;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
             
-			Query<Product> query = session.createQuery("FROM Product WHERE species.speciesName like :searchText", Product.class);
-            query.setParameter("searchText", "%" + searchtext + "%");
-			list = query.list();
-
-			session.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	public Product getProduct(String productId) {
-	    Product product = null;
-	    Session session = null;
-	    try {
-	        SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
-	        session = sessionFactory.openSession();
+            product = session.get(Product.class, productId);
             
-	        product = session.get(Product.class, productId);
-	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        if (session != null) session.close();
-	    }
-	    return product;
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return product;
+    }
 
-	public List<Product> getFeaturedProducts(int limit) {
+    public List<Product> getFeaturedProducts(int limit) {
         List<Product> products = new ArrayList<>();
         Session session = null;
         try {
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             session = sessionFactory.openSession();
             
-            Query<Product> query = session.createQuery("FROM Product ORDER BY productId DESC", Product.class);
+            Query<Product> query = session.createQuery("FROM Product WHERE productStatus = 'Active' ORDER BY productId DESC", Product.class);
             query.setMaxResults(limit);
             
             products = query.list();
@@ -112,28 +115,40 @@ public class ProductManager {
         return result;
     }
 
-    public boolean deleteProduct(String productId) {
-        boolean result = false;
-        Session session = null;
+    public int deleteProduct(String productId) {
+        int status = 0;
         Transaction tx = null;
+        Session session = null;
         try {
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             session = sessionFactory.openSession();
             tx = session.beginTransaction();
-
-            Product product = session.get(Product.class, productId);
-            if (product != null) {
-                session.remove(product);
+            
+            Product p = session.get(Product.class, productId);
+            if (p != null) {
+                
+                String hql = "SELECT count(od) FROM OrderDetail od WHERE od.product.productId = :pid";
+                Long count = (Long) session.createQuery(hql).setParameter("pid", productId).uniqueResult();
+                
+                if (count != null && count > 0) {
+                    p.setProductStatus("Inactive"); 
+                    session.update(p);
+                    status = 2;
+                } else {
+                    session.delete(p);
+                    status = 1;
+                }
+                
                 tx.commit();
-                result = true;
             }
+            
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return result;
+        return status;
     }
 
     public List<Species> getAllSpecies() {
@@ -152,6 +167,43 @@ public class ProductManager {
     }
 
     public List<Product> searchProducts(String keyword, String speciesId) {
+        List<Product> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            StringBuilder hql = new StringBuilder("FROM Product p WHERE 1=1 AND p.productStatus = 'Active' ");
+            
+            if (keyword != null && !keyword.isEmpty()) {
+                hql.append("AND (p.productName LIKE :keyword OR p.description LIKE :keyword) ");
+            }
+            if (speciesId != null && !speciesId.isEmpty() && !speciesId.equals("all")) {
+                hql.append("AND p.species.speciesId = :speciesId ");
+            }
+            
+            hql.append("ORDER BY p.productId DESC");
+
+            Query<Product> query = session.createQuery(hql.toString(), Product.class);
+            
+            if (keyword != null && !keyword.isEmpty()) {
+                query.setParameter("keyword", "%" + keyword + "%");
+            }
+            if (speciesId != null && !speciesId.isEmpty() && !speciesId.equals("all")) {
+                query.setParameter("speciesId", speciesId);
+            }
+
+            list = query.list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return list;
+    }
+
+    public List<Product> searchProductsForSeller(String keyword, String speciesId) {
         List<Product> list = new ArrayList<>();
         Session session = null;
         try {
@@ -201,15 +253,10 @@ public class ProductManager {
             
             if (species != null) {
                 product.setSpecies(species); 
-                
                 session.merge(product);
-                
                 session.flush();
                 tx.commit();
                 result = true;
-                System.out.println(">>> Product Updated: " + product.getProductName());
-            } else {
-                System.err.println(">>> Error: Species ID " + speciesId + " Not Found!");
             }
 
         } catch (Exception e) {
@@ -234,7 +281,6 @@ public class ProductManager {
 
             tx.commit();
             result = true;
-            System.out.println(">>> Product Updated (Stock deducted): " + product.getProductName());
 
         } catch (Exception e) {
             if (tx != null) tx.rollback();
@@ -252,12 +298,10 @@ public class ProductManager {
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             session = sessionFactory.openSession();
             
-            StringBuilder hql = new StringBuilder("FROM Product p");
-            boolean hasWhere = false;
+            StringBuilder hql = new StringBuilder("FROM Product p WHERE p.productStatus = 'Active'");
 
             if (category != null && !category.equals("all") && !category.isEmpty()) {
-                hql.append(" WHERE p.species.speciesName = :category");
-                hasWhere = true;
+                hql.append(" AND p.species.speciesName = :category");
             }
 
             if ("price_asc".equals(sortBy)) {
@@ -278,7 +322,7 @@ public class ProductManager {
 
             Query<Product> query = session.createQuery(hql.toString(), Product.class);
             
-            if (hasWhere) {
+            if (category != null && !category.equals("all") && !category.isEmpty()) {
                 query.setParameter("category", category);
             }
 
@@ -302,9 +346,10 @@ public class ProductManager {
             SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
             session = sessionFactory.openSession();
             
-            StringBuilder hql = new StringBuilder("SELECT COUNT(p) FROM Product p");
+            StringBuilder hql = new StringBuilder("SELECT COUNT(p) FROM Product p WHERE p.productStatus = 'Active'");
+            
             if (category != null && !category.equals("all") && !category.isEmpty()) {
-                hql.append(" WHERE p.species.speciesName = :category");
+                hql.append(" AND p.species.speciesName = :category");
             }
 
             Query<Long> query = session.createQuery(hql.toString(), Long.class);
@@ -320,6 +365,27 @@ public class ProductManager {
             if (session != null) session.close();
         }
         return count;
+    }
+
+    public List<Product> getProductsBySpecies(String speciesId) {
+        List<Product> list = new ArrayList<>();
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+            
+            String hql = "FROM Product p WHERE p.species.speciesId = :id AND p.productStatus = 'Active' ORDER BY p.productId DESC";
+            
+            Query<Product> query = session.createQuery(hql, Product.class);
+            query.setParameter("id", speciesId);
+            list = query.list();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return list;
     }
 
 }

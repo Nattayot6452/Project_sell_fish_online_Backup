@@ -55,7 +55,7 @@ public class SellerController {
 
         List<Product> products;
         if ((search != null && !search.isEmpty()) || (category != null && !category.equals("all"))) {
-            products = pm.searchProducts(search, category);
+            products = pm.searchProductsForSeller(search, category);
         } else {
             products = pm.getListProducts();
         }
@@ -207,14 +207,22 @@ public class SellerController {
     
     @RequestMapping(value = "/DeleteProduct", method = RequestMethod.GET)
     public ModelAndView deleteProduct(@RequestParam("id") String productId, HttpSession session) {
-        if (session.getAttribute("seller") == null) { return new ModelAndView("redirect:/Login"); }
+        if (session.getAttribute("seller") == null) { 
+            return new ModelAndView("redirect:/Login"); 
+        }
 
         ProductManager pm = new ProductManager();
-        boolean deleted = pm.deleteProduct(productId);
 
-        if (deleted) {
+        int result = pm.deleteProduct(productId);
+
+        if (result == 1) {
+
             return new ModelAndView("redirect:/SellerCenter?msg=deleted");
+        } else if (result == 2) {
+
+            return new ModelAndView("redirect:/SellerCenter?msg=archived");
         } else {
+
             return new ModelAndView("redirect:/SellerCenter?error=deleteFailed");
         }
     }

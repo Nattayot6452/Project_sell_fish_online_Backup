@@ -116,8 +116,20 @@
                                     </c:otherwise>
                                 </c:choose>
 
-                                <c:if test="${p.newProduct}">
-                                    <div class="new-badge">NEW</div>
+                                <c:if test="${p.newProduct && p.stock > 0}">
+                                    <div class="new-badge">สินค้าใหม่</div>
+                                </c:if>
+
+                                <c:if test="${p.productStatus == 'Inactive'}">
+                                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(108, 117, 125, 0.9); color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 5;">
+                                        <i class="fas fa-pause-circle"></i> พักการขาย
+                                    </div>
+                                </c:if>
+
+                                <c:if test="${p.stock <= 0}">
+                                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(220, 53, 69, 0.9); color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 5;">
+                                        <i class="fas fa-times-circle"></i> สินค้าหมด
+                                    </div>
                                 </c:if>
 
                                 <div class="card-actions">
@@ -195,35 +207,9 @@
       });
     </script>
 
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const msg = urlParams.get('msg');
-
-        if (msg === 'login_success') {
-            Swal.fire({
-                icon: 'success',
-                title: 'เข้าสู่ระบบสำเร็จ!',
-                text: 'ยินดีต้อนรับเข้าสู่ระบบ',
-                showConfirmButton: false,
-                timer: 1500, 
-                position: 'center'
-            }).then(() => {
-
-                const newUrl = window.location.pathname;
-                window.history.replaceState({}, document.title, newUrl);
-            });
-        }
-    });
-</script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-
+    <script>
     function confirmDelete(event, url) {
         event.preventDefault(); 
 
@@ -253,10 +239,20 @@
             Swal.fire({
                 icon: 'success',
                 title: 'ลบสินค้าเรียบร้อย!',
+                text: 'สินค้านี้ไม่มีประวัติการซื้อขาย จึงถูกลบออกจากระบบ',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 2000
             });
-        } else if (msg === 'saved' || msg === 'success') {
+        } 
+        else if (msg === 'archived') {
+            Swal.fire({
+                icon: 'info',
+                title: 'พักการขายสินค้าแล้ว',
+                text: 'สินค้านี้มีประวัติการสั่งซื้อ ไม่สามารถลบถาวรได้ ระบบได้เปลี่ยนสถานะเป็น "พักการขาย" แทน',
+                confirmButtonColor: '#3085d6'
+            });
+        } 
+        else if (msg === 'saved' || msg === 'success') {
             Swal.fire({
                 icon: 'success',
                 title: 'บันทึกสำเร็จ!',
@@ -264,8 +260,29 @@
                 timer: 1500
             });
         }
+        else if (msg === 'login_success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'เข้าสู่ระบบสำเร็จ!',
+                text: 'ยินดีต้อนรับเข้าสู่ระบบ',
+                showConfirmButton: false,
+                timer: 1500, 
+                position: 'center'
+            }).then(() => {
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            });
+        }
+        else if (error === 'deleteFailed') {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถลบสินค้าได้ กรุณาลองใหม่',
+                confirmButtonColor: '#d33'
+            });
+        }
     });
-</script>
+    </script>
 
 </body>
 </html>

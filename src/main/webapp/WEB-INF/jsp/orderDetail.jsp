@@ -243,12 +243,12 @@
             <c:if test="${empty sessionScope.seller and not empty sessionScope.user}">
             <div style="margin-top: 20px; text-align: right;">
 
-                <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
+                <!-- <c:if test="${order.status != 'Completed' && order.status != 'Cancelled' && order.status != 'สำเร็จ' && order.status != 'ยกเลิก' && order.status != 'รออนุมัติยกเลิก'}">
                     <a href="requestCancellation?orderId=${order.ordersId}" class="btn-action btn-cancel-order"
                        onclick="confirmAction(event, this.href, 'ขอยกเลิกคำสั่งซื้อ?', 'ร้านค้าจะต้องอนุมัติก่อน คำสั่งซื้อจึงจะยกเลิกสมบูรณ์')">
                        <i class="fas fa-times-circle"></i> ขอยกเลิกคำสั่งซื้อ
                     </a>
-                </c:if>
+                </c:if> -->
                 
                 <c:if test="${order.status == 'รออนุมัติยกเลิก'}">
                     <span style="color: #c62828; font-weight: bold;">

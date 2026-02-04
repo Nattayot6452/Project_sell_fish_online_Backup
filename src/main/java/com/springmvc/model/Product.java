@@ -63,6 +63,9 @@ public class Product {
     @Column(name = "care_level", length = 1, nullable = false)
     private String careLevel;
 
+	@Column(name = "product_status")
+    private String productStatus;
+
 	@Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate = new Date();
@@ -260,6 +263,14 @@ public class Product {
         long days = diff / (24 * 60 * 60 * 1000); 
         
         return days <= 7;
+    }
+
+	public String getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(String productStatus) {
+        this.productStatus = productStatus;
     }
 }
 
