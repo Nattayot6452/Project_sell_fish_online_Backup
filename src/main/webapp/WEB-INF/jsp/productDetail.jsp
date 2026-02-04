@@ -167,25 +167,45 @@
 
                         <div class="specs-grid">
                             <div class="spec-item">
-                                <i class="fas fa-globe-asia"></i> <span>แหล่งกำเนิด</span> <strong>${product.origin}</strong>
+                                <i class="fas fa-globe-asia"></i> <span>แหล่งกำเนิด</span> 
+                                <strong><c:out value="${product.origin}" /></strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-water"></i> <span>ประเภทน้ำ</span> <strong>${product.waterType}</strong>
+                                <i class="fas fa-water"></i> <span>ประเภทน้ำ</span> 
+                                <strong><c:out value="${product.waterType}" /></strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-thermometer-half"></i> <span>อุณหภูมิ</span> <strong>${product.temperature}</strong>
+                                <i class="fas fa-thermometer-half"></i> <span>อุณหภูมิ</span> 
+                                <strong>${product.temperature} &deg;C</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-ruler"></i> <span>ขนาดโตเต็มวัย</span> <strong>${product.size}</strong>
+                                <i class="fas fa-ruler"></i> <span>ขนาดโตเต็มวัย</span> 
+                                <strong>${product.size} ซม.</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-heartbeat"></i> <span>อายุขัยเฉลี่ย</span> <strong>${product.lifeSpan}</strong>
+                                <i class="fas fa-heartbeat"></i> <span>อายุขัยเฉลี่ย</span> 
+                                <strong>${product.lifeSpan} ปี</strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-hand-holding-heart"></i> <span>ระดับการดูแล</span> <strong>${product.careLevel}</strong>
+                                <i class="fas fa-hand-holding-heart"></i> <span>ระดับการดูแล</span> 
+                                <strong>
+                                    <c:choose>
+                                        <c:when test="${product.careLevel == 'A'}">ง่าย (Easy)</c:when>
+                                        <c:when test="${product.careLevel == 'B'}">ปานกลาง (Medium)</c:when>
+                                        <c:when test="${product.careLevel == 'C'}">ยาก (Hard)</c:when>
+                                        <c:otherwise>${product.careLevel}</c:otherwise>
+                                    </c:choose>
+                                </strong>
                             </div>
                             <div class="spec-item">
-                                <i class="fas fa-paw"></i> <span>นิสัย</span> <strong>${product.isAggressive}</strong>
+                                <i class="fas fa-paw"></i> <span>นิสัย</span> 
+                                <strong>
+                                    <c:choose>
+                                        <c:when test="${product.isAggressive == 'Y'}">ดุร้าย (Aggressive)</c:when>
+                                        <c:when test="${product.isAggressive == 'N'}">ไม่ดุร้าย (Peaceful)</c:when>
+                                        <c:otherwise>${product.isAggressive}</c:otherwise>
+                                    </c:choose>
+                                </strong>
                             </div>
                         </div>
 
