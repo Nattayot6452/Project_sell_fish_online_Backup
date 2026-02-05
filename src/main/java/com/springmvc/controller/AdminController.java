@@ -271,19 +271,26 @@ public class AdminController {
         }
     }
 
-    @RequestMapping(value = "/RemoveSpecies", method = RequestMethod.GET)
-    public ModelAndView removeSpecies(@RequestParam("id") String id, HttpSession session) {
-        if (session.getAttribute("admin") == null) return new ModelAndView("redirect:/Login");
+    @RequestMapping(value = "/deleteSpecies", method = RequestMethod.GET)
+    public ModelAndView deleteSpecies(@RequestParam("sid") String speciesId, HttpSession session) {
         
+        if (session.getAttribute("admin") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
         SpeciesManager sm = new SpeciesManager();
-        boolean success = sm.deleteSpecies(id);
+
+        if (sm.isSpeciesInUse(speciesId)) {
+
+            return new ModelAndView("redirect:/ViewSpecies?id=" + speciesId + "&error=inUse");
+        }
+
+        boolean success = sm.deleteSpecies(speciesId);
         
         if (success) {
-
             return new ModelAndView("redirect:/ManageSpecies?msg=deleted");
         } else {
-
-            return new ModelAndView("redirect:/ViewSpecies?id=" + id + "&error=delete_failed");
+            return new ModelAndView("redirect:/ManageSpecies?error=delete_failed");
         }
     }
 

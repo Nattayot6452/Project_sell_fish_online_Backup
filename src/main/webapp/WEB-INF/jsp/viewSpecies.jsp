@@ -35,10 +35,11 @@
                             <i class="fas fa-edit"></i> แก้ไข
                         </a>
                         
-                        <a href="RemoveSpecies?id=${species.speciesId}" 
-                           onclick="confirmDelete(event, this.href);"
-                           style="background: #e53e3e; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
-                            <i class="fas fa-trash-alt"></i> ลบ
+                        <a href="deleteSpecies?sid=${species.speciesId}" 
+                            class="btn-delete" 
+                            onclick="confirmDelete(event, this.href)"
+                            style="background: #e53e3e; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                            <i class="fas fa-trash"></i> ลบ
                         </a>
                     </div>
 
@@ -113,52 +114,59 @@
         </div>
     </div>
 
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-
-    function confirmDelete(event, url) {
-        event.preventDefault(); 
-
-        Swal.fire({
-            title: 'ยืนยันการลบ?',
-            text: "สายพันธุ์นี้อาจทำให้สินค้าที่เกี่ยวข้องถูกลบด้วย!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#e53e3e',  
-            cancelButtonColor: '#718096',   
-            confirmButtonText: 'ใช่, ลบเลย!',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = url; 
-            }
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const msg = urlParams.get('msg');
-        const error = urlParams.get('error');
-
-        if (msg === 'deleted') {
+    <script>
+        function confirmDelete(event, url) {
+            event.preventDefault(); 
             Swal.fire({
-                icon: 'success',
-                title: 'ลบสินค้าเรียบร้อย!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } else if (msg === 'saved' || msg === 'success') {
-            Swal.fire({
-                icon: 'success',
-                title: 'บันทึกสำเร็จ!',
-                showConfirmButton: false,
-                timer: 1500
+                title: 'ยืนยันการลบ?',
+                text: "หากลบแล้วจะไม่สามารถกู้คืนได้!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e53e3e',  
+                cancelButtonColor: '#718096',   
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; 
+                }
             });
         }
-    });
-</script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const msg = urlParams.get('msg');
+            const error = urlParams.get('error');
+
+            if (error === 'inUse') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ไม่สามารถลบได้!',
+                    text: 'มีสินค้าที่ใช้หมวดหมู่นี้อยู่ กรุณาย้ายหรือลบสินค้าในหมวดหมู่นี้ก่อน',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'เข้าใจแล้ว'
+                });
+            }
+
+            if (msg === 'deleted') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ลบข้อมูลสำเร็จ',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else if (msg === 'saved' || msg === 'success' || msg === 'updated') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกสำเร็จ!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

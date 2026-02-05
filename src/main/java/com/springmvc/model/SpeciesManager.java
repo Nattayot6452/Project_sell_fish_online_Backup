@@ -129,5 +129,29 @@ public class SpeciesManager {
         }
         return species;
     }
+
+    public boolean isSpeciesInUse(String speciesId) {
+        boolean inUse = false;
+        Session session = null;
+        try {
+            SessionFactory sessionFactory = HibernateConnection.doHibernateConnection();
+            session = sessionFactory.openSession();
+
+            String hql = "SELECT count(p) FROM Product p WHERE p.species.speciesId = :sid";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("sid", speciesId);
+
+            Long count = query.uniqueResult();
+            if (count != null && count > 0) {
+                inUse = true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) session.close();
+        }
+        return inUse;
+    }
     
 }
