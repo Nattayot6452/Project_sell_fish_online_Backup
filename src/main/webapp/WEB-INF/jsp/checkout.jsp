@@ -138,6 +138,9 @@
         }
 
         function validatePayment(event) {
+
+            event.preventDefault();
+
             const paymentMethods = document.getElementsByName('paymentMethod');
             let isSelected = false;
 
@@ -149,9 +152,6 @@
             }
 
             if (!isSelected) {
-
-                if(event) event.preventDefault(); 
-
                 Swal.fire({
                     title: 'ลืมอะไรไปหรือเปล่า?',
                     text: 'กรุณาเลือกธนาคารที่ต้องการชำระเงินก่อนดำเนินการต่อ',
@@ -161,7 +161,23 @@
                 });
                 return false; 
             }
-            return true;
+
+            Swal.fire({
+                title: 'คุณโอนเงินแล้วใช่มั้ย?',
+                text: "กรุณาตรวจสอบการโอนเงินให้เรียบร้อยก่อนยืนยัน",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, โอนแล้ว',
+                cancelButtonText: 'ยังไม่โอน'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    document.getElementById('checkoutForm').submit();
+                }
+
+            });
         }
     </script>
 
