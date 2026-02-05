@@ -11,9 +11,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .product-card { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; gap: 30px; align-items: flex-start; }
-        .product-img-box { flex: 1; text-align: center; position: sticky; top: 20px; }
-        .product-img-box img { width: 100%; max-width: 400px; border-radius: 10px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
+        .product-img-box { flex: 1; text-align: center; position: sticky; top: 20px; }
+        .main-img { width: 100%; max-width: 400px; border-radius: 10px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .gallery-img {
+            width: 100%;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gallery-img:hover {
+            transform: scale(1.05);
+            border-color: #3182ce;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
         .product-info-box { flex: 2; }
         .info-header { border-bottom: 2px solid #edf2f7; padding-bottom: 15px; margin-bottom: 20px; }
         
@@ -22,8 +44,14 @@
         .info-value { font-size: 16px; color: #333; line-height: 1.6; }
         
         .price-tag { font-size: 28px; color: #00571d; font-weight: bold; }
-        .stock-tag { background: #edf2f7; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #2d3748; display: inline-block; margin-top: 10px;}
         
+        .badge-group { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+        .stock-tag { background: #edf2f7; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #2d3748; }
+        
+        .status-badge { padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+        .status-active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-suspended { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
         .specs-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -39,10 +67,6 @@
         .spec-value { font-size: 15px; color: #2d3748; font-weight: 500; }
         .spec-icon { margin-right: 5px; color: #4a5568; }
 
-        .btn-action-group { margin-top: 30px; display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 20px; }
-        .btn-edit { background: #3182ce; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: 0.2s; }
-        .btn-delete { background: #e53e3e; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: 0.2s; }
-        .btn-edit:hover { background: #2b6cb0; } .btn-delete:hover { background: #c53030; }
     </style>
 </head>
 <body>
@@ -65,15 +89,43 @@
                 <div class="product-card">
                     <div class="product-img-box">
                         <img src="${pageContext.request.contextPath}/${product.productImg.startsWith('assets') ? '' : 'displayImage?name='}${product.productImg}" 
+                             class="main-img"
+                             id="mainImage"
                              onerror="this.src='https://cdn-icons-png.flaticon.com/512/1156/1156477.png'">
+                        
+                        <c:if test="${not empty product.galleryImages}">
+                            <div class="gallery-grid">
+                                <c:forEach items="${product.galleryImages}" var="img">
+                                    <img src="${pageContext.request.contextPath}/displayImage?name=${img.imagePath}" 
+                                         class="gallery-img"
+                                         onclick="changeMainImage(this.src)">
+                                </c:forEach>
+                            </div>
+                        </c:if>
                     </div>
 
                     <div class="product-info-box">
                         <div class="info-header">
                             <h2 style="margin: 0; color: #2d3748;">${product.productName}</h2>
-                            <span class="stock-tag">
-                                <i class="fas fa-boxes"></i> สินค้าคงเหลือ: ${product.stock} ตัว
-                            </span>
+                            
+                            <div class="badge-group">
+                                <span class="stock-tag">
+                                    <i class="fas fa-boxes"></i> คงเหลือ: ${product.stock} ตัว
+                                </span>
+
+                                <c:choose>
+                                    <c:when test="${product.productStatus == 'Suspended' || product.productStatus == 'Inactive'}">
+                                        <span class="status-badge status-suspended">
+                                            <i class="fas fa-pause-circle"></i> พักการขาย
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="status-badge status-active">
+                                            <i class="fas fa-check-circle"></i> ขายปกติ
+                                        </span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </div>
 
                         <div class="info-group">
@@ -140,5 +192,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function changeMainImage(src) {
+            document.getElementById('mainImage').src = src;
+        }
+    </script>
 </body>
 </html>

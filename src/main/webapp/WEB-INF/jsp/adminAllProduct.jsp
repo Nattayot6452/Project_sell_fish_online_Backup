@@ -40,7 +40,7 @@
                                 <th>หมวดหมู่/สายพันธุ์</th>
                                 <th>ราคา</th>
                                 <th>คงเหลือ</th>
-                                <th>จัดการ</th>
+                                <th>สถานะ</th> <th>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,6 +61,22 @@
                                         <span class="status-dot ${p.stock > 0 ? 'dot-green' : 'dot-red'}"></span>
                                         ${p.stock}
                                     </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${p.productStatus == 'Suspended' || p.productStatus == 'Inactive'}">
+                                                <span class="badge" style="background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                                                    <i class="fas fa-pause-circle"></i> พักการขาย
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge" style="background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                                                    <i class="fas fa-check-circle"></i> ขายปกติ
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
                                     <td>
                                         <a href="AdminProductDetail?pid=${p.productId}" class="btn-small" title="ดูรายละเอียด">
                                             <i class="fas fa-eye"></i> ดูข้อมูล
