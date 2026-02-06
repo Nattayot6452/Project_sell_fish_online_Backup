@@ -311,13 +311,13 @@ public class ProductManager {
             } else if ("name_asc".equals(sortBy)) {
                 hql.append(" ORDER BY p.productName ASC");
             } else if ("oldest".equals(sortBy)) {
-                hql.append(" ORDER BY p.productId ASC");
+                hql.append(" ORDER BY p.createDate ASC");
             } else if ("newest".equals(sortBy)) {
-                hql.append(" ORDER BY p.productId DESC");
+                hql.append(" ORDER BY p.createDate DESC");
             } else if ("best_selling".equals(sortBy)) {
                 hql.append(" ORDER BY (SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.product = p) DESC");
             } else {
-                hql.append(" ORDER BY p.productId DESC");
+                hql.append(" ORDER BY p.createDate DESC");
             }
 
             Query<Product> query = session.createQuery(hql.toString(), Product.class);
