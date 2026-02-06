@@ -147,7 +147,7 @@
                     <div class="product-details-info">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
-                                ${product.stock > 0 ? 'มีสินค้าพร้อมส่ง' : 'สินค้าหมดชั่วคราว'}
+                                ${product.stock > 0 ? 'มีสินค้าพร้อมจำหน่าย' : 'สินค้าหมดชั่วคราว'}
                             </span>
                             <span style="color: #666; font-size: 0.95em; font-weight: 500;">
                                 (เหลือ ${product.stock} ชิ้น)
