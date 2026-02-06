@@ -48,7 +48,7 @@
         </div>
         
         <div class="categories-grid">
-            <a href="AllProduct?category=ปลากัดไทย" class="category-card">
+            <a href="AllProduct?category=ปลากัด" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/betta.jpg" alt="ปลากัด">
                 </div>
@@ -66,11 +66,11 @@
                 </div>
                 <span>ปลาทอง</span>
             </a>
-            <a href="AllProduct?category=ปลาเนออน" class="category-card">
+            <a href="AllProduct?category=ปลานีออน" class="category-card">
                 <div class="cat-img-wrapper">
                     <img src="${pageContext.request.contextPath}/assets/images/categories/tetra.jpeg" alt="ปลาเนออน">
                 </div>
-                <span>ปลาเล็ก/ปลาเนออน</span>
+                <span>ปลานีออน</span>
             </a>
         </div>
     </div>
