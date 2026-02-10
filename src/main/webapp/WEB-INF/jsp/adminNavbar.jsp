@@ -49,6 +49,15 @@
             </ul>
         </li>
 
+        <li>
+            <a href="javascript:void(0)" onclick="confirmLogout()">
+                <div style="display: flex; align-items: center;">
+                    <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; margin-right: 10px;"></i>
+                    <span>ออกจากระบบ</span>
+                </div>
+            </a>
+        </li>
+
     </ul>
 </nav>
 
@@ -139,5 +148,24 @@
             .then(() => {
                 window.location.href = link;
             });
+    }
+</script>
+
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'ยืนยันการออกจากระบบ?',
+            text: "คุณต้องการออกจากระบบจัดการร้านค้าใช่หรือไม่",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',   
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'ใช่, ออกจากระบบ',
+            cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'Logout';
+            }
+        });
     }
 </script>
