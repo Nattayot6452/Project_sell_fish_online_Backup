@@ -116,7 +116,7 @@
                                     </c:otherwise>
                                 </c:choose>
 
-                                <c:if test="${p.newProduct && p.stock > 0}">
+                                <c:if test="${p.newProduct && p.stock > 0 && p.productStatus != 'Inactive'}">
                                     <div class="new-badge">สินค้าใหม่</div>
                                 </c:if>
 
@@ -222,7 +222,6 @@
             cancelButtonColor: '#718096',   
             confirmButtonText: 'ใช่, ลบเลย!',
             cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url; 
@@ -296,6 +295,40 @@
                     confirmButtonColor: '#00571d',
                     confirmButtonText: 'ยอดเยี่ยม!',
                     timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+
+            if (success === 'added') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เพิ่มสินค้าสำเร็จ! 🎉',
+                    text: 'สินค้าของคุณพร้อมวางจำหน่ายแล้ว',
+                    confirmButtonColor: '#00571d',
+                    confirmButtonText: 'ยอดเยี่ยม!',
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            } 
+            else if (success === 'updated') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'แก้ไขข้อมูลสำเร็จ! 📝',
+                    text: 'ข้อมูลสินค้าได้รับการอัปเดตเรียบร้อยแล้ว',
+                    confirmButtonColor: '#00571d',
+                    confirmButtonText: 'ตกลง',
+                    timer: 2000,
                     timerProgressBar: true
                 }).then(() => {
                     window.history.replaceState({}, document.title, window.location.pathname);
