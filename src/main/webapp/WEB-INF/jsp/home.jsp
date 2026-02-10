@@ -95,7 +95,7 @@
                                 </c:choose>
                                 
                                 <c:if test="${p.newProduct}">
-                                    <div class="new-badge">สินค้ามาใหม่</div>
+                                    <div class="new-badge">สินค้าใหม่</div>
                                 </c:if>
 
                                 <div class="card-actions">

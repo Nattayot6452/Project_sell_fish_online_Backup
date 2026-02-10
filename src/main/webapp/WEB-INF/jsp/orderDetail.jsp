@@ -330,7 +330,6 @@
             cancelButtonColor: '#d33',      
             confirmButtonText: 'ใช่, ยืนยัน!',
             cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url; 

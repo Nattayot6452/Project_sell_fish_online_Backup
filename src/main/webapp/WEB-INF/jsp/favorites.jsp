@@ -45,7 +45,7 @@
                                 </c:choose>
 
                                 <c:if test="${p.newProduct}">
-                                    <div class="new-badge">NEW</div>
+                                    <div class="new-badge">สินค้าใหม่</div>
                                 </c:if>
                                 
                                 <a href="RemoveFavorite?favId=${fav.favoriteId}" class="btn-remove" 
@@ -118,7 +118,6 @@
             cancelButtonColor: '#718096',   
             confirmButtonText: 'ใช่, ลบเลย!',
             cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url; 

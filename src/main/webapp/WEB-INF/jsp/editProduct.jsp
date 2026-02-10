@@ -40,7 +40,7 @@
                 <p style="color: #555;">แก้ไขข้อมูลรายละเอียดสินค้า: <c:out value="${product.productName}" /></p>
             </div>
 
-            <form action="updateProduct" method="post" enctype="multipart/form-data" class="product-form" id="editForm">
+            <form action="updateProduct" method="post" enctype="multipart/form-data" class="product-form" id="editProductForm">
                 
                 <input type="hidden" name="productId" value="${product.productId}">
                 <input type="hidden" name="oldImage" value="${product.productImg}">
@@ -376,6 +376,26 @@ function countDescChars(input) {
 
 </script>
 
+<script>
+    document.getElementById('editProductForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'ยืนยันการแก้ไข?',
+            text: "คุณต้องการบันทึกการเปลี่ยนแปลงนี้หรือไม่",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#00571d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่, บันทึกเลย',
+            cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submit();
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
