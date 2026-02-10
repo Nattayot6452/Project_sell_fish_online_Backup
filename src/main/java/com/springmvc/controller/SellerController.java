@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.springmvc.model.Admin;
 import com.springmvc.model.HibernateConnection;
+import com.springmvc.model.NotificationManager;
 import com.springmvc.model.OrderManager;
 import com.springmvc.model.Orders;
 import com.springmvc.model.Product;
@@ -489,5 +490,35 @@ public class SellerController {
         ModelAndView mav = new ModelAndView("listProduct");
         mav.addObject("products", products);
         return mav;
+    }
+
+    @RequestMapping(value = "/SellerReportUser", method = RequestMethod.GET)
+    public ModelAndView reportUser(
+            @RequestParam("id") String memberId,
+            @RequestParam("reason") String reason,
+            @RequestParam("note") String note,
+            HttpSession session) {
+        
+        if (session.getAttribute("seller") == null) {
+            return new ModelAndView("redirect:/Login");
+        }
+
+        try {
+
+            String reportMsg = "🚩 มีการรายงานผู้ใช้: " + memberId + " | ข้อหา: " + reason;
+            if (note != null && !note.isEmpty()) {
+                reportMsg += " (" + note + ")";
+            }
+
+            NotificationManager nm = new NotificationManager();
+            
+            nm.createNotification("1", "ADMIN", reportMsg, "UserDetail?id=" + memberId);
+
+            return new ModelAndView("redirect:/SellerOrders?msg=report_sent");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:/SellerOrders?error=report_failed");
+        }
     }
 }

@@ -12,13 +12,17 @@ public class NotificationController {
     @ResponseBody
     public List<Notification> getNotifications(HttpSession session) {
         NotificationManager nm = new NotificationManager();
+
         if (session.getAttribute("seller") != null) {
 
             return nm.getUnreadNotifications("0", "SELLER");
+
         } else if (session.getAttribute("user") != null) {
             Member user = (Member) session.getAttribute("user");
-            
             return nm.getUnreadNotifications(user.getMemberId(), "MEMBER");
+
+        } else if (session.getAttribute("admin") != null) {
+            return nm.getUnreadNotifications("1", "ADMIN");
         }
         return null;
     }

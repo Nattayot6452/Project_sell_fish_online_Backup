@@ -99,9 +99,20 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="OrderDetail?orderId=${order.ordersId}" class="btn-view">
-                                            <i class="fas fa-eye"></i> ตรวจสอบ
-                                        </a>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            
+                                            <a href="OrderDetail?orderId=${order.ordersId}" class="btn-view" style="margin-right: 0; white-space: nowrap;">
+                                                <i class="fas fa-eye"></i> ตรวจสอบ
+                                            </a>
+
+                                            <button type="button" onclick="openReportModal('${order.member.memberId}', '${order.member.memberName}')" 
+                                                    style="width: 32px; height: 32px; border: 1px solid #ffc107; background: #fff3cd; color: #856404; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;"
+                                                    title="แจ้งปัญหา / รายงานพฤติกรรม"
+                                                    onmouseover="this.style.background='#ffecb5'"
+                                                    onmouseout="this.style.background='#fff3cd'">
+                                                <i class="fas fa-flag"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -118,6 +129,69 @@
             </c:choose>
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function openReportModal(memberId, memberName) {
+        Swal.fire({
+            title: 'รายงานพฤติกรรมผู้ซื้อ',
+            html: `
+                <div style="text-align: left;">
+                    <p style="font-size: 14px; color: #555;">คุณกำลังรายงานผู้ใช้: <b>` + memberName + `</b></p>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">ข้อมูลนี้จะถูกส่งไปยัง <b>ผู้ดูแลระบบ (Admin)</b> เพื่อพิจารณา</p>
+                    
+                    <label style="font-weight: bold; font-size: 14px;">หัวข้อการรายงาน:</label>
+                    <select id="reportReason" class="swal2-input" style="margin-top: 5px;">
+                        <option value="สั่งเล่น/ก่อกวน">👻 สั่งเล่น / ก่อกวน</option>
+                        <option value="ไม่ชำระเงิน">💸 ไม่ชำระเงิน / ทิ้งออเดอร์</option>
+                        <option value="ใช้ถ้อยคำไม่สุภาพ">🤬 ใช้ถ้อยคำไม่สุภาพ</option>
+                        <option value="หลักฐานปลอม">🚫 เจตนาฉ้อโกง / หลักฐานปลอม</option>
+                        <option value="อื่นๆ">📝 อื่นๆ</option>
+                    </select>
+                    
+                    <label style="font-weight: bold; font-size: 14px; margin-top: 10px; display: block;">รายละเอียดเพิ่มเติม:</label>
+                    <textarea id="reportNote" class="swal2-textarea" placeholder="ระบุรายละเอียด..." style="margin-top: 5px; height: 100px;"></textarea>
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ffc107',
+            confirmButtonText: 'ส่งรายงานให้ Admin',
+            cancelButtonText: 'ยกเลิก',
+            cancelButtonColor: '#6c757d',
+            focusConfirm: false,
+            preConfirm: () => {
+                const reason = document.getElementById('reportReason').value;
+                const note = document.getElementById('reportNote').value;
+                return { memberId: memberId, reason: reason, note: note };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "SellerReportUser?id=" + result.value.memberId + 
+                                       "&reason=" + encodeURIComponent(result.value.reason) +
+                                       "&note=" + encodeURIComponent(result.value.note);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+
+        if (msg === 'report_sent') {
+            Swal.fire({
+                icon: 'success',
+                title: 'ส่งรายงานเรียบร้อย',
+                text: 'ระบบได้ส่งข้อมูลพฤติกรรมผู้ใช้นี้ให้ผู้ดูแลระบบตรวจสอบแล้ว',
+                confirmButtonColor: '#00571d',
+                timer: 3000
+            }).then(() => {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
